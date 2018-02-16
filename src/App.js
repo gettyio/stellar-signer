@@ -9,12 +9,43 @@ import {
   Platform,
   StyleSheet,
   Text,
-  View
+  View,
+  Linking
 } from 'react-native';
+import qs from 'qs';
+import uuid from "uuid/v4";
 import HomeScreen from './transactions/HomeScreen'
-global.Buffer = require('buffer/').Buffer ;
-
+import realm from './store'
 export default class App extends Component {
+
+  componentDidMount() {
+
+    if (Platform.OS === 'android') {
+      Linking.getInitialURL().then(url => {
+        this.handleAppLinkURL(url);
+      });
+    } else {
+        Linking.addEventListener('url', this.handleAppLinkURL);
+      }
+    }
+    
+  componentWillUnmount() {
+    Linking.removeEventListener('url', this.handleAppLinkURL);
+  }
+  
+  handleAppLinkURL = (event) => {
+    const url = event.url;
+    const tx = qs.parse(url.replace('stellar-signer://stellar-signer?',''));
+    realm.write(() => {
+      const john = realm.create('Transaction', {
+        id: uuid(),
+        xdr: tx.xdr,
+        createdAt: new Date()
+      });
+      john.lastName = 'Peterson';
+    });
+  }
+
   render() {
     return (
       <View>

@@ -15,9 +15,10 @@ const TransactionSchema = {
   name: "Transaction",
   primaryKey: "id",
   properties: {
-    id: "int",
+    id: "string",
     xdr: "string",
     signedXdr: { type: "string", optional: true },
+    decodedXdr: { type: "string", optional: true },
     createdAt: "date"
   }
 };
@@ -26,5 +27,5 @@ Transaction.schema = TransactionSchema;
 
 export default new Realm({
   schema: [Transaction],
-  schemaVersion: 2
+  schemaVersion: 4
 });

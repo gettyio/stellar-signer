@@ -18,9 +18,20 @@ import realm from './../store';
 class TransactionList extends PureComponent {
 
   state = {
+    transactions: [],
     currentTx: undefined,
     hasError: undefined,
     isLoadingList: false,
+  }
+
+  componentDidMount() {
+    realm.addListener('change', this.refreshList);
+    this.refreshList();
+  }
+
+  refreshList = ()=> {
+    const transactions = realm.objects('Transaction');
+    this.setState({ transactions })
   }
 
   renderRow = ({ item })=> {
@@ -43,8 +54,8 @@ class TransactionList extends PureComponent {
   }
 
   render() {
-    const { isLoadingList, hasError } = this.state;
-    const transactions = realm.objects('Transaction');
+    const { isLoadingList, hasError, transactions } = this.state;
+    
     if (isLoadingList) {
       return (
         <View style={{ flex: 1, marginTop: 64 }}>

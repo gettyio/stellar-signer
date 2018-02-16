@@ -32,7 +32,7 @@
     }
 
     function decodeXdr(xdr) {
-      var decodedXdr = StellarSdk.xdr.TransactionEnvelope.fromXDR(signedXDR, 'base64');
+      var decodedXdr = StellarSdk.xdr.TransactionEnvelope.fromXDR(xdr, 'base64');
       postMessage(decodedXdr);  
     }
 
