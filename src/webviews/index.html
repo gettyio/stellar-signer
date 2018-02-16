@@ -14,9 +14,8 @@
     var xdr = StellarSdk.xdr;
     var StrKey = StellarSdk.StrKey;
     var Operation = StellarSdk.Operation;
-    var Network = StellarSdk.Network;
 
-    Network.useTestNetwork();
+    StellarSdk.Network.useTestNetwork();
 
     function signTx() {
       // 1. Decode XDR received from RN
@@ -32,7 +31,7 @@
     }
 
     function decodeXdr(xdr) {
-      var decodedXdr = StellarSdk.xdr.TransactionEnvelope.fromXDR(xdr, 'base64');
+      var decodedXdr = StellarSdk.xdr.TransactionEnvelope.fromXDR(signedXDR, 'base64');
       postMessage(decodedXdr);  
     }
 
@@ -43,6 +42,7 @@
       try {
         xdrObject = xdr[type].fromXDR(input, 'base64');
       } catch(error) {
+        postMessage(JSON.stringify({ type: 'error', message: 'Input XDR could not be parsed' }));
         throw new Error('Input XDR could not be parsed');
       }
 
@@ -198,7 +198,6 @@
 
     document.addEventListener("message", function(event) {
       var data = JSON.parse(event.data);
-      StellarSdk.Network.useTestNetwork();
       switch (data.type) {
         case 'sign':
           signTx(data.xdr);

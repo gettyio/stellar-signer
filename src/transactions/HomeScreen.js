@@ -8,18 +8,52 @@ import {
   Keyboard,
   StatusBar,
   WebView,
-  ActivityIndicator
+  ActivityIndicator,
+  Linking
 } from 'react-native';
+import qs from 'qs';
+import uuid from "uuid/v4";
 import * as Animatable from 'react-native-animatable';
-
 import { Screen, Container, Header, H1, TextInput, PasteButton, PasteButtonLabel, LoadButton } from './../shared'
 import TransactionList from './TransactionList';
+import realm from './../store';
 
 class HomeScreen extends PureComponent {
 
   state = {
     currentMessage: undefined,
     accountInputValue: 'GBJACKMHHDWPM2NDDRMOIBZFWXPUQ2IQBV42U5ZFV6CWMD27K3KIDO2H'
+  }
+
+  componentDidMount() {
+    if (Platform.OS === 'android') {
+      Linking.getInitialURL().then(url => {
+        if (url) {
+          this.handleAppLinkURL(new String(url));
+        }
+      });
+    } else {
+      Linking.addEventListener('url', this.handleAppLinkURL);
+      Linking.getInitialURL().then(url => {
+        if (url) {
+          this.handleAppLinkURL(new String(url));
+        }
+      });
+    }
+  }
+    
+  componentWillUnmount() {
+    Linking.removeEventListener('url', this.handleAppLinkURL);
+  }
+  
+  handleAppLinkURL = (event) => {
+    const url = (event instanceof String) ? event : event.url;
+    if (url) {
+      const tx = qs.parse(url.replace('stellar-signer://stellar-signer?',''));
+      this.postMessage(tx);
+    } else {
+      alert('Invalid Transaction! Please contact the support.');
+    }
   }
 
   setAccountValue = (text)=> {
@@ -69,15 +103,42 @@ class HomeScreen extends PureComponent {
     )
   }
 
-  onMessage = (event) => {
-    console.log('hehe', event.nativeEvent.data)
-  }
-
   postMessage = () => {
-    console.log('posted')
-    const event = JSON.stringify({ type: 'decode',  xdr: 'AAAAAFIBKYc47PZpoxxY5Acltd9IaRANeap3Ja+FZg9fVtSBAAAAZABu6EUAAAACAAAAAAAAAAAAAAABAAAAAAAAAAEAAAAAr+SzF6CyMZracAojHWYWqhzdJZW+OiI9csaw1Nl4EZMAAAAAAAAAAAX14QAAAAAAAAAAAA==' });
+    const event = JSON.stringify({ type: 'decode', xdr: 'AAAAAFIBKYc47PZpoxxY5Acltd9IaRANeap3Ja+FZg9fVtSBAAAAZABu6EUAAAACAAAAAAAAAAAAAAABAAAAAAAAAAEAAAAAr+SzF6CyMZracAojHWYWqhzdJZW+OiI9csaw1Nl4EZMAAAAAAAAAAAX14QAAAAAAAAAAAA==' });
     this.webview.postMessage(event);
   }
+
+  onMessage = (event) => {
+    const data = event.nativeEvent.data;
+    if (data) {
+      const tx = JSON.parse(data);
+      if (tx.type === 'error') {
+        console.log('Error: ', data);
+      } else {
+        console.log(tx);
+        // realm.write(() => {
+        //   realm.create('Transaction', {
+        //     id: uuid(),
+        //     xdr: tx.xdr,
+        //     decodedXdr: tx.decodedXdr,
+        //     createdAt: new Date()
+        //   });
+        // });
+      }
+    } else {
+      console.log('Data not found!');
+    }
+  }
+
+  // onMessage = (event) => {
+  //   console.log('hehe', event.nativeEvent.data)
+  // }
+
+  // postMessage = () => {
+  //   console.log('posted')
+  //   const event = JSON.stringify({ type: 'decode',  xdr: 'AAAAAFIBKYc47PZpoxxY5Acltd9IaRANeap3Ja+FZg9fVtSBAAAAZABu6EUAAAACAAAAAAAAAAAAAAABAAAAAAAAAAEAAAAAr+SzF6CyMZracAojHWYWqhzdJZW+OiI9csaw1Nl4EZMAAAAAAAAAAAX14QAAAAAAAAAAAA==' });
+  //   this.webview.postMessage(event);
+  // }
 
   clearMessage = () => {
     this.setState({ currentMessage: undefined });
