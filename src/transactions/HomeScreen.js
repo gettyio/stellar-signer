@@ -103,9 +103,15 @@ class HomeScreen extends PureComponent {
     )
   }
 
-  postMessage = () => {
-    const event = JSON.stringify({ type: 'decode', xdr: 'AAAAAFIBKYc47PZpoxxY5Acltd9IaRANeap3Ja+FZg9fVtSBAAAAZABu6EUAAAACAAAAAAAAAAAAAAABAAAAAAAAAAEAAAAAr+SzF6CyMZracAojHWYWqhzdJZW+OiI9csaw1Nl4EZMAAAAAAAAAAAX14QAAAAAAAAAAAA==' });
-    this.webview.postMessage(event);
+  // Must use encodeURIComponent
+  postMessage = (tx) => {
+    console.log(tx);
+    //const testTx = 'AAAAAFIBKYc47PZpoxxY5Acltd9IaRANeap3Ja+FZg9fVtSBAAAAZABu6EUAAAACAAAAAAAAAAAAAAABAAAAAAAAAAEAAAAAr+SzF6CyMZracAojHWYWqhzdJZW+OiI9csaw1Nl4EZMAAAAAAAAAAAX14QAAAAAAAAAAAA==';
+    const xdr = decodeURIComponent(tx.xdr)
+    const event = JSON.stringify({ type: 'decode', xdr: xdr  });
+    setTimeout(()=> {
+      this.webview.postMessage(event);
+    }, 2300)
   }
 
   onMessage = (event) => {
