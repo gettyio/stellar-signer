@@ -11,8 +11,14 @@
 <body>
   <div id="root"></div>
   <script>
+    var xdr = StellarSdk.xdr;
+    var StrKey = StellarSdk.StrKey;
+    var Operation = StellarSdk.Operation;
+    var Network = StellarSdk.Network;
 
-    var signTx = function() {
+    Network.useTestNetwork();
+
+    function signTx() {
       // 1. Decode XDR received from RN
       var transaction = new StellarSdk.Transaction(data.xdr);
 
@@ -25,17 +31,10 @@
       postMessage(signedXDR);      
     }
 
-    var decodeXdr = function(xdr) {
+    function decodeXdr(xdr) {
       var decodedXdr = StellarSdk.xdr.TransactionEnvelope.fromXDR(signedXDR, 'base64');
       postMessage(decodedXdr);  
     }
-
-    var xdr = StellarSdk.xdr;
-    var StrKey = StellarSdk.StrKey;
-    var Operation = StellarSdk.Operation;
-    var Network = StellarSdk.Network;
-
-    Network.useTestNetwork();
 
     function decodeFromXdr(input, type) {
       // TODO: Check to see if type exists
@@ -200,7 +199,6 @@
     document.addEventListener("message", function(event) {
       var data = JSON.parse(event.data);
       StellarSdk.Network.useTestNetwork();
-      console.log('1', data)
       switch (data.type) {
         case 'sign':
           signTx(data.xdr);
