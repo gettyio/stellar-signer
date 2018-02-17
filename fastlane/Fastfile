@@ -62,8 +62,8 @@ platform :ios do
     )
 
     gym(
-      scheme: "getcaremobile",
-      workspace: "./ios/StellarSigner.xcodeproj",
+      scheme: "StellarSigner",
+      workspace: "./ios/StellarSigner.xcodeproj/project.xcworkspace",
       include_bitcode: true
     )
 
