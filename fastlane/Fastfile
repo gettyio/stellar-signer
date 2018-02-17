@@ -63,7 +63,7 @@ platform :ios do
 
     gym(
       scheme: "StellarSigner",
-      workspace: "./ios/StellarSigner.xcodeproj/project.xcworkspace",
+      workspace: "./ios/StellarSigner.xcodeproj",
       include_bitcode: true
     )
 

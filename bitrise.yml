@@ -1,0 +1,86 @@
+---
+format_version: 1.2.0
+default_step_lib_source: https://github.com/bitrise-io/bitrise-steplib.git
+app:
+  envs:
+  - opts:
+      is_expand: false
+    FASTLANE_PRODUCTION: production
+  - opts:
+      is_expand: true
+    FASTLANE_PASSWORD: Gc2017ft
+  - opts:
+      is_expand: true
+    FASTLANE_XCODEBUILD_SETTINGS_TIMEOUT: '60'
+  - opts:
+      is_expand: true
+    FASTLANE_TEST: test
+  - opts:
+      is_expand: true
+    FASTLANE_UPGRADE: upgrade
+trigger_map:
+- push_branch: master
+  workflow: Production
+- push_branch: dev
+  workflow: Upgrade
+- pull_request_source_branch: "*"
+  workflow: Test
+  pull_request_target_branch: dev
+workflows:
+  Test:
+    steps:
+    - activate-ssh-key:
+        run_if: '{{getenv "SSH_RSA_PRIVATE_KEY" | ne ""}}'
+    - git-clone: {}
+    - certificate-and-profile-installer@1.8.2: {}
+    - yarn:
+        inputs:
+        - command: ''
+        - args: ''
+    - fastlane:
+        inputs:
+        - lane: "$FASTLANE_TEST"
+        - work_dir: "$FASTLANE_WORK_DIR"
+    envs:
+    - opts:
+        is_expand: true
+      "$FASTLANE_LANE": fastlane beta
+  Production:
+    steps:
+    - cache-pull: {}
+    - cache-push: {}
+    - activate-ssh-key@3.1.1:
+        run_if: '{{getenv "SSH_RSA_PRIVATE_KEY" | ne ""}}'
+    - git-clone: {}
+    - certificate-and-profile-installer: {}
+    - yarn@0.0.3:
+        inputs:
+        - command: ''
+        - args: ''
+    - fastlane:
+        inputs:
+        - lane: "$FASTLANE_PRODUCTION"
+        - work_dir: "$FASTLANE_WORK_DIR"
+    envs:
+    - opts:
+        is_expand: true
+      "$FASTLANE_LANE": fastlane beta
+  Upgrade:
+    steps:
+    - cache-pull: {}
+    - cache-push: {}
+    - activate-ssh-key@3.1.1:
+        run_if: '{{getenv "SSH_RSA_PRIVATE_KEY" | ne ""}}'
+    - git-clone: {}
+    - certificate-and-profile-installer: {}
+    - yarn@0.0.3:
+        inputs:
+        - command: ''
+        - args: ''
+    - fastlane:
+        inputs:
+        - lane: "$FASTLANE_UPGRADE"
+    envs:
+    - opts:
+        is_expand: true
+      "$FASTLANE_LANE": fastlane beta
