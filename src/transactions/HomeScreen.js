@@ -163,6 +163,7 @@ class HomeScreen extends PureComponent {
 
   renderAddTransactionModal = () => {
     const { isAddTransactionModalVisible, currentTransaction } = this.state;
+    console.log('currentTransaction',currentTransaction)
     if (currentTransaction) {
       return (
         <Modal isVisible={true}>
