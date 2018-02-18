@@ -4739,6 +4739,12 @@ tr46@^1.0.0:
   dependencies:
     punycode "^2.1.0"
 
+tree-walk@^0.4.0:
+  version "0.4.0"
+  resolved "https://registry.yarnpkg.com/tree-walk/-/tree-walk-0.4.0.tgz#eace119bdf9f3a3945275e838f9862e69c5f064b"
+  dependencies:
+    util-extend "^1.0.1"
+
 trim-right@^1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/trim-right/-/trim-right-1.0.1.tgz#cb2e1203067e0c8de1f614094b9fe45704ea6003"
@@ -4851,6 +4857,10 @@ url-parse@^1.1.7:
 util-deprecate@1.0.2, util-deprecate@~1.0.1:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/util-deprecate/-/util-deprecate-1.0.2.tgz#450d4dc9fa70de732762fbd2d4a28981419a0ccf"
+
+util-extend@^1.0.1:
+  version "1.0.3"
+  resolved "https://registry.yarnpkg.com/util-extend/-/util-extend-1.0.3.tgz#a7c216d267545169637b3b6edc6ca9119e2ff93f"
 
 util.promisify@^1.0.0:
   version "1.0.0"

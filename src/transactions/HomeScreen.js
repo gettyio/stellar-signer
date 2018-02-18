@@ -13,14 +13,17 @@ import {
 } from 'react-native';
 import qs from 'qs';
 import uuid from "uuid/v4";
+import { get } from 'lodash';
 import * as Animatable from 'react-native-animatable';
 import { Screen, Container, Header, H1, TextInput, PasteButton, PasteButtonLabel, LoadButton } from './../shared'
 import TransactionList from './TransactionList';
 import realm from './../store';
+import parseEnvelopeTree from './../utils/parseEnvelopeTree';
 
 class HomeScreen extends PureComponent {
 
   state = {
+    isAddXdrModalVisible: false,
     currentMessage: undefined,
     accountInputValue: 'GBJACKMHHDWPM2NDDRMOIBZFWXPUQ2IQBV42U5ZFV6CWMD27K3KIDO2H'
   }
@@ -87,7 +90,7 @@ class HomeScreen extends PureComponent {
   }
 
   renderTransactionList = () => {
-    const { accountInputValue, currentMessage } = this.state;
+    const { accountInputValue } = this.state;
     if (!accountInputValue) {
       return (
         <View style={{ flex: 1, marginTop: 64, justifyContent: 'flex-start', alignItems: 'center' }}>
@@ -103,15 +106,19 @@ class HomeScreen extends PureComponent {
     )
   }
 
+  toggleReceiveTransactionModal = () => {
+    this.setState({ isAddXdrModalVisible: !this.state.isAddXdrModalVisible });
+  }
+
   // Must use encodeURIComponent
   postMessage = (tx) => {
-    console.log(tx);
     //const testTx = 'AAAAAFIBKYc47PZpoxxY5Acltd9IaRANeap3Ja+FZg9fVtSBAAAAZABu6EUAAAACAAAAAAAAAAAAAAABAAAAAAAAAAEAAAAAr+SzF6CyMZracAojHWYWqhzdJZW+OiI9csaw1Nl4EZMAAAAAAAAAAAX14QAAAAAAAAAAAA==';
     const xdr = decodeURIComponent(tx.xdr)
     const event = JSON.stringify({ type: 'decode', xdr: xdr  });
+    //this.showReceiveTransactionModal();
     setTimeout(()=> {
       this.webview.postMessage(event);
-    }, 2300)
+    }, 3000)
   }
 
   onMessage = (event) => {
@@ -121,33 +128,23 @@ class HomeScreen extends PureComponent {
       if (tx.type === 'error') {
         console.log('Error: ', data);
       } else {
-        console.log(tx);
-        // realm.write(() => {
-        //   realm.create('Transaction', {
-        //     id: uuid(),
-        //     xdr: tx.xdr,
-        //     decodedXdr: tx.decodedXdr,
-        //     createdAt: new Date()
-        //   });
-        // });
+        const currentTransaction = this.parseTransactionTree(tx);
+        console.log(currentTransaction);
+        this.setState({ currentTransaction });
       }
     } else {
       console.log('Data not found!');
     }
   }
 
-  // onMessage = (event) => {
-  //   console.log('hehe', event.nativeEvent.data)
-  // }
+  parseTransactionTree = (tx)=> {
+    return parseEnvelopeTree(tx);
+  }
 
-  // postMessage = () => {
-  //   console.log('posted')
-  //   const event = JSON.stringify({ type: 'decode',  xdr: 'AAAAAFIBKYc47PZpoxxY5Acltd9IaRANeap3Ja+FZg9fVtSBAAAAZABu6EUAAAACAAAAAAAAAAAAAAABAAAAAAAAAAEAAAAAr+SzF6CyMZracAojHWYWqhzdJZW+OiI9csaw1Nl4EZMAAAAAAAAAAAX14QAAAAAAAAAAAA==' });
-  //   this.webview.postMessage(event);
-  // }
-
-  clearMessage = () => {
-    this.setState({ currentMessage: undefined });
+  saveTransaction = ({ id, xdr, source, fee, seq, time, memo, dest, asset, amount, createdAt }) => {
+    realm.write(() => {
+      realm.create('Transaction', { id, xdr, source, fee, seq, time, memo, dest, asset, amount, createdAt });
+    });
   }
 
   renderWebview = ()=> {
