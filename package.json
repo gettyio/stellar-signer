@@ -1,11 +1,12 @@
 {
   "name": "StellarSigner",
-  "version": "0.0.1",
+  "version": "2.0.1",
   "private": true,
   "scripts": {
     "start": "node node_modules/react-native/local-cli/cli.js start",
     "test": "jest",
-    "postinstall": "rm ./node_modules/react-native/local-cli/core/__fixtures__/files/package.json"
+    "postinstall": "rm ./node_modules/react-native/local-cli/core/__fixtures__/files/package.json",
+    "postversion": "react-native-version"
   },
   "dependencies": {
     "moment": "^2.20.1",
@@ -28,6 +29,7 @@
     "babel-jest": "22.2.2",
     "babel-preset-react-native": "4.0.0",
     "jest": "22.3.0",
+    "react-native-version": "^2.4.1",
     "react-test-renderer": "16.2.0"
   },
   "jest": {

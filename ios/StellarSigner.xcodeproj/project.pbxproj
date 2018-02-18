@@ -49,6 +49,7 @@
 		A901192DFE094D578406590F /* SimpleLineIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CBFD26FA28514AC797601F64 /* SimpleLineIcons.ttf */; };
 		AD0FCDE36BFE435A96FE582D /* Feather.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 7B72C4D5D6C84E17B93F8303 /* Feather.ttf */; };
 		ADBDB9381DFEBF1600ED6528 /* libRCTBlob.a in Frameworks */ = {isa = PBXBuildFile; fileRef = ADBDB9271DFEBF0700ED6528 /* libRCTBlob.a */; };
+		AEBC2570203884E9008C340F /* AppIcon.appiconset in Resources */ = {isa = PBXBuildFile; fileRef = AEBC256F203884E8008C340F /* AppIcon.appiconset */; };
 		B504DF3CD9834E52999E8621 /* MaterialIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = F34FD049ABF34C469EF7F6ED /* MaterialIcons.ttf */; };
 		BA9B0BE55F1A4F8FBD7C1366 /* FontAwesome.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 205D609D62B141F9B7104A2E /* FontAwesome.ttf */; };
 		F603F3B0B015436A88FE5596 /* libc++.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = C41020A5EF96491282AAE717 /* libc++.tbd */; };
@@ -392,6 +393,7 @@
 		94ABDB90188844319A46CF43 /* Ionicons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Ionicons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Ionicons.ttf"; sourceTree = "<group>"; };
 		A59969DCD9664377844AB721 /* libz.tbd */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libz.tbd; path = usr/lib/libz.tbd; sourceTree = SDKROOT; };
 		ADBDB91F1DFEBF0600ED6528 /* RCTBlob.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTBlob.xcodeproj; path = "../node_modules/react-native/Libraries/Blob/RCTBlob.xcodeproj"; sourceTree = "<group>"; };
+		AEBC256F203884E8008C340F /* AppIcon.appiconset */ = {isa = PBXFileReference; lastKnownFileType = folder; name = AppIcon.appiconset; path = ../resources/rocket_1f680/ios/AppIcon.appiconset; sourceTree = "<group>"; };
 		BB0AB0AC1147475FB93E93FD /* Zocial.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Zocial.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Zocial.ttf"; sourceTree = "<group>"; };
 		C41020A5EF96491282AAE717 /* libc++.tbd */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = "libc++.tbd"; path = "usr/lib/libc++.tbd"; sourceTree = SDKROOT; };
 		CBFD26FA28514AC797601F64 /* SimpleLineIcons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = SimpleLineIcons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/SimpleLineIcons.ttf"; sourceTree = "<group>"; };
@@ -545,6 +547,7 @@
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
 				13B07FB01A68108700A75B9A /* AppDelegate.m */,
 				13B07FB51A68108700A75B9A /* Images.xcassets */,
+				AEBC256F203884E8008C340F /* AppIcon.appiconset */,
 				13B07FB61A68108700A75B9A /* Info.plist */,
 				13B07FB11A68108700A75B9A /* LaunchScreen.xib */,
 				13B07FB71A68108700A75B9A /* main.m */,
@@ -809,6 +812,10 @@
 					00E356ED1AD99517003FC87E = {
 						CreatedOnToolsVersion = 6.2;
 						TestTargetID = 13B07F861A680F5B00A75B9A;
+					};
+					13B07F861A680F5B00A75B9A = {
+						DevelopmentTeam = SGP85Y6RSS;
+						ProvisioningStyle = Manual;
 					};
 					2D02E47A1E0B4A5D006451C7 = {
 						CreatedOnToolsVersion = 8.2.1;
@@ -1203,6 +1210,7 @@
 				13B07FBD1A68108700A75B9A /* LaunchScreen.xib in Resources */,
 				A55E5FE9DC3440DD9F26BF04 /* Entypo.ttf in Resources */,
 				FB4BA9DE05F94A83BBBBB6B7 /* EvilIcons.ttf in Resources */,
+				AEBC2570203884E9008C340F /* AppIcon.appiconset in Resources */,
 				AD0FCDE36BFE435A96FE582D /* Feather.ttf in Resources */,
 				BA9B0BE55F1A4F8FBD7C1366 /* FontAwesome.ttf in Resources */,
 				7381A9395F0547019F252A08 /* Foundation.ttf in Resources */,
@@ -1391,13 +1399,17 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CURRENT_PROJECT_VERSION = 1;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
+				CODE_SIGN_STYLE = Manual;
+				CURRENT_PROJECT_VERSION = 3;
 				DEAD_CODE_STRIPPING = NO;
+				DEVELOPMENT_TEAM = SGP85Y6RSS;
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SRCROOT)/../node_modules/react-native-gesture-handler/ios/**",
 					"$(SRCROOT)/../node_modules/react-native-vector-icons/RNVectorIconsManager",
 					"$(SRCROOT)/../node_modules/realm/src/**",
+					"$(SRCROOT)/../node_modules/react-native/React/**",
 				);
 				INFOPLIST_FILE = StellarSigner/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -1406,7 +1418,10 @@
 					"-ObjC",
 					"-lc++",
 				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.gettydata.stellarsigner;
 				PRODUCT_NAME = StellarSigner;
+				PROVISIONING_PROFILE = "1dfa97d2-6b0f-4e51-b465-670382703acc";
+				PROVISIONING_PROFILE_SPECIFIER = "match AppStore com.gettydata.stellarsigner 1518827924";
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Debug;
@@ -1415,12 +1430,16 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CURRENT_PROJECT_VERSION = 1;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
+				CODE_SIGN_STYLE = Manual;
+				CURRENT_PROJECT_VERSION = 3;
+				DEVELOPMENT_TEAM = SGP85Y6RSS;
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SRCROOT)/../node_modules/react-native-gesture-handler/ios/**",
 					"$(SRCROOT)/../node_modules/react-native-vector-icons/RNVectorIconsManager",
 					"$(SRCROOT)/../node_modules/realm/src/**",
+					"$(SRCROOT)/../node_modules/react-native/React/**",
 				);
 				INFOPLIST_FILE = StellarSigner/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -1429,7 +1448,10 @@
 					"-ObjC",
 					"-lc++",
 				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.gettydata.stellarsigner;
 				PRODUCT_NAME = StellarSigner;
+				PROVISIONING_PROFILE = "1dfa97d2-6b0f-4e51-b465-670382703acc";
+				PROVISIONING_PROFILE_SPECIFIER = "match AppStore com.gettydata.stellarsigner 1518827924";
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Release;
