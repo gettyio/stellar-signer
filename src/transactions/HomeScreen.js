@@ -15,6 +15,9 @@ import qs from 'qs';
 import uuid from "uuid/v4";
 import { get } from 'lodash';
 import * as Animatable from 'react-native-animatable';
+import Modal from 'react-native-modal';
+import moment from 'moment';
+import { TabViewAnimated, TabBar, SceneMap } from 'react-native-tab-view';
 import { Screen, Container, Header, H1, TextInput, PasteButton, PasteButtonLabel, LoadButton } from './../shared'
 import TransactionList from './TransactionList';
 import realm from './../store';
@@ -98,7 +101,6 @@ class HomeScreen extends PureComponent {
         </View>
       )
     }
-
     return (
       <TransactionList 
         account={accountInputValue}
