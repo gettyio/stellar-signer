@@ -26,8 +26,8 @@ import parseEnvelopeTree from './../utils/parseEnvelopeTree';
 class HomeScreen extends PureComponent {
 
   state = {
-    isAddXdrModalVisible: false,
-    currentMessage: undefined,
+    isAddTransactionModalVisible: false,
+    currentTransaction: undefined,
     accountInputValue: 'GBJACKMHHDWPM2NDDRMOIBZFWXPUQ2IQBV42U5ZFV6CWMD27K3KIDO2H'
   }
 
@@ -109,7 +109,7 @@ class HomeScreen extends PureComponent {
   }
 
   toggleReceiveTransactionModal = () => {
-    this.setState({ isAddXdrModalVisible: !this.state.isAddXdrModalVisible });
+    this.setState({ isAddTransactionModalVisible: !this.state.isAddTransactionModalVisible });
   }
 
   // Must use encodeURIComponent
@@ -161,6 +161,20 @@ class HomeScreen extends PureComponent {
     )
   }
 
+  renderAddTransactionModal = () => {
+    const { isAddTransactionModalVisible, currentTransaction } = this.state;
+    if (currentTransaction) {
+      return (
+        <Modal isVisible={true}>
+          <View style={{ height: '60%', justifyContent: 'center', backgroundColor: 'white' , margin: 16 }}>
+            <ActivityIndicator size="large" color="#4b9ed4"></ActivityIndicator>
+            <Text style={{ color: 'gray' }}>Stellar Signer is loading...</Text>
+          </View>
+        </Modal>
+      );
+    }
+  }
+
   render() {
     const { accountInputValue } = this.state;
     return (
@@ -179,7 +193,7 @@ class HomeScreen extends PureComponent {
           {this.renderPasteButton()}
         </Container>
         {this.renderTransactionList()}
-
+        {this.renderAddTransactionModal()}
         <StatusBar barStyle="light-content" />
       </Screen>
     );
