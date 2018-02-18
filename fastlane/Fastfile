@@ -52,7 +52,7 @@ platform :ios do
   lane :production do
     match(
       readonly: true,
-      git_url: "git@bitbucket.org:gettydata/stellarauth-certs.git",
+      git_url: "git@bitbucket.org:gettydata/stellarsigner-certs.git",
       git_branch: "master",
       app_identifier: "com.gettydata.stellarsigner",
       username: "devops@getty.io",
