@@ -27,6 +27,7 @@ const TransactionSchema = {
     dest: { type: "string", optional: true },
     asset: { type: "string", optional: true },
     amount: { type: "string", optional: true },
+    status: { type: "string", optional: true },
     createdAt: "date"
   }
 };
@@ -35,5 +36,5 @@ Transaction.schema = TransactionSchema;
 
 export default new Realm({
   schema: [Transaction],
-  schemaVersion: 5
+  schemaVersion: 6
 });

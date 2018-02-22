@@ -14,21 +14,25 @@ import {
 import qs from 'qs';
 import uuid from "uuid/v4";
 import { get } from 'lodash';
-import * as Animatable from 'react-native-animatable';
-import Modal from 'react-native-modal';
+
 import moment from 'moment';
-import { TabViewAnimated, TabBar, SceneMap } from 'react-native-tab-view';
-import { Screen, Container, Header, H1, TextInput, PasteButton, PasteButtonLabel, LoadButton } from './../shared'
+import { Screen, Container, Header, H1, LoadButton, TextInput } from './../shared'
+
+import PasteButton from './../shared/PasteButton';
 import TransactionList from './TransactionList';
+import TransactionModal from './TransactionModal';
+
 import realm from './../store';
 import parseEnvelopeTree from './../utils/parseEnvelopeTree';
 
 class HomeScreen extends PureComponent {
 
   state = {
-    isAddTransactionModalVisible: false,
+    isAddTransactionModalVisible: true,
+    currentXdr: undefined,
     currentTransaction: undefined,
     accountInputValue: 'GBJACKMHHDWPM2NDDRMOIBZFWXPUQ2IQBV42U5ZFV6CWMD27K3KIDO2H'
+
   }
 
   componentDidMount() {
@@ -57,6 +61,7 @@ class HomeScreen extends PureComponent {
     if (url) {
       const tx = qs.parse(url.replace('stellar-signer://stellar-signer?',''));
       this.postMessage(tx);
+      this.setState({ currentXdr: tx.xdr })
     } else {
       alert('Invalid Transaction! Please contact the support.');
     }
@@ -64,32 +69,6 @@ class HomeScreen extends PureComponent {
 
   setAccountValue = (text)=> {
     this.setState({ accountInputValue: text })
-  }
-
-  renderPasteButton = ()=> {
-    const { accountInputValue } = this.state;
-    if (!accountInputValue || accountInputValue === "") {
-      return (
-        <Animatable.View ref="view" style={{ position: 'absolute', marginTop: 18, marginLeft: -6 }}>
-          <PasteButton onPress={this.pasteHandler} >
-            <PasteButtonLabel>Click to paste your public key or start type.</PasteButtonLabel>
-          </PasteButton>
-        </Animatable.View>
-      )
-    }
-  }
-
-  getClipboardValue = async ()=> {
-    return await Clipboard.getString();
-  }
-
-  pasteHandler = async ()=> {
-    const content = await this.getClipboardValue();
-    this.refs.view
-      .fadeOutLeft(300)
-      .then(() => this.setState({ accountInputValue: content }, ()=> {
-        Keyboard.dismiss();
-      }))
   }
 
   renderTransactionList = () => {
@@ -161,19 +140,21 @@ class HomeScreen extends PureComponent {
     )
   }
 
-  renderAddTransactionModal = () => {
-    const { isAddTransactionModalVisible, currentTransaction } = this.state;
-    console.log('currentTransaction',currentTransaction)
-    if (currentTransaction) {
-      return (
-        <Modal isVisible={true}>
-          <View style={{ height: '60%', justifyContent: 'center', backgroundColor: 'white' , margin: 16 }}>
-            <ActivityIndicator size="large" color="#4b9ed4"></ActivityIndicator>
-            <Text style={{ color: 'gray' }}>Stellar Signer is loading...</Text>
-          </View>
-        </Modal>
-      );
-    }
+  saveXDR = (event) => {
+    const { signedXdr } = this.state;
+    this.signButton.success();
+    setTimeout(()=> { this.setState({ isAddTransactionModalVisible: false, signedXdr }) }, 1000)
+  }
+
+  cancelButton = (btn)=> {
+    btn
+  }
+
+  signTransaction = () => {
+    const { secretInputValue, currentXdr } = this.state;
+    const xdr = currentXdr;
+    const data = JSON.stringify({ xdr, sk: secretInputValue });
+    this.signingView.postMessage(data);
   }
 
   render() {
@@ -191,10 +172,10 @@ class HomeScreen extends PureComponent {
             clearButtonMode={'always'} 
             value={accountInputValue}
           ></TextInput>
-          {this.renderPasteButton()}
+          <PasteButton account={accountInputValue} setAccountValue={this.setAccountValue}/>
         </Container>
-        {this.renderTransactionList()}
-        {this.renderAddTransactionModal()}
+        <TransactionList />
+        <TransactionModal isVisible={false} />
         <StatusBar barStyle="light-content" />
       </Screen>
     );
