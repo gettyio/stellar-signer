@@ -8,14 +8,12 @@ import React, { Component } from 'react';
 import {
   View
 } from 'react-native';
+import { Provider } from 'mobx-react';
 import HomeScreen from './transactions/HomeScreen'
-export default class App extends Component {
+import store from './store';
 
-  render() {
-    return (
-      <View>
-        <HomeScreen></HomeScreen>
-      </View>
-    );
-  }
-}
+export default App = () => (
+  <Provider appStore={store}>
+    <HomeScreen></HomeScreen>
+  </Provider>
+)

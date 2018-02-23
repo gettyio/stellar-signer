@@ -1,4 +1,4 @@
-import React, { PureComponent } from 'react';
+import React, { Component } from 'react';
 import {
   Platform,
   StyleSheet,
@@ -14,25 +14,27 @@ import {
 import qs from 'qs';
 import uuid from "uuid/v4";
 import { get } from 'lodash';
-
+import { observer, inject } from "mobx-react";
+import Icon from 'react-native-vector-icons/FontAwesome';
 import moment from 'moment';
+
 import { Screen, Container, Header, H1, LoadButton, TextInput } from './../shared'
+
 
 import PasteButton from './../shared/PasteButton';
 import TransactionList from './TransactionList';
-import TransactionModal from './TransactionModal';
+import Modal from './Modal';
 
-import realm from './../store';
+import realm from './../store/realm';
 import parseEnvelopeTree from './../utils/parseEnvelopeTree';
 
-class HomeScreen extends PureComponent {
-
+@inject("appStore") @observer
+class HomeScreen extends Component {
+  
   state = {
-    isAddTransactionModalVisible: true,
     currentXdr: undefined,
     currentTransaction: undefined,
     accountInputValue: 'GBJACKMHHDWPM2NDDRMOIBZFWXPUQ2IQBV42U5ZFV6CWMD27K3KIDO2H'
-
   }
 
   componentDidMount() {
@@ -87,8 +89,9 @@ class HomeScreen extends PureComponent {
     )
   }
 
-  toggleReceiveTransactionModal = () => {
-    this.setState({ isAddTransactionModalVisible: !this.state.isAddTransactionModalVisible });
+  toggleModal = () => {
+    const { appStore } = this.props;
+    appStore.set('isModalVisible', !appStore.get('isModalVisible'));
   }
 
   // Must use encodeURIComponent
@@ -159,23 +162,29 @@ class HomeScreen extends PureComponent {
 
   render() {
     const { accountInputValue } = this.state;
+    const isModalVisible = this.props.appStore.get('isModalVisible');
+
     return (
       <Screen>
+        {this.renderWebview()}
         <Header>
-          <H1>OneSign</H1>
-          <LoadButton onPress={this.postMessage}><Text>Load</Text></LoadButton>
-          {this.renderWebview()}
+          <H1>Stellar Signer</H1>
+          <LoadButton onPress={this.toggleModal}>
+              <Icon name="plus-circle" color="white" size={32}></Icon>
+          </LoadButton>
         </Header>
         <Container>
+          {/**
           <TextInput 
             onChangeText={(text) => this.setAccountValue(text)}
             clearButtonMode={'always'} 
             value={accountInputValue}
           ></TextInput>
+          **/}
           <PasteButton account={accountInputValue} setAccountValue={this.setAccountValue}/>
+          <TransactionList />
+          <Modal isVisible={isModalVisible} type="add" />
         </Container>
-        <TransactionList />
-        <TransactionModal isVisible={false} />
         <StatusBar barStyle="light-content" />
       </Screen>
     );

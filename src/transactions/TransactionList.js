@@ -8,12 +8,13 @@ import {
   WebView,
   Keyboard,
   Clipboard,
+  Image,
   TouchableOpacity,
   ActivityIndicator,
 } from 'react-native';
 import moment from 'moment';
-import { Container, TransactionRow, AmountCard, AmountLabel, LabelsRow, CreatedAtLabel, StatusLabel, AccountInfoCard, AccountLabel } from '../shared';
-import realm from './../store';
+import { Screen, Container, EmptyScreen, TransactionRow, AmountCard, AmountLabel, LabelsRow, CreatedAtLabel, StatusLabel, AccountInfoCard, AccountLabel } from '../shared';
+import realm from './../store/realm';
 
 class TransactionList extends PureComponent {
 
@@ -31,7 +32,7 @@ class TransactionList extends PureComponent {
 
   refreshList = ()=> {
     const transactions = realm.objects('Transaction');
-    this.setState({ transactions })
+    this.setState({ transactions });
   }
 
   renderRow = ({ item })=> {
@@ -74,7 +75,14 @@ class TransactionList extends PureComponent {
 
     if (transactions.length < 1) {
       return (
-        <View><Text>No record founds!</Text></View> 
+        <EmptyScreen>
+          <Image 
+            source={require('./../shared/empty.png')} 
+            resizeMode="contain" 
+            style={{ width: 170 }}  
+          />
+          <Text style={{ fontWeight: '700', color: '#344B67' }}>No Transactions Found!</Text>
+        </EmptyScreen>         
       )
     }
 

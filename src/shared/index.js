@@ -1,7 +1,6 @@
 import styled from "styled-components";
 
 export const Screen = styled.View`
-  background-color: transparent;
 `;
 
 export const Header = styled.View`
@@ -15,7 +14,13 @@ export const Header = styled.View`
 `;
 
 export const Container = styled.View`
-  background-color: transparent;
+`;
+
+export const EmptyScreen = styled.View`
+  flex: 1;
+  align-items: center;
+  background-color: blue;
+  margin-top: 16px;
 `;
 
 export const PasteButton = styled.TouchableOpacity`
@@ -32,6 +37,31 @@ export const PasteButtonLabel = styled.Text`
   color: white;
 `;
 
+export const AddTransactionFormErrorLabel = styled.Text`
+  font-size: 12px;
+  color: red; 
+  padding-left: 16px;
+  margin-top: -24px;
+`;
+
+
+export const AddTransactionHeaderLabel = styled.Text`
+  font-size: 16px;
+  font-weight: 700;
+  color: white; 
+  padding-bottom: 16px;
+`;
+
+export const AddTransactionInput = styled.TextInput`
+  height: 40%;
+  width: 100%;
+  color: #344B67;
+  padding: 16px;
+  align-content: flex-start;
+  background-color: white;
+  border-radius: 16px;
+`;
+
 export const LoadButton = styled.TouchableOpacity`
   position: absolute;
   padding-top: 8px;
@@ -40,19 +70,17 @@ export const LoadButton = styled.TouchableOpacity`
   height: 24px;
   width: 40px;
   border-radius: 10px;
-  background-color: transparent;
 `;
 
 export const H1 = styled.Text`
-    color: white;
-    font-weight: 700;
-    padding-left: 16; 
-    font-size: 28;
+  color: white;
+  font-weight: 700;
+  padding-left: 16; 
+  font-size: 28;
 `;
 
 export const TransactionRow = styled.View`
   padding: 8px;
-  background-color: transparent;
   border-bottom-width: 0.3px;
   border-color: #cecece;  
 `;
@@ -125,10 +153,10 @@ export const TransactionInfo = styled.Text`
 `;
 
 export const CloseButton = styled.TouchableOpacity`
-  position: absolute;
-  margin-top: 24px;
-  top: 0;
-  right: 0;
+  padding-right: 4px;
+  margin-bottom: -24px;
+  align-self: flex-end;
+  z-index: 1;
 `;
 
 export const AuthorizeButton = styled.TouchableOpacity`
