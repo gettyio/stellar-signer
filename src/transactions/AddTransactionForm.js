@@ -9,6 +9,7 @@ import Button from 'react-native-micro-animated-button';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { observer, inject } from "mobx-react";
 import { Container, CloseButton, AddTransactionInput, AddTransactionHeaderLabel, AddTransactionFormErrorLabel } from './../shared'
+import realm from './../store/realm';
 
 @inject("appStore") @observer
 class AddTransactionForm extends Component {
@@ -26,15 +27,22 @@ class AddTransactionForm extends Component {
     appStore.set('isModalVisible', !appStore.get('isModalVisible'));
   }
 
+  handleXdrInput = (text) => {
+    console.log('text',text)
+    const { appStore } = this.props;
+    appStore.set('currentXdr', text);    
+  }
+
   render() {
-    const { isVisible, toggleModal, type, children } = this.props;
+    const { appStore, isVisible, toggleModal, type, children } = this.props;
+    const currentXdr = appStore.get('currentXdr');
     return (
       <Container> 
         <CloseButton onPress={this.toggleModal}>
           <Icon name="times-circle" color="white" size={32}></Icon>
         </CloseButton>
         <AddTransactionHeaderLabel>Add Transaction Envelope</AddTransactionHeaderLabel>
-        <AddTransactionInput placeholder="Past your XDR here!" />
+        <AddTransactionInput placeholder="Past your XDR here!" value={currentXdr} onChangeText={this.handleXdrInput}  />
         { /** <AddTransactionFormErrorLabel>Invalid XDR!</AddTransactionFormErrorLabel> **/ }
         <View style={{ alignSelf: 'center', paddingTop: 16 }}>
           <Button 
