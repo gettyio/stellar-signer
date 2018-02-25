@@ -14,7 +14,7 @@ import {
 } from 'react-native';
 import moment from 'moment';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import { Screen, Container, EmptyScreen, ErrorCard, ErrorCardContent, ErrorMessageLabel, ErrorInputValueLabel, TransactionRow, AmountCard, AmountLabel, LabelsRow, CreatedAtLabel, StatusLabel, AccountInfoCard, AccountLabel } from '../shared';
+import { Screen, Container, EmptyScreen, CardWrapper, CardContent, ErrorMessageLabel, ErrorInputValueLabel, TransactionRow, AmountCard, AmountLabel, LabelsRow, CreatedAtLabel, StatusLabel, AccountInfoCard, AccountLabel } from '../shared';
 import realm from './../store/realm';
 
 class TransactionList extends PureComponent {
@@ -40,17 +40,18 @@ class TransactionList extends PureComponent {
     if (item.type === 'error') {
       return (
       <TransactionRow>
-        <ErrorCard>
+        <CardWrapper>
           <Icon name="times-circle" color="red" size={32}></Icon>
-          <ErrorCardContent>
+          <CardContent>
             <ErrorMessageLabel>{`${item.message}`}</ErrorMessageLabel>
             <ErrorInputValueLabel>{`XDR: ${item.xdr}`}</ErrorInputValueLabel>
             <LabelsRow>
               <StatusLabel status={item.status}>{item.status}</StatusLabel>
               <CreatedAtLabel>{moment(item.createdAt, "YYYYMMDD hh:mm:ss").fromNow()}</CreatedAtLabel>
-            </LabelsRow>         
-          </ErrorCardContent>
-        </ErrorCard>
+            </LabelsRow>   
+                  
+          </CardContent>
+        </CardWrapper>
       </TransactionRow>
       )
     }
@@ -58,16 +59,21 @@ class TransactionList extends PureComponent {
     return (
       <TouchableOpacity key={item.id} onPress={() => {}}>
         <TransactionRow>
-          <AmountCard>
-            <AmountLabel>{`${item.amount} XLM`}</AmountLabel>
-          </AmountCard>
-          <LabelsRow>
-            <StatusLabel status={item.status}>{item.status}</StatusLabel>
-            <CreatedAtLabel>{moment(item.createdAt, "YYYYMMDD hh:mm:ss").fromNow()}</CreatedAtLabel>
-          </LabelsRow>
-          <AccountInfoCard>
-            <AccountLabel>{`${item.memo}`}</AccountLabel>
-          </AccountInfoCard>          
+          <CardWrapper>
+            <Icon name="check-circle" color="#3ED235" size={32}></Icon>
+            <CardContent>
+              <AmountCard>
+                <AmountLabel>{`${item.amount} XLM`}</AmountLabel>
+              </AmountCard>
+              <LabelsRow>
+                <AccountLabel>{`${item.memo}`}</AccountLabel>
+              </LabelsRow>   
+              <LabelsRow>
+                <StatusLabel status={item.status}>{item.status}</StatusLabel>
+                <CreatedAtLabel>{moment(item.createdAt, "YYYYMMDD hh:mm:ss").fromNow()}</CreatedAtLabel>
+              </LabelsRow>                         
+            </CardContent>
+          </CardWrapper>
         </TransactionRow>
       </TouchableOpacity>
     )

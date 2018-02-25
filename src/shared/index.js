@@ -1,6 +1,7 @@
 import styled from "styled-components";
 
 export const Screen = styled.View`
+  display: flex;
 `;
 
 export const Header = styled.View`
@@ -14,10 +15,10 @@ export const Header = styled.View`
 `;
 
 export const Container = styled.View`
+  height: 100%;
 `;
 
 export const EmptyScreen = styled.View`
-  flex: 1;
   align-items: center;
   background-color: blue;
   margin-top: 16px;
@@ -93,7 +94,6 @@ export const AmountCard = styled.View`
   bottom: 0;
   margin-bottom: 8px;
   width: auto;
-  padding: 8px;
   align-self: flex-end;
 `;
 
@@ -121,7 +121,7 @@ export const AccountLabel = styled.Text`
 export const AmountLabel = styled.Text`
   font-size: 24px;
   font-weight: 700;
-  color: #56c038;
+  color: #3ED235;
 `;
 
 export const LabelsRow = styled.View`
@@ -185,15 +185,14 @@ export const TextInput = styled.TextInput`
   color: #a0a0a0;
 `;
 
-export const ErrorCard = styled.View`
+export const CardWrapper = styled.View`
   padding: 8px;
   flex-direction: row;
   align-items: center;
 `;
 
-export const ErrorCardContent = styled.View`
+export const CardContent = styled.View`
   flex: 1;
-  background-color: pink;
   margin-left: 16px;
 `;
 
