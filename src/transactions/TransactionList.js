@@ -13,7 +13,8 @@ import {
   ActivityIndicator,
 } from 'react-native';
 import moment from 'moment';
-import { Screen, Container, EmptyScreen, TransactionRow, AmountCard, AmountLabel, LabelsRow, CreatedAtLabel, StatusLabel, AccountInfoCard, AccountLabel } from '../shared';
+import Icon from 'react-native-vector-icons/FontAwesome';
+import { Screen, Container, EmptyScreen, ErrorCard, ErrorCardContent, ErrorMessageLabel, ErrorInputValueLabel, TransactionRow, AmountCard, AmountLabel, LabelsRow, CreatedAtLabel, StatusLabel, AccountInfoCard, AccountLabel } from '../shared';
 import realm from './../store/realm';
 
 class TransactionList extends PureComponent {
@@ -31,11 +32,26 @@ class TransactionList extends PureComponent {
   }
 
   refreshList = ()=> {
-    const transactions = realm.objects('Transaction');
+    const transactions = realm.objects('Transaction').sorted('createdAt', true);;
     this.setState({ transactions });
   }
 
   renderRow = ({ item })=> {
+    if (item.type === 'error') {
+      return (
+      <TransactionRow>
+        <ErrorCard>
+          <Icon name="times-circle" color="red" size={32}></Icon>
+          <ErrorCardContent>
+            <ErrorMessageLabel>{`Error: ${item.message}`}</ErrorMessageLabel>
+            <ErrorInputValueLabel>{`Input: ${item.xdr}`}</ErrorInputValueLabel>
+            <CreatedAtLabel>{moment(item.createdAt, "YYYYMMDD hh:mm:ss").fromNow()}</CreatedAtLabel>
+          </ErrorCardContent>
+        </ErrorCard>
+      </TransactionRow>
+      )
+    }
+    
     return (
       <TouchableOpacity key={item.id} onPress={() => {}}>
         <TransactionRow>

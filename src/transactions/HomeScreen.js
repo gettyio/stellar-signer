@@ -26,6 +26,11 @@ import TransactionList from './TransactionList';
 import Modal from './Modal';
 
 import realm from './../store/realm';
+
+// realm.write(() => {
+//   realm.deleteAll();
+// });
+
 import parseEnvelopeTree from './../utils/parseEnvelopeTree';
 
 @inject("appStore") @observer
@@ -51,6 +56,18 @@ class HomeScreen extends Component {
           this.handleAppLinkURL(new String(url));
         }
       });
+    }
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    this.handleCurrentTx();
+  }
+
+  handleCurrentTx = () => {
+    const { appStore } = this.props;
+    const currentXdr = appStore.get('currentXdr');
+    if (currentXdr) {
+      this.decodeXdr(currentXdr);
     }
   }
     
@@ -94,6 +111,14 @@ class HomeScreen extends Component {
     appStore.set('isModalVisible', !appStore.get('isModalVisible'));
   }
 
+  decodeXdr = (xdr) => {
+    //const testTx = 'AAAAAFIBKYc47PZpoxxY5Acltd9IaRANeap3Ja+FZg9fVtSBAAAAZABu6EUAAAACAAAAAAAAAAAAAAABAAAAAAAAAAEAAAAAr+SzF6CyMZracAojHWYWqhzdJZW+OiI9csaw1Nl4EZMAAAAAAAAAAAX14QAAAAAAAAAAAA==';
+    const event = JSON.stringify({ type: 'decode', xdr: xdr  });
+    setTimeout(()=> {
+      this.webview.postMessage(event);
+    }, 3000)
+  }
+
   // Must use encodeURIComponent
   postMessage = (tx) => {
     //const testTx = 'AAAAAFIBKYc47PZpoxxY5Acltd9IaRANeap3Ja+FZg9fVtSBAAAAZABu6EUAAAACAAAAAAAAAAAAAAABAAAAAAAAAAEAAAAAr+SzF6CyMZracAojHWYWqhzdJZW+OiI9csaw1Nl4EZMAAAAAAAAAAAX14QAAAAAAAAAAAA==';
@@ -108,27 +133,25 @@ class HomeScreen extends Component {
   onMessage = (event) => {
     const data = event.nativeEvent.data;
     if (data) {
-      const tx = JSON.parse(data);
-      if (tx.type === 'error') {
+      const res = JSON.parse(data);
+      if (res.type === 'error') {
         console.log('Error: ', data);
+        this.saveTransaction({ xdr: res.xdr, createdAt: new Date(), type: 'error', message: res.message });
       } else {
-        const currentTransaction = this.parseTransactionTree(tx);
-        console.log(currentTransaction);
-        this.setState({ currentTransaction });
+        const tx = parseEnvelopeTree(res.tx);
+        this.saveTransaction({ ...tx, xdr: res.xdr, createdAt: new Date() });
       }
     } else {
       console.log('Data not found!');
     }
   }
 
-  parseTransactionTree = (tx)=> {
-    return parseEnvelopeTree(tx);
-  }
-
-  saveTransaction = ({ id, xdr, source, fee, seq, time, memo, dest, asset, amount, createdAt }) => {
+  saveTransaction = (tx) => {
+    const { appStore } = this.props;
     realm.write(() => {
-      realm.create('Transaction', { id, xdr, source, fee, seq, time, memo, dest, asset, amount, createdAt });
+      realm.create('Transaction', { id: uuid(), ...tx });
     });
+    appStore.set('currentXdr', undefined);
   }
 
   renderWebview = ()=> {
@@ -147,10 +170,6 @@ class HomeScreen extends Component {
     const { signedXdr } = this.state;
     this.signButton.success();
     setTimeout(()=> { this.setState({ isAddTransactionModalVisible: false, signedXdr }) }, 1000)
-  }
-
-  cancelButton = (btn)=> {
-    btn
   }
 
   signTransaction = () => {

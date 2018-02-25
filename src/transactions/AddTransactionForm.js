@@ -14,8 +14,14 @@ import realm from './../store/realm';
 @inject("appStore") @observer
 class AddTransactionForm extends Component {
 
+  state = {
+    inputValue: undefined
+  }
+
   onPressHandler = () => {
     const { appStore } = this.props;
+    const  { inputValue } = this.state;
+    this.submitXdr(inputValue);
     this.addButton.success();
     setTimeout(()=> {
       appStore.set('isModalVisible', false)
@@ -27,22 +33,23 @@ class AddTransactionForm extends Component {
     appStore.set('isModalVisible', !appStore.get('isModalVisible'));
   }
 
-  handleXdrInput = (text) => {
-    console.log('text',text)
+  submitXdr = (xdr) => {
     const { appStore } = this.props;
-    appStore.set('currentXdr', text);    
+    appStore.set('currentXdr', xdr);    
   }
 
   render() {
     const { appStore, isVisible, toggleModal, type, children } = this.props;
+    const { inputValue } = this.state;
     const currentXdr = appStore.get('currentXdr');
+
     return (
       <Container> 
         <CloseButton onPress={this.toggleModal}>
           <Icon name="times-circle" color="white" size={32}></Icon>
         </CloseButton>
         <AddTransactionHeaderLabel>Add Transaction Envelope</AddTransactionHeaderLabel>
-        <AddTransactionInput placeholder="Past your XDR here!" value={currentXdr} onChangeText={this.handleXdrInput}  />
+        <AddTransactionInput placeholder="Past your XDR here!" value={inputValue} onChangeText={(inputValue)=> { this.setState({ inputValue })}}  />
         { /** <AddTransactionFormErrorLabel>Invalid XDR!</AddTransactionFormErrorLabel> **/ }
         <View style={{ alignSelf: 'center', paddingTop: 16 }}>
           <Button 

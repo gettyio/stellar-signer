@@ -185,3 +185,19 @@ export const TextInput = styled.TextInput`
   color: #a0a0a0;
 `;
 
+export const ErrorCard = styled.View`
+  padding: 16px;
+  flex-direction: row;
+  align-items: center;
+`;
+
+export const ErrorCardContent = styled.View`
+  padding: 16px;
+`;
+
+export const ErrorMessageLabel = styled.Text`
+  color: #333
+`;
+
+export const ErrorInputValueLabel = styled.Text`
+`;

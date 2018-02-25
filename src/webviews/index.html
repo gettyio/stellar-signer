@@ -42,13 +42,13 @@
       try {
         xdrObject = xdr[type].fromXDR(input, 'base64');
       } catch(error) {
-        postMessage(JSON.stringify({ type: 'error', message: 'Input XDR could not be parsed' }));
+        postMessage(JSON.stringify({ type: 'error', message: 'Input XDR could not be parsed', xdr: input }));
         throw new Error('Input XDR could not be parsed');
       }
 
       let tree = [{}];
       buildTreeFromObject(xdrObject, tree[0], type);
-      postMessage(JSON.stringify(tree))
+      postMessage(JSON.stringify({ tx: tree, xdr: input }));
       return tree;
     }
 
