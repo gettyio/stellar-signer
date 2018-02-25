@@ -7,6 +7,6 @@ const Container = styled.View`
 `
 export default ({ tx }) => (
   <Container>
-    <EnvelopCard tx={tx}></EnvelopCard>
+    <EnvelopCard tx={tx} />
   </Container>
 )

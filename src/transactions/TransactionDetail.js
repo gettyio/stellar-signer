@@ -1,16 +1,18 @@
 
 import React, { Component } from 'react';
 import {
-  View
+  View,
+  Text
 } from 'react-native';
 import { TabViewAnimated, TabBar, SceneMap } from 'react-native-tab-view';
 import Button from 'react-native-micro-animated-button';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import DisplayTab from './DisplayTab'
+import ErrorMessage from './ErrorMessage';
 import EnvelopTab from './EnvelopTab'
 import EnvelopeCard from './../shared/EnvelopeCard';
 
-class TransactionModal extends Component {
+class TransactionDetail extends Component {
 
   state = {
     tabView: {
@@ -107,39 +109,43 @@ class TransactionModal extends Component {
     const { currentXdr, signedXdr } = this.state;
 		switch (route.key) {
 			case 'display':
-				return (<DisplayTab tx={tx}></DisplayTab>);
+				return (<DisplayTab tx={tx} />);
 			case 'envelop':
         return (<EnvelopTab xdr={currentXdr} />);
       case 'signed':   
-        return (<EnvelopTab xdr={signedXdr}></EnvelopTab>);     
+        return (<EnvelopTab xdr={signedXdr} />);     
 			default:
 				return null;
 		}
   }
     
   render() {
-    const { isVisible, tx } = this.props;
+    const { tx } = this.props;
+    
+    if (tx.type === 'error') {
+      return (
+        <ErrorMessage tx={tx} />
+      )
+    }
+
     if (tx) {
       return (
-        <Modal isVisible={isVisible}>
-          <View style={{ height: '80%', justifyContent: 'center', backgroundColor: 'white' , margin: 8 }}>
-            {/**<ActivityIndicator size="large" color="#4b9ed4"></ActivityIndicator> **/}
-              <TabViewAnimated
-                navigationState={this.state.tabView}
-                renderScene={({ route })=> this.renderTab(route, tx)}
-                renderHeader={this.renderTabHeader}
-                onIndexChange={this.handleTabIndexChange}
-              />
-              {this.renderActionBar()}
-              />
-          </View>
-        </Modal>
+        <View style={{ height: '80%', justifyContent: 'center', backgroundColor: 'white' , margin: 8 }}>
+          {/**<ActivityIndicator size="large" color="#4b9ed4"></ActivityIndicator> **/}
+            <TabViewAnimated
+              navigationState={this.state.tabView}
+              renderScene={({ route })=> this.renderTab(route, tx)}
+              renderHeader={this.renderTabHeader}
+              onIndexChange={this.handleTabIndexChange}
+            />
+            {this.renderActionBar()}
+        </View>
       );
     }
 
-    return <View></View>;
+    return <View></View>
     
   }
 }
 
-export default TransactionModal;
+export default TransactionDetail;

@@ -17,13 +17,14 @@ import { get } from 'lodash';
 import { observer, inject } from "mobx-react";
 import Icon from 'react-native-vector-icons/FontAwesome';
 import moment from 'moment';
-
-import { Screen, Container, Header, H1, LoadButton, TextInput } from './../shared'
-
+import Modal from 'react-native-modal';
+import AddTransactionForm from './AddTransactionForm';
+import TransactionDetail from './TransactionDetail';
+import { Screen, Container, Header, Title, LoadButton, TextInput } from './../shared'
 
 import PasteButton from './../shared/PasteButton';
 import TransactionList from './TransactionList';
-import Modal from './Modal';
+
 
 import realm from './../store/realm';
 
@@ -106,9 +107,14 @@ class HomeScreen extends Component {
     )
   }
 
-  toggleModal = () => {
+  toggleDetailModal = () => {
     const { appStore } = this.props;
-    appStore.set('isModalVisible', !appStore.get('isModalVisible'));
+    appStore.set('isDetailModalVisible', !appStore.get('isDetailModalVisible'));
+  }
+
+  toggleAddModal = () => {
+    const { appStore } = this.props;
+    appStore.set('isAddModalVisible', !appStore.get('isAddModalVisible'));
   }
 
   decodeXdr = (xdr) => {
@@ -116,7 +122,7 @@ class HomeScreen extends Component {
     const event = JSON.stringify({ type: 'decode', xdr: xdr  });
     setTimeout(()=> {
       this.webview.postMessage(event);
-    }, 3000)
+    }, 1000)
   }
 
   // Must use encodeURIComponent
@@ -127,7 +133,7 @@ class HomeScreen extends Component {
     //this.showReceiveTransactionModal();
     setTimeout(()=> {
       this.webview.postMessage(event);
-    }, 3000)
+    }, 1000)
   }
 
   onMessage = (event) => {
@@ -166,12 +172,6 @@ class HomeScreen extends Component {
     )
   }
 
-  saveXDR = (event) => {
-    const { signedXdr } = this.state;
-    this.signButton.success();
-    setTimeout(()=> { this.setState({ isAddTransactionModalVisible: false, signedXdr }) }, 1000)
-  }
-
   signTransaction = () => {
     const { secretInputValue, currentXdr } = this.state;
     const xdr = currentXdr;
@@ -181,20 +181,31 @@ class HomeScreen extends Component {
 
   render() {
     const { accountInputValue } = this.state;
-    const isModalVisible = this.props.appStore.get('isModalVisible');
+    const { appStore } = this.props;
+    const isAddModalVisible = appStore.get('isAddModalVisible');
+    const isDetailModalVisible = appStore.get('isDetailModalVisible');
+    const currentTransaction = appStore.get('currentTransaction');
 
     return (
       <Screen>
         {this.renderWebview()}
         <Header>
-          <H1>Stellar Signer</H1>
-          <LoadButton onPress={this.toggleModal}>
+          <Title>Stellar Signer</Title>
+          <LoadButton onPress={this.toggleAddModal}>
               <Icon name="plus-circle" color="white" size={32}></Icon>
           </LoadButton>
         </Header>
         <Container height="100%">
           <TransactionList />
-          <Modal isVisible={isModalVisible} type="add" />
+          
+          <Modal isVisible={isAddModalVisible}>
+            <AddTransactionForm />
+          </Modal>
+
+          <Modal isVisible={isDetailModalVisible}>
+            <TransactionDetail tx={currentTransaction} />
+          </Modal>
+
         </Container>
         <StatusBar barStyle="light-content" />
       </Screen>

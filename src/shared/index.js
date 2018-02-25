@@ -26,7 +26,6 @@ const EnvelopInfo = styled.View`
 
 export const EmptyScreen = styled.View`
   align-items: center;
-  background-color: blue;
   margin-top: 16px;
 `;
 
@@ -79,7 +78,7 @@ export const LoadButton = styled.TouchableOpacity`
   border-radius: 10px;
 `;
 
-export const H1 = styled.Text`
+export const Title = styled.Text`
   color: white;
   font-weight: 700;
   padding-left: 16; 
@@ -192,7 +191,7 @@ export const TextInput = styled.TextInput`
 `;
 
 export const CardWrapper = styled.View`
-  padding: 8px;
+  padding: ${props => props.pad ? props.pad : '0px'};
   flex-direction: row;
   align-items: center;
 `;

@@ -24,13 +24,13 @@ class AddTransactionForm extends Component {
     this.submitXdr(inputValue);
     this.addButton.success();
     setTimeout(()=> {
-      appStore.set('isModalVisible', false)
+      appStore.set('isAddModalVisible', false)
     }, 1000)
   }
 
   toggleModal = () => {
     const { appStore } = this.props;
-    appStore.set('isModalVisible', !appStore.get('isModalVisible'));
+    appStore.set('isAddModalVisible', !appStore.get('isAddModalVisible'));
   }
 
   submitXdr = (xdr) => {

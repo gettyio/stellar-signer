@@ -1,4 +1,4 @@
-import React, { PureComponent } from 'react';
+import React, { Component } from 'react';
 import {
   Platform,
   StyleSheet,
@@ -14,11 +14,13 @@ import {
 } from 'react-native';
 import moment from 'moment';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import { observer, inject } from "mobx-react";
 import { Container, EmptyScreen } from '../shared';
 import realm from './../store/realm';
 import TransactionRow from './TransactionRow';
 
-class TransactionList extends PureComponent {
+@inject("appStore") @observer
+class TransactionList extends Component {
 
   state = {
     transactions: [],
@@ -33,13 +35,14 @@ class TransactionList extends PureComponent {
   }
 
   refreshList = ()=> {
-    const transactions = realm.objects('Transaction').sorted('createdAt', true);;
+    const transactions = realm.objects('Transaction').sorted('createdAt', true);
     this.setState({ transactions });
   }
 
   renderRow = ({ item })=> {
+    const { appStore } = this.props;
     return (
-      <TransactionRow item={item} />
+      <TransactionRow item={item} appStore={appStore}/>
     );
   }
 
