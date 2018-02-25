@@ -192,16 +192,7 @@ class HomeScreen extends Component {
               <Icon name="plus-circle" color="white" size={32}></Icon>
           </LoadButton>
         </Header>
-        <Container>
-          {/**
-          <TextInput 
-            onChangeText={(text) => this.setAccountValue(text)}
-            clearButtonMode={'always'} 
-            value={accountInputValue}
-          ></TextInput>
-           <PasteButton account={accountInputValue} setAccountValue={this.setAccountValue}/>
-
-          **/}
+        <Container height="100%">
           <TransactionList />
           <Modal isVisible={isModalVisible} type="add" />
         </Container>
@@ -210,5 +201,14 @@ class HomeScreen extends Component {
     );
   }
 }
+{/**
+  Paste Button
+<TextInput 
+  onChangeText={(text) => this.setAccountValue(text)}
+  clearButtonMode={'always'} 
+  value={accountInputValue}
+></TextInput>
+  <PasteButton account={accountInputValue} setAccountValue={this.setAccountValue}/>
 
+**/}
 export default HomeScreen;

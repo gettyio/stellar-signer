@@ -15,8 +15,14 @@ export const Header = styled.View`
 `;
 
 export const Container = styled.View`
-  height: 100%;
+  height: ${props => props.height ? props.height : 'auto' };
 `;
+
+const EnvelopInfo = styled.View`
+  flex: 1;
+  align-items: ${props => props.align ? props.align : 'flex-start'};
+  justify-content: ${props => props.justify ? props.justify : 'flex-start'};
+`
 
 export const EmptyScreen = styled.View`
   align-items: center;

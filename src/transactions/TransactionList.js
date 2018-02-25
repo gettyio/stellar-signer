@@ -76,13 +76,11 @@ class TransactionList extends PureComponent {
     }
 
     return (
-      <Container>
-        <FlatList
-          data={transactions}
-          renderItem={this.renderRow}
-          keyExtractor={(item, index) => `${item.id}`}
-        />
-      </Container>
+      <FlatList
+        data={transactions}
+        renderItem={this.renderRow}
+        keyExtractor={(item, index) => `${item.id}`}
+      />
     );
   }
 }
