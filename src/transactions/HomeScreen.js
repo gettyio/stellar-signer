@@ -199,8 +199,9 @@ class HomeScreen extends Component {
             clearButtonMode={'always'} 
             value={accountInputValue}
           ></TextInput>
+           <PasteButton account={accountInputValue} setAccountValue={this.setAccountValue}/>
+
           **/}
-          <PasteButton account={accountInputValue} setAccountValue={this.setAccountValue}/>
           <TransactionList />
           <Modal isVisible={isModalVisible} type="add" />
         </Container>
