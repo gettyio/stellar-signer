@@ -108,7 +108,7 @@ export const StatusLabel = styled.Text`
   margin-top: 2px;
   margin-left: 8px;
   font-size: 12px;
-  color: white;
+  color: #a9a8aa;
   padding: 3px;
 `;
 
@@ -186,18 +186,22 @@ export const TextInput = styled.TextInput`
 `;
 
 export const ErrorCard = styled.View`
-  padding: 16px;
+  padding: 8px;
   flex-direction: row;
   align-items: center;
 `;
 
 export const ErrorCardContent = styled.View`
-  padding: 16px;
+  flex: 1;
+  background-color: pink;
+  margin-left: 16px;
 `;
 
 export const ErrorMessageLabel = styled.Text`
-  color: #333
+  color: #333;
+  font-weight: 700;
 `;
 
 export const ErrorInputValueLabel = styled.Text`
+  padding-top: 4px;
 `;

@@ -136,10 +136,10 @@ class HomeScreen extends Component {
       const res = JSON.parse(data);
       if (res.type === 'error') {
         console.log('Error: ', data);
-        this.saveTransaction({ xdr: res.xdr, createdAt: new Date(), type: 'error', message: res.message });
+        this.saveTransaction({ xdr: res.xdr, createdAt: new Date(), type: 'error', message: res.message, status: 'ERROR' });
       } else {
         const tx = parseEnvelopeTree(res.tx);
-        this.saveTransaction({ ...tx, xdr: res.xdr, createdAt: new Date() });
+        this.saveTransaction({ ...tx, xdr: res.xdr, createdAt: new Date(), status: 'CREATED' });
       }
     } else {
       console.log('Data not found!');

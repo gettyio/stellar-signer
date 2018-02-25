@@ -43,9 +43,12 @@ class TransactionList extends PureComponent {
         <ErrorCard>
           <Icon name="times-circle" color="red" size={32}></Icon>
           <ErrorCardContent>
-            <ErrorMessageLabel>{`Error: ${item.message}`}</ErrorMessageLabel>
-            <ErrorInputValueLabel>{`Input: ${item.xdr}`}</ErrorInputValueLabel>
-            <CreatedAtLabel>{moment(item.createdAt, "YYYYMMDD hh:mm:ss").fromNow()}</CreatedAtLabel>
+            <ErrorMessageLabel>{`${item.message}`}</ErrorMessageLabel>
+            <ErrorInputValueLabel>{`XDR: ${item.xdr}`}</ErrorInputValueLabel>
+            <LabelsRow>
+              <StatusLabel status={item.status}>{item.status}</StatusLabel>
+              <CreatedAtLabel>{moment(item.createdAt, "YYYYMMDD hh:mm:ss").fromNow()}</CreatedAtLabel>
+            </LabelsRow>         
           </ErrorCardContent>
         </ErrorCard>
       </TransactionRow>
@@ -56,14 +59,14 @@ class TransactionList extends PureComponent {
       <TouchableOpacity key={item.id} onPress={() => {}}>
         <TransactionRow>
           <AmountCard>
-            <AmountLabel>{`${11111} XLM`}</AmountLabel>
+            <AmountLabel>{`${item.amount} XLM`}</AmountLabel>
           </AmountCard>
           <LabelsRow>
+            <StatusLabel status={item.status}>{item.status}</StatusLabel>
             <CreatedAtLabel>{moment(item.createdAt, "YYYYMMDD hh:mm:ss").fromNow()}</CreatedAtLabel>
-            <StatusLabel status={'CREATED'}>{'CREATED'}</StatusLabel>
           </LabelsRow>
           <AccountInfoCard>
-            <AccountLabel>{`Hello`}</AccountLabel>
+            <AccountLabel>{`${item.memo}`}</AccountLabel>
           </AccountInfoCard>          
         </TransactionRow>
       </TouchableOpacity>
