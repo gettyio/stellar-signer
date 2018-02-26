@@ -18,9 +18,10 @@ import { observer, inject } from "mobx-react";
 import Icon from 'react-native-vector-icons/FontAwesome';
 import moment from 'moment';
 import Modal from 'react-native-modal';
+import Button from 'react-native-micro-animated-button';
 import AddTransactionForm from './AddTransactionForm';
 import TransactionDetail from './TransactionDetail';
-import { Screen, Container, Header, Title, LoadButton, TextInput } from './../shared'
+import { Screen, Container, Header, Title, LoadButton, TextInput, CloseButton } from './../shared'
 
 import PasteButton from './../shared/PasteButton';
 import TransactionList from './TransactionList';
@@ -39,8 +40,7 @@ class HomeScreen extends Component {
   
   state = {
     currentXdr: undefined,
-    currentTransaction: undefined,
-    accountInputValue: 'GBJACKMHHDWPM2NDDRMOIBZFWXPUQ2IQBV42U5ZFV6CWMD27K3KIDO2H'
+    currentTransaction: undefined
   }
 
   componentDidMount() {
@@ -87,26 +87,6 @@ class HomeScreen extends Component {
     }
   }
 
-  setAccountValue = (text)=> {
-    this.setState({ accountInputValue: text })
-  }
-
-  renderTransactionList = () => {
-    const { accountInputValue } = this.state;
-    if (!accountInputValue) {
-      return (
-        <View style={{ flex: 1, marginTop: 64, justifyContent: 'flex-start', alignItems: 'center' }}>
-          <Text style={{ color: '#454545' }}>Add an account to start.</Text>
-        </View>
-      )
-    }
-    return (
-      <TransactionList 
-        account={accountInputValue}
-      />
-    )
-  }
-
   toggleDetailModal = () => {
     const { appStore } = this.props;
     appStore.set('isDetailModalVisible', !appStore.get('isDetailModalVisible'));
@@ -137,13 +117,17 @@ class HomeScreen extends Component {
   }
 
   onMessage = (event) => {
+    const { appStore } = this.props;
     const data = event.nativeEvent.data;
+    const currentTransaction = appStore.get('currentTransaction');
     if (data) {
       const res = JSON.parse(data);
       if (res.type === 'error') {
         console.log('Error: ', data);
         this.saveTransaction({ xdr: res.xdr, createdAt: new Date(), type: 'error', message: res.message, status: 'ERROR' });
-      } else {
+      } else if (res.type === 'sign') {
+        this.saveTransaction({ ...currentTransaction, ...res, status: 'SIGNED' });
+      } else  {
         const tx = parseEnvelopeTree(res.tx);
         this.saveTransaction({ ...tx, xdr: res.xdr, createdAt: new Date(), status: 'CREATED' });
       }
@@ -155,7 +139,11 @@ class HomeScreen extends Component {
   saveTransaction = (tx) => {
     const { appStore } = this.props;
     realm.write(() => {
-      realm.create('Transaction', { id: uuid(), ...tx });
+      if (tx.type === 'sign') {
+        realm.create('Transaction', { ...tx }, true);
+      } else {
+        realm.create('Transaction', { id: uuid(), ...tx });
+      }
     });
     appStore.set('currentXdr', undefined);
   }
@@ -172,15 +160,29 @@ class HomeScreen extends Component {
     )
   }
 
+  cancelTransaction = () => {
+    const { appStore } = this.props;
+    realm.write(() => {
+      const currentTransaction = appStore.get('currentTransaction');
+      currentTransaction.status = 'REJECTED'
+      realm.create('Transaction', { ...currentTransaction, id: currentTransaction.id, status: 'REJECTED' }, true);
+    });
+    
+    setTimeout(()=> { 
+      appStore.set('currentTransaction', undefined);
+      this.toggleDetailModal();
+     }, 1000);
+  }
+  
   signTransaction = () => {
-    const { secretInputValue, currentXdr } = this.state;
-    const xdr = currentXdr;
-    const data = JSON.stringify({ xdr, sk: secretInputValue });
-    this.signingView.postMessage(data);
+    const { appStore } = this.props;
+    const currentTransaction = appStore.get('currentTransaction');
+    const data = JSON.stringify({ type: 'sign', tx: currentTransaction, xdr: currentTransaction.xdr, sk: 'SCJKEGBTFVCVV7FLZLSTN2BJMVZYBJ6FUX3WYWTRKOPWNVEM4CUIXLSC' });
+    this.webview.postMessage(data);
+    this.toggleDetailModal();
   }
 
   render() {
-    const { accountInputValue } = this.state;
     const { appStore } = this.props;
     const isAddModalVisible = appStore.get('isAddModalVisible');
     const isDetailModalVisible = appStore.get('isDetailModalVisible');
@@ -197,15 +199,23 @@ class HomeScreen extends Component {
         </Header>
         <Container height="100%">
           <TransactionList />
-          
           <Modal isVisible={isAddModalVisible}>
+            <CloseButton onPress={this.toggleAddModal}>
+              <Icon name="times-circle" color="white" size={32}></Icon>
+            </CloseButton>          
             <AddTransactionForm />
           </Modal>
 
           <Modal isVisible={isDetailModalVisible}>
-            <TransactionDetail tx={currentTransaction} />
+            <CloseButton onPress={this.toggleDetailModal}>
+              <Icon name="times-circle" color="white" size={32}></Icon>
+            </CloseButton>
+            <TransactionDetail 
+              tx={currentTransaction} 
+              cancelTransaction={this.cancelTransaction}
+              signTransaction={this.signTransaction.bind(this)} 
+            />
           </Modal>
-
         </Container>
         <StatusBar barStyle="light-content" />
       </Screen>

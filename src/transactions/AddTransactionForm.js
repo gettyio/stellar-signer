@@ -28,26 +28,18 @@ class AddTransactionForm extends Component {
     }, 1000)
   }
 
-  toggleModal = () => {
-    const { appStore } = this.props;
-    appStore.set('isAddModalVisible', !appStore.get('isAddModalVisible'));
-  }
-
   submitXdr = (xdr) => {
     const { appStore } = this.props;
     appStore.set('currentXdr', xdr);    
   }
 
   render() {
-    const { appStore, isVisible, toggleModal, type, children } = this.props;
+    const { appStore, isVisible, type, children } = this.props;
     const { inputValue } = this.state;
     const currentXdr = appStore.get('currentXdr');
 
     return (
       <Container> 
-        <CloseButton onPress={this.toggleModal}>
-          <Icon name="times-circle" color="white" size={32}></Icon>
-        </CloseButton>
         <AddTransactionHeaderLabel>Add Transaction Envelope</AddTransactionHeaderLabel>
         <AddTransactionInput placeholder="Past your XDR here!" value={inputValue} onChangeText={(inputValue)=> { this.setState({ inputValue })}}  />
         { /** <AddTransactionFormErrorLabel>Invalid XDR!</AddTransactionFormErrorLabel> **/ }

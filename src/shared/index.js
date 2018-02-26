@@ -158,8 +158,8 @@ export const TransactionInfo = styled.Text`
 `;
 
 export const CloseButton = styled.TouchableOpacity`
-  padding-right: 4px;
-  margin-bottom: -24px;
+  margin-right: 8px;
+  margin-bottom: 8px;
   align-self: flex-end;
   z-index: 1;
 `;

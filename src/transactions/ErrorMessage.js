@@ -10,9 +10,9 @@ const Container = styled.View`
   align-items: center;
 `
 const Card = styled.View`
-  width: 90%;
+  width: 95%;
   background-color: white;
-  border-radius: 20px;
+  border-radius: 16px;
   padding: 16px;
 `
 

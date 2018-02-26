@@ -17,17 +17,23 @@
 
     StellarSdk.Network.useTestNetwork();
 
-    function signTx() {
-      // 1. Decode XDR received from RN
-      var transaction = new StellarSdk.Transaction(data.xdr);
+    function signTx(data) {
+      try {
+        // 1. Decode XDR received from RN
+        var transaction = new StellarSdk.Transaction(data.xdr);
 
-      // 2. Sign the transaction XDR with secret key
-      transaction.sign(StellarSdk.Keypair.fromSecret(data.sk));
-      
-      // 3. Convert back the tx to XDR
-      var signedXDR = transaction.toEnvelope().toXDR('base64');  
-      // 4. Send the signed XDR to be submited by RN
-      postMessage(signedXDR);      
+        // 2. Sign the transaction XDR with secret key
+        transaction.sign(StellarSdk.Keypair.fromSecret(data.sk));
+        
+        // 3. Convert back the tx to XDR
+        var signedXDR = transaction.toEnvelope().toXDR('base64');  
+        // 4. Send the signed XDR to be submited by RN
+        postMessage(JSON.stringify({ type: data.type, xdr: data.xdr, sxdr: signedXDR }));            
+      } catch (error) {
+        
+        postMessage(JSON.stringify({ type: 'error', message: 'Input XDR could not be parsed', xdr: input }));
+        throw new Error('Input XDR could not be parsed');
+      }
     }
 
     function decodeXdr(xdr) {
@@ -200,7 +206,7 @@
       var data = JSON.parse(event.data);
       switch (data.type) {
         case 'sign':
-          signTx(data.xdr);
+          signTx(data);
           break;
         case 'decode':
           decodeFromXdr(data.xdr, 'TransactionEnvelope');

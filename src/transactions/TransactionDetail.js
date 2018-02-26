@@ -7,11 +7,15 @@ import {
 import { TabViewAnimated, TabBar, SceneMap } from 'react-native-tab-view';
 import Button from 'react-native-micro-animated-button';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import { observer, inject } from "mobx-react";
 import DisplayTab from './DisplayTab'
 import ErrorMessage from './ErrorMessage';
 import EnvelopTab from './EnvelopTab'
 import EnvelopeCard from './../shared/EnvelopeCard';
+import { Container } from './../shared';
+import realm from './../store/realm';
 
+@inject("appStore") @observer
 class TransactionDetail extends Component {
 
   state = {
@@ -41,6 +45,16 @@ class TransactionDetail extends Component {
         scrollEnabled={true}
       />
     )
+  }
+  
+  rejectTransaction = () => {
+    this.cancelButton.success();
+    this.props.cancelTransaction();
+  }
+
+  signTransaction = () => {
+    this.signButton.success();
+    this.props.signTransaction();
   }
 
   renderActionBar = () => {
@@ -86,7 +100,7 @@ class TransactionDetail extends Component {
         <Button 
           ref={ref => (this.cancelButton = ref)}
           foregroundColor={'#ff3b30'}
-          onPress={()=> cancelTransaction(this.cancelButton)}
+          onPress={this.rejectTransaction}
           successIconName="check" 
           label="Reject"
           maxWidth={100}
@@ -95,7 +109,7 @@ class TransactionDetail extends Component {
         <Button 
           ref={ref => (this.signButton = ref)}
           foregroundColor={'#4cd964'}
-          onPress={()=> signTransaction(this.signTransaction)}
+          onPress={this.signTransaction}
           successIconName="check" 
           label="Sign"
           maxWidth={100}
@@ -106,31 +120,58 @@ class TransactionDetail extends Component {
   }
 
   renderTab = (route, tx) => {
-    const { currentXdr, signedXdr } = this.state;
 		switch (route.key) {
 			case 'display':
 				return (<DisplayTab tx={tx} />);
 			case 'envelop':
-        return (<EnvelopTab xdr={currentXdr} />);
+        return (<EnvelopTab xdr={tx.xdr} />);
       case 'signed':   
-        return (<EnvelopTab xdr={signedXdr} />);     
+        return (<EnvelopTab xdr={tx.sxdr} />);     
 			default:
 				return null;
 		}
   }
+
+  deleteTransaction = () => {
+    const { appStore } = this.props;
+    const currentTransaction = appStore.get('currentTransaction');
+    this.deleteTransactionButton.success();
+    appStore.set('isDetailModalVisible', !appStore.get('isDetailModalVisible'));
+    setTimeout(()=> {
+      realm.write(() => {
+        realm.delete(currentTransaction);
+      });
+      appStore.set('currentTransaction', undefined);
+    }, 800);
+  }
     
   render() {
     const { tx } = this.props;
+
+    if (!tx) {
+      return <View></View>
+    }
     
     if (tx.type === 'error') {
       return (
-        <ErrorMessage tx={tx} />
+        <Container>
+          <ErrorMessage tx={tx} />
+          <Button 
+              ref={ref => (this.deleteTransactionButton = ref)}
+              foregroundColor={'#ff3b30'}
+              onPress={this.deleteTransaction}
+              successIconName="check" 
+              label="Delete"
+              maxWidth={100}
+              style={{ marginLeft: 16 }}
+            /> 
+        </Container>
       )
     }
 
     if (tx) {
       return (
-        <View style={{ height: '80%', justifyContent: 'center', backgroundColor: 'white' , margin: 8 }}>
+        <Container style={{ height: '80%', justifyContent: 'center', backgroundColor: 'white' , margin: 8 }}>
           {/**<ActivityIndicator size="large" color="#4b9ed4"></ActivityIndicator> **/}
             <TabViewAnimated
               navigationState={this.state.tabView}
@@ -139,7 +180,7 @@ class TransactionDetail extends Component {
               onIndexChange={this.handleTabIndexChange}
             />
             {this.renderActionBar()}
-        </View>
+        </Container>
       );
     }
 

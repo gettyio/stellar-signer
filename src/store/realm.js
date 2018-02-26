@@ -45,7 +45,7 @@ const TransactionSchema = {
   properties: {
     id: "string",
     xdr: "string",
-    signedXdr: { type: "string", optional: true },
+    sxdr: { type: "string", optional: true },
     decodedXdr: { type: "string", optional: true },
     sourceAccount: { type: "string", optional: true },
     fee: { type: "string", optional: true },
@@ -66,5 +66,5 @@ Transaction.schema = TransactionSchema;
 
 export default new Realm({
   schema: [Transaction],
-  schemaVersion: 8
+  schemaVersion: 9
 });

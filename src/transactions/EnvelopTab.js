@@ -1,6 +1,6 @@
 import React from 'react'
 import styled from 'styled-components/native'
-import { WebView } from 'react-native'
+import { WebView, View, Text } from 'react-native'
 
 const Container = styled.View`
   flex: 1;
@@ -12,12 +12,21 @@ const Container = styled.View`
 // the xdr before the user approve it
 
 // Inject the XDR to the static xdr-viewer html
-export default ({ xdr }) => (
-  <Container>
-    <WebView 
-      source={require(`./../webviews/xdrviewer/index.html`)}
-      injectedJavaScript={`window.xdr = "${xdr}";`}
-      javaScriptEnabled={true}
-    />
-  </Container>
-)
+export default ({ xdr }) => {
+  if (xdr) {
+    return (
+      <Container>
+        <WebView 
+          source={require(`./../webviews/xdrviewer/index.html`)}
+          injectedJavaScript={`window.xdr = "${xdr}";`}
+          javaScriptEnabled={true}
+        />
+      </Container>
+    );
+  }
+  return (
+    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center'}}>
+      <Text>Transaction not signed!</Text>
+    </View>
+  )
+}
