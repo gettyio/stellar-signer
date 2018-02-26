@@ -129,7 +129,7 @@ class HomeScreen extends Component {
         this.saveTransaction({ ...currentTransaction, ...res, status: 'SIGNED' });
       } else  {
         const tx = parseEnvelopeTree(res.tx);
-        this.saveTransaction({ ...tx, xdr: res.xdr, createdAt: new Date(), status: 'CREATED' });
+        this.saveTransaction({ ...tx, type: res.type, xdr: res.xdr, createdAt: new Date(), status: 'CREATED' });
       }
     } else {
       console.log('Data not found!');
@@ -213,7 +213,7 @@ class HomeScreen extends Component {
             <TransactionDetail 
               tx={currentTransaction} 
               cancelTransaction={this.cancelTransaction}
-              signTransaction={this.signTransaction.bind(this)} 
+              signTransaction={this.signTransaction} 
             />
           </Modal>
         </Container>
