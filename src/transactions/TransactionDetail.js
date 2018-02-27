@@ -65,7 +65,7 @@ class TransactionDetail extends Component {
   
     if (tx.status === 'SIGNED') {
       return (
-        <View style={{flexDirection: 'row', justifyContent: 'center', padding: 16, backgroundColor: 'blue'}}>
+        <View style={{flexDirection: 'row', justifyContent: 'center', padding: 16, backgroundColor: 'blue', borderBottomLeftRadius: 8, borderBottomRightRadius: 8}}>
           <Text style={{ color: 'white', fontWeight: '700' }}>SIGNED</Text>
         </View>      
       )
@@ -73,7 +73,7 @@ class TransactionDetail extends Component {
   
     if (tx.status === 'REJECTED') {
       return (
-        <View style={{flexDirection: 'row', justifyContent: 'center', padding: 16, backgroundColor: '#ff3b30'}}>
+        <View style={{flexDirection: 'row', justifyContent: 'center', padding: 16, backgroundColor: '#ff3b30', borderBottomLeftRadius: 8, borderBottomRightRadius: 8}}>
           <Text style={{ color: 'white', fontWeight: '700' }}>REJECTED</Text>
         </View>      
       )
@@ -81,7 +81,7 @@ class TransactionDetail extends Component {
   
     if (tx.status === 'SUBMITTED') {
       return (
-        <View style={{flexDirection: 'row', justifyContent: 'center', padding: 16, backgroundColor: '#ff8300'}}>
+        <View style={{flexDirection: 'row', justifyContent: 'center', padding: 16, backgroundColor: '#ff8300', borderBottomLeftRadius: 8, borderBottomRightRadius: 8}}>
           <Text style={{ color: 'white', fontWeight: '700' }}>SUBMITTED</Text>
         </View>      
       )
@@ -89,7 +89,7 @@ class TransactionDetail extends Component {
     
     if (tx.status === 'CONFIRMED') {
       return (
-        <View style={{flexDirection: 'row', justifyContent: 'center', padding: 16, backgroundColor: '#4cd964'}}>
+        <View style={{flexDirection: 'row', justifyContent: 'center', padding: 16, backgroundColor: '#4cd964', borderBottomLeftRadius: 8, borderBottomRightRadius: 8 }}>
           <Text style={{ color: 'white', fontWeight: '700' }}>CONFIRMED</Text>
         </View>      
       )
@@ -171,7 +171,7 @@ class TransactionDetail extends Component {
 
     if (tx) {
       return (
-        <Container style={{ height: '80%', justifyContent: 'center', backgroundColor: 'white' , margin: 8 }}>
+        <Container style={{ height: '80%', justifyContent: 'center', backgroundColor: 'white' , margin: 8, borderRadius: 8 }}>
           {/**<ActivityIndicator size="large" color="#4b9ed4"></ActivityIndicator> **/}
             <TabViewAnimated
               navigationState={this.state.tabView}
