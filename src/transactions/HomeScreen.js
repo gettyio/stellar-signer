@@ -96,10 +96,10 @@ class HomeScreen extends Component {
     const { appStore } = this.props;
     appStore.set('isAddModalVisible', !appStore.get('isAddModalVisible'));
   }
-
+  
   decodeXdr = (xdr) => {
     //const testTx = 'AAAAAFIBKYc47PZpoxxY5Acltd9IaRANeap3Ja+FZg9fVtSBAAAAZABu6EUAAAACAAAAAAAAAAAAAAABAAAAAAAAAAEAAAAAr+SzF6CyMZracAojHWYWqhzdJZW+OiI9csaw1Nl4EZMAAAAAAAAAAAX14QAAAAAAAAAAAA==';
-    const event = JSON.stringify({ type: 'decode', xdr: xdr  });
+    const event = JSON.stringify({ type: 'decode', xdr: decodeURIComponent(xdr)  });
     setTimeout(()=> {
       this.webview.postMessage(event);
     }, 1000)
