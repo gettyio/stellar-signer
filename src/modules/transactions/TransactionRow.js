@@ -5,7 +5,7 @@ import {
 import styled from 'styled-components/native'
 import moment from 'moment';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import { Screen, Container, EmptyScreen, CardWrapper, CardContent, ErrorMessageLabel, ErrorInputValueLabel, TransactionRow, AmountCard, AmountLabel, LabelsRow, CreatedAtLabel, StatusLabel, AccountInfoCard, AccountLabel } from '../shared';
+import { Screen, Container, EmptyScreen, CardWrapper, CardContent, ErrorMessageLabel, ErrorInputValueLabel, TransactionRow, AmountCard, AmountLabel, LabelsRow, CreatedAtLabel, StatusLabel, AccountInfoCard, AccountLabel } from './../../shared';
 
 const toggleModal = (item, appStore) => {
   appStore.set('currentTransaction', item);

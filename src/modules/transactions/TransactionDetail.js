@@ -11,9 +11,9 @@ import { observer, inject } from "mobx-react";
 import DisplayTab from './DisplayTab'
 import ErrorMessage from './ErrorMessage';
 import EnvelopTab from './EnvelopTab'
-import EnvelopeCard from './../shared/EnvelopeCard';
-import { Container } from './../shared';
-import realm from './../store/realm';
+import EnvelopeCard from './../../shared/EnvelopeCard';
+import { Container } from './../../shared';
+import realm from './../../store/realm';
 
 @inject("appStore") @observer
 class TransactionDetail extends Component {

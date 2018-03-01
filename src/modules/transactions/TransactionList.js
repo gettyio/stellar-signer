@@ -15,8 +15,8 @@ import {
 import moment from 'moment';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { observer, inject } from "mobx-react";
-import { Container, EmptyScreen } from '../shared';
-import realm from './../store/realm';
+import { Container, EmptyScreen } from './../../shared';
+import realm from './../../store/realm';
 import TransactionRow from './TransactionRow';
 
 @inject("appStore") @observer
@@ -69,7 +69,7 @@ class TransactionList extends Component {
       return (
         <EmptyScreen>
           <Image 
-            source={require('./../shared/empty.png')} 
+            source={require('./../../shared/empty.png')} 
             resizeMode="contain" 
             style={{ width: 170 }}  
           />

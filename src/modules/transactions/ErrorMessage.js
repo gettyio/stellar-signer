@@ -3,7 +3,7 @@ import styled from 'styled-components/native'
 import { Text } from 'react-native'
 import Icon from 'react-native-vector-icons/FontAwesome';
 
-import EnvelopCard from './../shared/EnvelopeCard';
+import EnvelopCard from './../../shared/EnvelopeCard';
 
 const Container = styled.View`
   justify-content: center;

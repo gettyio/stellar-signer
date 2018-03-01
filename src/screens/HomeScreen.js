@@ -19,19 +19,19 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import moment from 'moment';
 import Modal from 'react-native-modal';
 import Button from 'react-native-micro-animated-button';
-import AddTransactionForm from './AddTransactionForm';
-import TransactionDetail from './TransactionDetail';
+import AddTransactionForm from './../modules/transactions/AddTransactionForm';
+import TransactionDetail from './../modules/transactions/TransactionDetail';
 import { Screen, Container, Header, Title, LoadButton, TextInput, CloseButton } from './../shared'
 
 import PasteButton from './../shared/PasteButton';
-import TransactionList from './TransactionList';
+import TransactionList from './../modules/transactions/TransactionList';
 
 
 import realm from './../store/realm';
 
-// realm.write(() => {
-//   realm.deleteAll();
-// });
+realm.write(() => {
+  realm.deleteAll();
+});
 
 import parseEnvelopeTree from './../utils/parseEnvelopeTree';
 
@@ -44,6 +44,8 @@ class HomeScreen extends Component {
   }
 
   componentDidMount() {
+    //const url = `stellar-signer://stellar-signer?${qs.stringify({ type: 'decode', xdr: 'AAAAAFIBKYc47PZpoxxY5Acltd9IaRANeap3Ja+FZg9fVtSBAAAAZABu6EUAAAACAAAAAAAAAAAAAAABAAAAAAAAAAEAAAAAr+SzF6CyMZracAojHWYWqhzdJZW+OiI9csaw1Nl4EZMAAAAAAAAAAAX14QAAAAAAAAAAAA==' })}`;
+
     if (Platform.OS === 'android') {
       Linking.getInitialURL().then(url => {
         if (url) {
@@ -87,6 +89,17 @@ class HomeScreen extends Component {
     }
   }
 
+  sendToViewer = () => {
+    const url = `stellar-signer://stellar-signer?${qs.stringify({ type: 'decode', xdr: 'AAAAAFIBKYc47PZpoxxY5Acltd9IaRANeap3Ja+FZg9fVtSBAAAAZABu6EUAAAACAAAAAAAAAAAAAAABAAAAAAAAAAEAAAAAr+SzF6CyMZracAojHWYWqhzdJZW+OiI9csaw1Nl4EZMAAAAAAAAAAAX14QAAAAAAAAAAAA==' })}`;
+    Linking.canOpenURL(url).then(supported => {
+      if (!supported) {
+        console.log('Can\'t handle url: ' + url);
+      } else {
+        return Linking.openURL(url);
+      }
+    }).catch(err => console.error('An error occurred', err));
+  }
+
   toggleDetailModal = () => {
     const { appStore } = this.props;
     appStore.set('isDetailModalVisible', !appStore.get('isDetailModalVisible'));
@@ -98,8 +111,10 @@ class HomeScreen extends Component {
   }
   
   decodeXdr = (xdr) => {
+
     //const testTx = 'AAAAAFIBKYc47PZpoxxY5Acltd9IaRANeap3Ja+FZg9fVtSBAAAAZABu6EUAAAACAAAAAAAAAAAAAAABAAAAAAAAAAEAAAAAr+SzF6CyMZracAojHWYWqhzdJZW+OiI9csaw1Nl4EZMAAAAAAAAAAAX14QAAAAAAAAAAAA==';
-    const event = JSON.stringify({ type: 'decode', xdr: decodeURIComponent(xdr)  });
+
+    const event = JSON.stringify({ type: 'decode', xdr });
     setTimeout(()=> {
       this.webview.postMessage(event);
     }, 1000)
@@ -153,7 +168,7 @@ class HomeScreen extends Component {
       <WebView
         ref={webview => (this.webview = webview)}
         style={{ width: 0, height: 0 }}
-        source={require(`./../webviews/index.html`)}
+        source={require(`./../modules/webviews/index.html`)}
         javaScriptEnabled={true}
         onMessage={((event)=> this.onMessage(event))}
       />
@@ -197,7 +212,7 @@ class HomeScreen extends Component {
               <Icon name="plus-circle" color="white" size={32}></Icon>
           </LoadButton>
         </Header>
-        <Container height="100%">
+        <Container>
           <TransactionList />
           <Modal isVisible={isAddModalVisible}>
             <CloseButton onPress={this.toggleAddModal}>
