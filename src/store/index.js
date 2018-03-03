@@ -2,7 +2,8 @@ import { observable } from 'mobx';
 
 const initialState = {
 	sk: undefined,
-  isAddModalVisible: false,
+	isAddModalVisible: false,
+	isAddSecretModalVisible: false,
   isDetailModalVisible: false,
   currentXdr: undefined,
   currentLink: undefined,

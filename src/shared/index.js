@@ -1,5 +1,28 @@
 import styled from "styled-components";
 
+export const Card = styled.View`
+  width: 95%;
+  background-color: white;
+  border-radius: 16px;
+  padding: 16px;
+`
+
+export const CardRow = styled.View`
+  flex-direction: ${props => props.flexx ? props.flexx : "row"};
+  align-items: ${props => props.align ? props.align : "center"};
+`
+
+export const CardTitle = styled.Text`
+  font-size: 16px;
+  font-weight: 700;
+  padding-left: 8px;
+`
+
+export const CardLabel = styled.Text`
+  font-size: 12px;
+  padding-top: 8px;
+`
+
 export const Screen = styled.View`
   display: flex;
 `;
@@ -43,11 +66,10 @@ export const PasteButtonLabel = styled.Text`
   color: white;
 `;
 
-export const AddTransactionFormErrorLabel = styled.Text`
+export const ErrorLabel = styled.Text`
+	margin-top: 8px;
   font-size: 12px;
   color: red; 
-  padding-left: 16px;
-  margin-top: -24px;
 `;
 
 

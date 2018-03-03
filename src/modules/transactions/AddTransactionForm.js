@@ -8,7 +8,7 @@ import { TabViewAnimated, TabBar, SceneMap } from 'react-native-tab-view';
 import Button from 'react-native-micro-animated-button';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { observer, inject } from "mobx-react";
-import { Container, CloseButton, AddTransactionInput, AddTransactionHeaderLabel, AddTransactionFormErrorLabel } from './../../shared'
+import { Container, CloseButton, AddTransactionInput, AddTransactionHeaderLabel, ErrorLabel } from './../../shared'
 import realm from './../../store/transactions';
 
 @inject("appStore") @observer

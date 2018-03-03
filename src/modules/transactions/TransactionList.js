@@ -32,8 +32,12 @@ class TransactionList extends Component {
   componentDidMount() {
     realm.addListener('change', this.refreshList);
     this.refreshList();
-  }
+	}
 
+	componentWillUnmount() {
+		realm.removeAllListeners();
+	}
+	
   refreshList = ()=> {
     const transactions = realm.objects('Transaction').sorted('createdAt', true);
     this.setState({ transactions });

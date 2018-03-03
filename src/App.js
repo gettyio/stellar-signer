@@ -25,7 +25,7 @@ const Navigator = TabNavigator({
   },
 },
 {
-  initialRouteName: 'Home',
+  initialRouteName: 'Secrets',
   navigationOptions: ({ navigation }) => ({
     tabBarIcon: ({ focused, tintColor }) => {
       const { routeName } = navigation.state;

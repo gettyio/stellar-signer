@@ -7,28 +7,34 @@ import {
 		Image
   } from 'react-native';
 import { observer, inject } from "mobx-react";
-import utf8 from 'utf8';
 import base64 from 'base-64';
 import base64js from 'base64-js';
+import crypto from 'crypto-js/pbkdf2';
 import { Container, EmptyScreen } from './../../shared';
 import SecretRow from './SecretRow';
 import saltStore from './../..//store/salt';
 import getSecretStore from './../../store/secrets';
-import crypto from 'crypto-js/pbkdf2';
 
 @inject("appStore") @observer
 class SecretList extends Component {
 
 	state = {
+		secrets: [],
 		sk: undefined,
-		realm: undefined,
-    secrets: [],
+		secretStore: undefined,
     hasError: undefined,
     isLoadingList: false,
 	}
 
 	componentDidMount() {
 		this.getSecrets();
+	}
+
+	componentWillUnmount() {
+		const { realm } = this.state;
+		if (realm) {
+			realm.removeAllListeners();
+		}
 	}
 
 	getSecrets = ()=> {
@@ -40,40 +46,30 @@ class SecretList extends Component {
 			const secret = base64js.toByteArray(encoded);
 
 			const { appStore } = this.props;
-			const { sk, realm } = this.state;
-			if (!sk) {
-				const usk = appStore.get('sk');
-				if (!realm) {
-					const realm = getSecretStore(secret);
-					realm.addListener('change', this.refreshList);
-					this.setState({ realm, sk });
-					this.refreshList();
-				}
+			const { realm } = this.state;
+			if (!realm) {
+				const realm = getSecretStore(secret);
+				const secrets = realm.objects('Secret').sorted('alias', true);
+				this.setState({ realm, secrets });
+				realm.addListener('change', this.getSecrets);
+			} else {
+				const secrets = realm.objects('Secret').sorted('alias', true);
+				this.setState({ realm, secrets });
+				realm.addListener('change', this.getSecrets);
 			}
-		}
-	}
-
-  refreshList = ()=> {
-		const { realm } = this.state;
-		if (realm) {
-			const secrets = realm.objects('Secret').sorted('alias', true);
-			console.warn('secrets',secrets)
-			if (secrets) {
-				this.setState({ secrets });
-			}
+			
 		}
 	}
 	
 	renderRow = ({ item })=> {
     const { appStore } = this.props;
     return (
-      <SecretRow item={item} appStore={appStore}/>
+      <SecretRow item={item} appStore={appStore} onPress={this.props.show}/>
     );
   }
 	
 	render() {
     const { isLoadingList, hasError, secrets } = this.state;
-    
     if (isLoadingList) {
       return (
         <View style={{ flex: 1, marginTop: 64 }}>
