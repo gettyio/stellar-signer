@@ -12,53 +12,13 @@ import base64js from 'base64-js';
 import crypto from 'crypto-js/pbkdf2';
 import { Container, EmptyScreen } from './../../shared';
 import SecretRow from './SecretRow';
-import saltStore from './../..//store/salt';
-import getSecretStore from './../../store/secrets';
 
 @inject("appStore") @observer
 class SecretList extends Component {
 
 	state = {
-		secrets: [],
-		sk: undefined,
-		secretStore: undefined,
     hasError: undefined,
     isLoadingList: false,
-	}
-
-	componentDidMount() {
-		this.getSecrets();
-	}
-
-	componentWillUnmount() {
-		const { realm } = this.state;
-		if (realm) {
-			realm.removeAllListeners();
-		}
-	}
-
-	getSecrets = ()=> {
-		const saltObject = saltStore.objects('Salt')[0];
-		if (saltObject) {
-			const salt = JSON.parse(saltObject.value);
-			const passcode = crypto("Secret Passphrase", salt, { keySize: 512/64 })
-			const encoded = base64.encode(passcode.toString());
-			const secret = base64js.toByteArray(encoded);
-
-			const { appStore } = this.props;
-			const { realm } = this.state;
-			if (!realm) {
-				const realm = getSecretStore(secret);
-				const secrets = realm.objects('Secret').sorted('alias', true);
-				this.setState({ realm, secrets });
-				realm.addListener('change', this.getSecrets);
-			} else {
-				const secrets = realm.objects('Secret').sorted('alias', true);
-				this.setState({ realm, secrets });
-				realm.addListener('change', this.getSecrets);
-			}
-			
-		}
 	}
 	
 	renderRow = ({ item })=> {
@@ -69,22 +29,7 @@ class SecretList extends Component {
   }
 	
 	render() {
-    const { isLoadingList, hasError, secrets } = this.state;
-    if (isLoadingList) {
-      return (
-        <View style={{ flex: 1, marginTop: 64 }}>
-          <ActivityIndicator size="large" color="#0000ff"></ActivityIndicator>
-        </View>
-      );
-    }
-
-    if (hasError) {
-      return (
-        <View full={true} justify="center" align="center">
-          <Text>Error</Text>
-        </View>
-      );
-    }
+    const { secrets } = this.props;
 
     if (secrets.length < 1) {
       return (

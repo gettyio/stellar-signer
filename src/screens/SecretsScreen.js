@@ -12,7 +12,7 @@ import base64js from 'base64-js';
 import crypto from 'crypto-js/pbkdf2';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Button from 'react-native-micro-animated-button';
-import { Screen, Container, Header, Title, LoadButton, TextInput, ErrorLabel, CloseButton, Card, CardRow, CardLabel, CardTitle } from './../shared'
+import { Screen, ContainerFlex, Header, Title, LoadButton, TextInput, ErrorLabel, CloseButton, Card, CardRow, CardLabel, CardTitle } from './../shared'
 import SecretList from './../modules/secrets/SecretList';
 import saltStore from './../store/salt';
 import getSecretStore from './../store/secrets';
@@ -23,11 +23,54 @@ class SecretsScreen extends Component {
 	state = {
 		sk: undefined,
 		alias: undefined,
-		hasError: false
+		hasError: false,
+		secrets: []
 	}
 
 	componentDidMount() {
 		this.getSecrets();
+	}
+
+	componentWillUnmount() {
+		const { realm } = this.state;
+		if (realm) {
+			realm.removeAllListeners();
+		}
+	}
+
+	getSecrets = ()=> {
+		const { appStore } = this.props;
+		const saltObject = saltStore.objects('Salt')[0];
+		try {
+			if (saltObject) {
+				const pwd = appStore.get('pwd');
+				if (pwd) {
+					const salt = JSON.parse(saltObject.value);
+					const passcode = crypto(pwd, salt, { keySize: 512/64 })
+					const encoded = base64.encode(passcode.toString());
+					const secret = base64js.toByteArray(encoded);
+					const { realm } = this.state;
+					if (!realm) {
+						const secretStore = getSecretStore(secret);
+						const secrets = secretStore.objects('Secret').sorted('alias', true);
+						secretStore.addListener('change', this.getSecrets);
+						this.setState({ realm: secretStore, secrets });
+					} else {
+						const secrets = realm.objects('Secret').sorted('alias', true);
+						realm.addListener('change', this.getSecrets);
+						this.setState({ realm, secrets });
+					}
+				} else {
+					alert('Ask Password');
+				}
+			}
+		} catch (error) {
+			if (error.message.includes('Unable to open a realm at path')) {
+				alert('Invalid secret!')
+			} else {
+				alert(error.message)
+			}
+		}
 	}
 
 	toggleAddModal = () => {
@@ -50,22 +93,6 @@ class SecretsScreen extends Component {
 			this.toggleAddModal();
 			this.saveSecret({ sk, alias });
 			this.setState({ hasError: false, sk: undefined, alias: undefined });
-		}
-	}
-
-	getSecrets = ()=> {
-		const saltObject = saltStore.objects('Salt')[0];
-		if (saltObject) {
-			const salt = JSON.parse(saltObject.value);
-			// Todo ask the Passphrase to the user
-			const passcode = crypto("Secret Passphrase", salt, { keySize: 512/64 })
-			const encoded = base64.encode(passcode.toString());
-			const secret = base64js.toByteArray(encoded);
-			const { realm } = this.state;
-			if (!realm) {
-				const realm = getSecretStore(secret);
-				this.setState({ realm });
-			}
 		}
 	}
 
@@ -93,7 +120,7 @@ class SecretsScreen extends Component {
 			`${item.sk}`,
 			[
 				{text: 'Delete', onPress: () => this.deleteSecret(item), style: 'cancel'},
-				{text: 'Cancel', onPress: () => { }}, // Do not button
+				{text: 'Close', onPress: () => { }}, // Do not button
 			],
 			{ cancelable: false }
 		)
@@ -102,7 +129,7 @@ class SecretsScreen extends Component {
 
   render() {
 		const { appStore } = this.props;
-		const { sk, alias, hasError } = this.state;
+		const { sk, alias, hasError, secrets } = this.state;
 		const isAddSecretModalVisible = appStore.get('isAddSecretModalVisible');
 		
     return (
@@ -113,9 +140,9 @@ class SecretsScreen extends Component {
               <Icon name="plus-circle" color="white" size={32}></Icon>
           </LoadButton>
         </Header>
-				<SecretList show={this.showSecretAlert} />
+				<SecretList secrets={secrets} show={this.showSecretAlert} />
 				<Modal isVisible={isAddSecretModalVisible}>
-					<Container>
+					<ContainerFlex>
 						<CloseButton onPress={this.toggleAddModal}>
               <Icon name="times-circle" color="white" size={32}></Icon>
             </CloseButton>
@@ -123,7 +150,7 @@ class SecretsScreen extends Component {
 							<TextInput placeholder="Label" onChangeText={(alias)=> this.setState({ alias })} clearButtonMode={'always'} value={alias} />
 							<TextInput placeholder="Secret Key" onChangeText={(sk)=> this.setState({ sk })} clearButtonMode={'always'} value={sk} />
 							<View>
-							{ hasError && (<ErrorLabel>Invalid secret or alias.</ErrorLabel>)	}
+							{ hasError && (<ErrorLabel>Invalid secret or label.</ErrorLabel>)	}
 							</View>
 						</Card>
 						<View style={{ alignSelf: 'center', paddingTop: 16 }}>
@@ -144,7 +171,7 @@ class SecretsScreen extends Component {
 							/> 
 						</View>
 
-					</Container>
+					</ContainerFlex>
 				</Modal>
       </Screen>
     )

@@ -29,7 +29,7 @@ import TransactionList from './../modules/transactions/TransactionList';
 
 import saltStore from './../store/salt';
 import txStore from './../store/transactions';
-// Delete All
+//Delete All
 // txStore.write(() => {
 //   txStore.deleteAll();
 // });

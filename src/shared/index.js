@@ -5,6 +5,7 @@ export const Card = styled.View`
   background-color: white;
   border-radius: 16px;
   padding: 16px;
+	align-self: center;
 `
 
 export const CardRow = styled.View`
@@ -16,6 +17,18 @@ export const CardTitle = styled.Text`
   font-size: 16px;
   font-weight: 700;
   padding-left: 8px;
+`
+
+export const SmallMessageLabel = styled.Text`
+  font-size: 10px;
+	color: #464646;
+`
+
+export const PasswordFormTitle = styled.Text`
+	padding-top: 8px;
+  font-size: 16px;
+	font-weight: 700;
+	color: #464646;
 `
 
 export const CardLabel = styled.Text`
@@ -39,6 +52,10 @@ export const Header = styled.View`
 
 export const Container = styled.View`
   height: ${props => props.height ? props.height : 'auto' };
+`;
+
+export const ContainerFlex = styled.View`
+  flex: 1;
 `;
 
 const EnvelopInfo = styled.View`
@@ -68,7 +85,7 @@ export const PasteButtonLabel = styled.Text`
 
 export const ErrorLabel = styled.Text`
 	margin-top: 8px;
-  font-size: 12px;
+  font-size: 10px;
   color: red; 
 `;
 
@@ -207,8 +224,6 @@ export const TextInput = styled.TextInput`
   height: 80px;
   padding: 8px;
   background-color: white;
-  border-width: 1px;
-  border-color: #f0f0f0;
   color: #a0a0a0;
 `;
 

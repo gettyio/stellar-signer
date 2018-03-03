@@ -26,7 +26,7 @@ const NavigatorScreen = TabNavigator({
   },
 },
 {
-  initialRouteName: 'Secrets',
+  initialRouteName: 'Home',
   navigationOptions: ({ navigation }) => ({
     tabBarIcon: ({ focused, tintColor }) => {
       const { routeName } = navigation.state;
