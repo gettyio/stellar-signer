@@ -53,9 +53,9 @@ class AddTransactionForm extends Component {
             errorIconColor={'white'}
             successIconColor={'white'}
             shakeOnError={true}
-            onPress={this.onPressHandler}
             successIconName="check" 
             label="Add"
+            onPress={this.onPressHandler}
             maxWidth={100}
             style={{ marginLeft: 16, borderWidth: 0 }}
           />          

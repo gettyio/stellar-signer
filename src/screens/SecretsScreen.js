@@ -121,20 +121,29 @@ class SecretsScreen extends Component {
             </CloseButton>
 						<Card>
 							<TextInput placeholder="Label" onChangeText={(alias)=> this.setState({ alias })} clearButtonMode={'always'} value={alias} />
-							<TextInput placeholder="Secret" onChangeText={(sk)=> this.setState({ sk })} clearButtonMode={'always'} value={sk} />
+							<TextInput placeholder="Secret Key" onChangeText={(sk)=> this.setState({ sk })} clearButtonMode={'always'} value={sk} />
 							<View>
 							{ hasError && (<ErrorLabel>Invalid secret or alias.</ErrorLabel>)	}
 							</View>
 						</Card>
-						<Button 
-							ref={ref => (this.addSecretButton = ref)}
-							foregroundColor={'#4cd964'}
-							onPress={this.addSecretToStore}
-							successIconName="check" 
-							label="Save"
-							maxWidth={100}
-							style={{ marginLeft: 16 }}
-						/> 
+						<View style={{ alignSelf: 'center', paddingTop: 16 }}>
+							<Button 
+								ref={ref => (this.addSecretButton = ref)}
+								foregroundColor={'#4cd964'}
+								onPress={this.addSecretToStore}
+								foregroundColor={'white'}
+								backgroundColor={'#4cd964'}
+								successColor={'#4cd964'}
+								errorColor={'#ff3b30'}
+								errorIconColor={'white'}
+								successIconColor={'white'}							
+								successIconName="check" 
+								label="Save"
+								maxWidth={100}
+								style={{ marginLeft: 16, borderWidth: 0 }}
+							/> 
+						</View>
+
 					</Container>
 				</Modal>
       </Screen>

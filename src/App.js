@@ -4,7 +4,7 @@
  * @flow
  */
 
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import {
   View
 } from 'react-native';
@@ -14,9 +14,10 @@ import { TabNavigator, TabBarBottom } from 'react-navigation';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import HomeScreen from './screens/HomeScreen'
 import SecretsScreen from './screens/SecretsScreen'
+import SecurePadScreen from './screens/SecurePadScreen';
 import store from './store';
 
-const Navigator = TabNavigator({
+const NavigatorScreen = TabNavigator({
   Home: {
     screen: HomeScreen,
   },
@@ -54,6 +55,9 @@ const Navigator = TabNavigator({
 
 export default App = () => (
   <Provider appStore={store}>
-    <Navigator />  
+		<Fragment>
+  	  <NavigatorScreen />
+			<SecurePadScreen />
+		</Fragment>
   </Provider>
 )
