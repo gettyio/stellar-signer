@@ -16,7 +16,7 @@ import moment from 'moment';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { observer, inject } from "mobx-react";
 import { Container, EmptyScreen } from './../../shared';
-import realm from './../../store/realm';
+import realm from './../../store/transactions';
 import TransactionRow from './TransactionRow';
 
 @inject("appStore") @observer

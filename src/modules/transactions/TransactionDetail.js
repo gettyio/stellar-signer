@@ -13,7 +13,7 @@ import ErrorMessage from './ErrorMessage';
 import EnvelopTab from './EnvelopTab'
 import EnvelopeCard from './../../shared/EnvelopeCard';
 import { Container } from './../../shared';
-import realm from './../../store/realm';
+import realm from './../../store/transactions';
 
 @inject("appStore") @observer
 class TransactionDetail extends Component {

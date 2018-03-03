@@ -18,6 +18,7 @@ import { observer, inject } from "mobx-react";
 import Icon from 'react-native-vector-icons/FontAwesome';
 import moment from 'moment';
 import Modal from 'react-native-modal';
+import cryptocore from 'crypto-js/core';
 import Button from 'react-native-micro-animated-button';
 import AddTransactionForm from './../modules/transactions/AddTransactionForm';
 import TransactionDetail from './../modules/transactions/TransactionDetail';
@@ -26,12 +27,12 @@ import { Screen, Container, Header, Title, LoadButton, TextInput, CloseButton } 
 import PasteButton from './../shared/PasteButton';
 import TransactionList from './../modules/transactions/TransactionList';
 
-
-import realm from './../store/realm';
-
-realm.write(() => {
-  realm.deleteAll();
-});
+import saltStore from './../store/salt';
+import txStore from './../store/transactions';
+// Delete All
+// txStore.write(() => {
+//   txStore.deleteAll();
+// });
 
 import parseEnvelopeTree from './../utils/parseEnvelopeTree';
 
@@ -59,8 +60,21 @@ class HomeScreen extends Component {
           this.handleAppLinkURL(new String(url));
         }
       });
-    }
-  }
+		}
+	
+		// Ensure that the salt will exists when create the realm file
+		this.checkSalt();
+	}
+	
+	checkSalt = () => {
+		const salt = saltStore.objects('Salt')[0];
+		if (!salt) {
+			saltStore.write(()=> {
+				const val = cryptocore.lib.WordArray.random(128/8);
+				saltStore.create('Salt', { id: uuid(), value: JSON.stringify(val) })
+			});
+		}
+	}
 
   componentDidUpdate(prevProps, prevState) {
     this.handleCurrentTx();
@@ -153,11 +167,11 @@ class HomeScreen extends Component {
 
   saveTransaction = (tx) => {
     const { appStore } = this.props;
-    realm.write(() => {
+    txStore.write(() => {
       if (tx.type === 'sign') {
-        realm.create('Transaction', { ...tx }, true);
+        txStore.create('Transaction', { ...tx }, true);
       } else {
-        realm.create('Transaction', { id: uuid(), ...tx });
+        txStore.create('Transaction', { id: uuid(), ...tx });
       }
     });
     appStore.set('currentXdr', undefined);
@@ -177,10 +191,10 @@ class HomeScreen extends Component {
 
   cancelTransaction = () => {
     const { appStore } = this.props;
-    realm.write(() => {
+    txStore.write(() => {
       const currentTransaction = appStore.get('currentTransaction');
       currentTransaction.status = 'REJECTED'
-      realm.create('Transaction', { ...currentTransaction, id: currentTransaction.id, status: 'REJECTED' }, true);
+      txStore.create('Transaction', { ...currentTransaction, id: currentTransaction.id, status: 'REJECTED' }, true);
     });
     
     setTimeout(()=> { 

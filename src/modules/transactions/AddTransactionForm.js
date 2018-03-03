@@ -9,7 +9,7 @@ import Button from 'react-native-micro-animated-button';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { observer, inject } from "mobx-react";
 import { Container, CloseButton, AddTransactionInput, AddTransactionHeaderLabel, AddTransactionFormErrorLabel } from './../../shared'
-import realm from './../../store/realm';
+import realm from './../../store/transactions';
 
 @inject("appStore") @observer
 class AddTransactionForm extends Component {

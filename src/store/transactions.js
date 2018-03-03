@@ -2,42 +2,7 @@
 import Realm from "realm";
 
 class Transaction {
-  // setStatus(status) {
-  //   this.status = status;
-  // }
-
-  // sendMessage(message) {
-  //   console.log(message);
-  // }
 }
-
-// amount
-// :
-// "10"
-// asset
-// :
-// "[assetTypeNative]"
-// destination
-// :
-// "GCX6JMYXUCZDDGW2OAFCGHLGC2VBZXJFSW7DUIR5OLDLBVGZPAIZGDST"
-// fee
-// :
-// "100"
-// memo
-// :
-// "[memoNone]"
-// operations
-// :
-// "Array[1]"
-// seqNum
-// :
-// "31217630488559618"
-// signatures
-// :
-// "Array[0]"
-// sourceAccount
-// :
-// "GBJACKMHHDWPM2NDDRMOIBZFWXPUQ2IQBV42U5ZFV6CWMD27K3KIDO2H"
 
 const TransactionSchema = {
   name: "Transaction",
