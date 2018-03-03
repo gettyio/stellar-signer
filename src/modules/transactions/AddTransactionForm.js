@@ -8,7 +8,7 @@ import { TabViewAnimated, TabBar, SceneMap } from 'react-native-tab-view';
 import Button from 'react-native-micro-animated-button';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { observer, inject } from "mobx-react";
-import { Container, CloseButton, AddTransactionInput, AddTransactionHeaderLabel, ErrorLabel } from './../../shared'
+import { ContainerFlex, CloseButton, AddTransactionInput, AddTransactionHeaderLabel, ErrorLabel } from './../../shared'
 import realm from './../../store/transactions';
 
 @inject("appStore") @observer
@@ -39,7 +39,7 @@ class AddTransactionForm extends Component {
     const currentXdr = appStore.get('currentXdr');
 
     return (
-      <Container> 
+      <ContainerFlex> 
         <AddTransactionHeaderLabel>Add Transaction Envelope</AddTransactionHeaderLabel>
         <AddTransactionInput placeholder="Past your XDR here!" value={inputValue} onChangeText={(inputValue)=> { this.setState({ inputValue })}}  />
         { /** <AddTransactionFormErrorLabel>Invalid XDR!</AddTransactionFormErrorLabel> **/ }
@@ -60,7 +60,7 @@ class AddTransactionForm extends Component {
             style={{ marginLeft: 16, borderWidth: 0 }}
           />          
         </View>   
-      </Container>
+      </ContainerFlex>
     )
   }
 }
