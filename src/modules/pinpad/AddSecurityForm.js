@@ -14,7 +14,7 @@ import { ContainerFlex, TextInput, ErrorLabel, CloseButton, Card, SmallMessageLa
 class AddSecurityForm extends Component {
 	
 	state = {
-		password: undefined,
+		password: '12345678',
 		errorMessage: undefined
 	}
 

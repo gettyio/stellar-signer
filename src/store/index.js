@@ -3,6 +3,7 @@ import { observable } from 'mobx';
 const initialState = {
 	sk: undefined,
 	pwd: undefined,
+	secretList: undefined,
 	isAddModalVisible: false,
 	isAddSecretModalVisible: false,
 	isSecurityRequired: true,

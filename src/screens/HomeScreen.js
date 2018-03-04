@@ -14,6 +14,9 @@ import {
 import qs from 'qs';
 import uuid from "uuid/v4";
 import { get } from 'lodash';
+import base64 from 'base-64';
+import base64js from 'base64-js';
+import crypto from 'crypto-js/pbkdf2';
 import { observer, inject } from "mobx-react";
 import Icon from 'react-native-vector-icons/FontAwesome';
 import moment from 'moment';
@@ -26,7 +29,7 @@ import { Screen, Container, Header, Title, LoadButton, TextInput, CloseButton } 
 
 import PasteButton from './../shared/PasteButton';
 import TransactionList from './../modules/transactions/TransactionList';
-
+import getSecretStore from './../store/secrets';
 import saltStore from './../store/salt';
 import txStore from './../store/transactions';
 //Delete All
@@ -40,6 +43,7 @@ import parseEnvelopeTree from './../utils/parseEnvelopeTree';
 class HomeScreen extends Component {
   
   state = {
+		realm: undefined,
     currentXdr: undefined,
     currentTransaction: undefined
   }
@@ -65,7 +69,18 @@ class HomeScreen extends Component {
 		// Ensure that the salt will exists when create the realm file
 		this.checkSalt();
 	}
-	
+
+  componentDidUpdate(prevProps, prevState) {
+		this.handleCurrentTx();
+	}
+
+	componentWillUnmount() {
+		const { secretStore } = this.state;
+		if (secretStore) {
+			secretStore.removeAllListeners();
+		}
+	}
+
 	checkSalt = () => {
 		const salt = saltStore.objects('Salt')[0];
 		if (!salt) {
@@ -75,10 +90,6 @@ class HomeScreen extends Component {
 			});
 		}
 	}
-
-  componentDidUpdate(prevProps, prevState) {
-    this.handleCurrentTx();
-  }
 
   handleCurrentTx = () => {
     const { appStore } = this.props;
@@ -216,7 +227,7 @@ class HomeScreen extends Component {
     const isAddModalVisible = appStore.get('isAddModalVisible');
     const isDetailModalVisible = appStore.get('isDetailModalVisible');
     const currentTransaction = appStore.get('currentTransaction');
-
+		const secretList = appStore.get('secretList');
     return (
       <Screen>
         {this.renderWebview()}
