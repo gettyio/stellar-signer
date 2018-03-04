@@ -11,7 +11,7 @@ import {
 import { Provider } from 'mobx-react';
 import { StackNavigator } from 'react-navigation';
 import { TabNavigator, TabBarBottom } from 'react-navigation';
-import Icon from 'react-native-vector-icons/FontAwesome';
+import Icon from 'react-native-vector-icons/Feather';
 import HomeScreen from './screens/HomeScreen'
 import SecretsScreen from './screens/SecretsScreen'
 import SecurePadScreen from './screens/SecurePadScreen';
@@ -32,7 +32,7 @@ const NavigatorScreen = TabNavigator({
       const { routeName } = navigation.state;
       let iconName;
       if (routeName === 'Home') {
-        iconName = `list-alt`;
+        iconName = `book`;
       } else if (routeName === 'Secrets') {
         iconName = `shield`;
       }
