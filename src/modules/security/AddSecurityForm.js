@@ -32,7 +32,9 @@ class AddSecurityForm extends Component {
 		this.savePasswordButton.success();
 		this.setState({ errorMessage: undefined });
 		submit(password);
-		close();
+		if (close) {
+			close();
+		}
 	}
 
 	render() { 

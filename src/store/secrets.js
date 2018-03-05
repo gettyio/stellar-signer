@@ -5,7 +5,7 @@ class Secret {
 
 const SecretSchema = {
   name: "Secret",
-  primaryKey: "id",
+  primaryKey: "alias",
   properties: {
 		id: "string",
 		sk: "string", 
@@ -20,7 +20,7 @@ export default (key) => {
 	return new Realm({
 		path: 'secrets_____________.realm',
 		schema: [Secret],
-		schemaVersion: 12,
+		schemaVersion: 13,
 		encryptionKey: key
 	});
 }

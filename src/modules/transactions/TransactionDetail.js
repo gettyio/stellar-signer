@@ -1,18 +1,21 @@
 
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import {
   View,
-  Text
+	Text
+	
 } from 'react-native';
 import { TabViewAnimated, TabBar, SceneMap } from 'react-native-tab-view';
 import Button from 'react-native-micro-animated-button';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import ActionSheet from 'react-native-actionsheet'
 import { observer, inject } from "mobx-react";
 import DisplayTab from './DisplayTab'
 import ErrorMessage from './ErrorMessage';
 import EnvelopTab from './EnvelopTab'
 import EnvelopeCard from './../../shared/EnvelopeCard';
-import { Container } from './../../shared';
+import { Container, SelectSecret } from './../../shared';
+import AddSecurityForm from './../security/AddSecurityForm';
 import realm from './../../store/transactions';
 
 @inject("appStore") @observer
@@ -26,7 +29,8 @@ class TransactionDetail extends Component {
         { key: 'envelop', title: 'Envelope' },
         { key: 'signed', title: 'Signed' }
       ]
-    }
+		},
+		showSecurityForm: false
   }
 
   handleTabIndexChange = index => {
@@ -53,12 +57,16 @@ class TransactionDetail extends Component {
   }
 
   signTransaction = () => {
-    this.signButton.success();
-    this.props.signTransaction();
-  }
+    this.signButton.success();		
+		this.setState({ showSecurityForm: true });
+	}
+	
+	authTransaction = (pwd) => {
+		this.actionSheet.show()
+	}
 
   renderActionBar = () => {
-    const { tx, cancelTransaction, signTransaction } = this.props;
+    const { tx } = this.props;
     if (!tx) {
       return;
     }
@@ -118,7 +126,7 @@ class TransactionDetail extends Component {
       </View>      
     )
   }
-
+	
   renderTab = (route, tx) => {
 		switch (route.key) {
 			case 'display':
@@ -143,15 +151,31 @@ class TransactionDetail extends Component {
       });
       appStore.set('currentTransaction', undefined);
     }, 800);
-  }
-    
-  render() {
-    const { tx } = this.props;
+	}
 
+	getOptions = () => {
+		const { appStore } = this.props;
+		const secretList = appStore.get('secretList');
+		let options = [];
+		secretList.forEach((el) => options.push(el.alias));
+		return options;
+	}
+
+	submitSignature = (index)=> {
+		const { appStore } = this.props;
+		const secretList = appStore.get('secretList');
+		const secret = secretList[index];
+		this.props.signTransaction(secret.sk);
+	}
+	
+  render() {
+		const { appStore, tx, toggleModal } = this.props;
+		const { showSecurityForm } = this.state;
+		const secretOptions = this.getOptions();
     if (!tx) {
       return <View></View>
     }
-    
+		
     if (tx.type === 'error') {
       return (
         <Container>
@@ -172,14 +196,29 @@ class TransactionDetail extends Component {
     if (tx) {
       return (
         <Container style={{ height: '80%', justifyContent: 'center', backgroundColor: 'white' , margin: 8, borderRadius: 8 }}>
-          {/**<ActivityIndicator size="large" color="#4b9ed4"></ActivityIndicator> **/}
-            <TabViewAnimated
-              navigationState={this.state.tabView}
-              renderScene={({ route })=> this.renderTab(route, tx)}
-              renderHeader={this.renderTabHeader}
-              onIndexChange={this.handleTabIndexChange}
-            />
-            {this.renderActionBar()}
+					{/**<ActivityIndicator size="large" color="#4b9ed4"></ActivityIndicator> **/}
+						{!showSecurityForm && (
+							<TabViewAnimated
+							navigationState={this.state.tabView}
+							renderScene={({ route })=> this.renderTab(route, tx)}
+							renderHeader={this.renderTabHeader}
+							onIndexChange={this.handleTabIndexChange}
+							/>
+						)}
+						{!showSecurityForm && this.renderActionBar()}
+						{showSecurityForm && (
+							<Fragment>
+								<AddSecurityForm submit={this.authTransaction} close={toggleModal} closeAfterSubmit={false} />
+							</Fragment>
+						)}
+						<ActionSheet
+							ref={o => this.actionSheet = o}
+							title={'Select a Secret'}
+							options={secretOptions}
+							cancelButtonIndex={1}
+							destructiveButtonIndex={2}
+							onPress={this.submitSignature}
+						/>
         </Container>
       );
     }

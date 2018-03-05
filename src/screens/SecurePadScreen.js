@@ -12,7 +12,7 @@ import Button from 'react-native-micro-animated-button';
 import { Screen, ContainerFlex, Header, Title, LoadButton, TextInput, ErrorLabel, CloseButton, Card, CardRow, CardLabel, CardTitle } from './../shared'
 import saltStore from './../store/salt';
 import getSecretStore from './../store/secrets';
-import AddSecurityForm from './../modules/pinpad/AddSecurityForm';
+import AddSecurityForm from './../modules/security/AddSecurityForm';
 
 @inject("appStore") @observer
 class SecurePadScreen extends Component {

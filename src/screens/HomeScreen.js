@@ -163,7 +163,7 @@ class HomeScreen extends Component {
     if (data) {
       const res = JSON.parse(data);
       if (res.type === 'error') {
-        console.log('Error: ', data);
+        console.warn('Error: ', data);
         this.saveTransaction({ xdr: res.xdr, createdAt: new Date(), type: 'error', message: res.message, status: 'ERROR' });
       } else if (res.type === 'sign') {
         this.saveTransaction({ ...currentTransaction, ...res, status: 'SIGNED' });
@@ -172,7 +172,7 @@ class HomeScreen extends Component {
         this.saveTransaction({ ...tx, type: res.type, xdr: res.xdr, createdAt: new Date(), status: 'CREATED' });
       }
     } else {
-      console.log('Data not found!');
+      console.warn('Data not found!');
     }
   }
 
@@ -214,10 +214,10 @@ class HomeScreen extends Component {
      }, 1000);
   }
   
-  signTransaction = () => {
+  signTransaction = (sk) => {
     const { appStore } = this.props;
     const currentTransaction = appStore.get('currentTransaction');
-    const data = JSON.stringify({ type: 'sign', tx: currentTransaction, xdr: currentTransaction.xdr, sk: 'SCJKEGBTFVCVV7FLZLSTN2BJMVZYBJ6FUX3WYWTRKOPWNVEM4CUIXLSC' });
+    const data = JSON.stringify({ type: 'sign', tx: currentTransaction, xdr: currentTransaction.xdr, sk });
     this.webview.postMessage(data);
     this.toggleDetailModal();
   }
@@ -227,7 +227,7 @@ class HomeScreen extends Component {
     const isAddModalVisible = appStore.get('isAddModalVisible');
     const isDetailModalVisible = appStore.get('isDetailModalVisible');
     const currentTransaction = appStore.get('currentTransaction');
-		const secretList = appStore.get('secretList');
+		
     return (
       <Screen>
         {this.renderWebview()}

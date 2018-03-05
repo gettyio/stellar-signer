@@ -99,9 +99,15 @@ class SecretsScreen extends Component {
 	saveSecret = (secret) => {
 		const { realm } = this.state;
 		if (realm) {
-			realm.write(() => {
-				realm.create('Secret', { id: uuid(), createdAt: new Date(), ...secret });
-			});
+			try {
+				realm.write(() => {
+					realm.create('Secret', { id: uuid(), createdAt: new Date(), ...secret });
+				});
+			} catch (error) {
+				if (error.message.includes('Attempting to create an object of type \'Secret\' with an existing primary key value')) {
+					setTimeout(()=> alert('A secret with this alias already exists. Please, choose another alias.'), 1000)
+				}
+			}
 		}
 	}
 
