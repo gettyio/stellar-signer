@@ -2,7 +2,8 @@
 import React, { Component } from 'react';
 import {
 		View,
-		Alert
+		Alert,
+		Dimensions
 	} from 'react-native';
 import Modal from 'react-native-modal';
 import uuid from "uuid/v4";

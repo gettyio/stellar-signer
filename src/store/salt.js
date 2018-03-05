@@ -15,7 +15,7 @@ const SaltSchema = {
 Salt.schema = SaltSchema;
 
 export default new Realm({
-	path: 'salt_.realm',
+	path: 'salt____.realm',
   schema: [Salt],
   schemaVersion: 10
 });

@@ -230,15 +230,13 @@ class HomeScreen extends Component {
 		
     return (
       <Screen>
-        {this.renderWebview()}
         <Header>
           <Title>Stellar Signer</Title>
           <LoadButton onPress={this.toggleAddModal}>
               <Icon name="plus-circle" color="white" size={32}></Icon>
           </LoadButton>
         </Header>
-        <Container>
-          <TransactionList />
+				<TransactionList />
           <Modal isVisible={isAddModalVisible}>
             <CloseButton onPress={this.toggleAddModal}>
               <Icon name="x-circle" color="white" size={32}></Icon>
@@ -256,8 +254,8 @@ class HomeScreen extends Component {
               signTransaction={this.signTransaction} 
             />
           </Modal>
-        </Container>
         <StatusBar barStyle="light-content" />
+				{this.renderWebview()}
       </Screen>
     );
   }

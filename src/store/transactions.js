@@ -30,7 +30,7 @@ const TransactionSchema = {
 Transaction.schema = TransactionSchema;
 
 export default new Realm({
-	path: 'transactions_.realm',
+	path: 'transactions___.realm',
   schema: [Transaction],
   schemaVersion: 9
 });

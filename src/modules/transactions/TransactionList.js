@@ -10,7 +10,8 @@ import {
   Clipboard,
   Image,
   TouchableOpacity,
-  ActivityIndicator,
+	ActivityIndicator,
+	Dimensions
 } from 'react-native';
 import moment from 'moment';
 import Icon from 'react-native-vector-icons/FontAwesome';
@@ -51,6 +52,7 @@ class TransactionList extends Component {
   }
 
   render() {
+		const { height } = Dimensions.get("window");
     const { isLoadingList, hasError, transactions } = this.state;
     
     if (isLoadingList) {
@@ -63,7 +65,7 @@ class TransactionList extends Component {
 
     if (hasError) {
       return (
-        <View full={true} justify="center" align="center">
+        <View>
           <Text>Error</Text>
         </View>
       );
@@ -83,11 +85,14 @@ class TransactionList extends Component {
     }
 
     return (
-      <FlatList
-        data={transactions}
-        renderItem={this.renderRow}
-        keyExtractor={(item, index) => `${item.id}`}
-      />
+      <View style={{ height: height - 142 }}>
+				<FlatList
+					data={transactions}
+					removeClippedSubviews={true}
+					renderItem={this.renderRow}
+					keyExtractor={(item, index) => `${item.id}`}
+				/>
+			</View>
     );
   }
 }

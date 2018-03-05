@@ -4,7 +4,7 @@ import {
 } from 'react-native';
 import styled from 'styled-components/native'
 import moment from 'moment';
-import Icon from 'react-native-vector-icons/FontAwesome';
+import Icon from 'react-native-vector-icons/Feather';
 import { Screen, Container, EmptyScreen, CardWrapper, CardContent, ErrorMessageLabel, ErrorInputValueLabel, TransactionRow, AmountCard, AmountLabel, LabelsRow, CreatedAtLabel, StatusLabel, AccountInfoCard, AccountLabel } from './../../shared';
 
 const toggleModal = (item, appStore) => {
@@ -19,7 +19,7 @@ export default ({ item, appStore }) => {
       <TouchableOpacity key={item.id} onPress={() => toggleModal(item, appStore)}>
         <TransactionRow>
           <CardWrapper pad="8px">
-            <Icon name="times-circle" color="red" size={32}></Icon>
+            <Icon name="x-circle" color="red" size={32}></Icon>
             <CardContent>
               <ErrorMessageLabel>{`${item.message}`}</ErrorMessageLabel>
               <ErrorInputValueLabel>{`XDR: ${item.xdr}`}</ErrorInputValueLabel>
@@ -32,13 +32,26 @@ export default ({ item, appStore }) => {
         </TransactionRow>
       </TouchableOpacity>
     )
-  }
+	}
+	
+	let iconName;
+	let iconColor;
+	if (item.status === 'CREATED') {
+		iconName = 'alert-circle';
+		iconColor = 'blue';
+	} else if (item.status === 'REJECTED') {
+		iconName = 'stop-circle';
+		iconColor = 'red';
+	} else if (item.status === 'SIGNED') {
+		iconName = 'check-circle';
+		iconColor = '#3ED235';
+	}
   
   return (
     <TouchableOpacity key={item.id} onPress={() => toggleModal(item, appStore)}>
       <TransactionRow>
         <CardWrapper pad="8px">
-          <Icon name="check-circle" color="#3ED235" size={32}></Icon>
+          <Icon name={iconName} color={iconColor} size={32}></Icon>
           <CardContent>
             <AmountCard>
               <AmountLabel>{`${item.amount} XLM`}</AmountLabel>

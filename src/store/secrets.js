@@ -18,7 +18,7 @@ Secret.schema = SecretSchema;
 
 export default (key) => {
 	return new Realm({
-		path: 'secrets_____________.realm',
+		path: 'secrets_______________________.realm',
 		schema: [Secret],
 		schemaVersion: 13,
 		encryptionKey: key
