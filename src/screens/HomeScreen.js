@@ -163,7 +163,7 @@ class HomeScreen extends Component {
     if (data) {
       const res = JSON.parse(data);
       if (res.type === 'error') {
-        console.warn('Error: ', data);
+        //console.warn('Error: ', data);
         this.saveTransaction({ xdr: res.xdr, createdAt: new Date(), type: 'error', message: res.message, status: 'ERROR' });
       } else if (res.type === 'sign') {
         this.saveTransaction({ ...currentTransaction, ...res, status: 'SIGNED' });
@@ -172,7 +172,7 @@ class HomeScreen extends Component {
         this.saveTransaction({ ...tx, type: res.type, xdr: res.xdr, createdAt: new Date(), status: 'CREATED' });
       }
     } else {
-      console.warn('Data not found!');
+      //console.warn('Data not found!');
     }
   }
 
@@ -217,7 +217,7 @@ class HomeScreen extends Component {
   signTransaction = (sk) => {
     const { appStore } = this.props;
     const currentTransaction = appStore.get('currentTransaction');
-    const data = JSON.stringify({ type: 'sign', tx: currentTransaction, xdr: currentTransaction.xdr, sk });
+		const data = JSON.stringify({ type: 'sign', tx: currentTransaction, xdr: currentTransaction.xdr, sk });
     this.webview.postMessage(data);
     this.toggleDetailModal();
   }
