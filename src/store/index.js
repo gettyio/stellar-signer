@@ -10,7 +10,8 @@ const initialState = {
   isDetailModalVisible: false,
   currentXdr: undefined,
   currentLink: undefined,
-	currentTransaction: undefined
+	currentTransaction: undefined,
+	securityFormError: undefined
 }
 
 export default observable.map(initialState);

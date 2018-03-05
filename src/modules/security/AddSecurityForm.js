@@ -19,10 +19,10 @@ class AddSecurityForm extends Component {
 	}
 
 	savePassword = () => {
-		const { close, submit } = this.props;
+		const { close, error, submit } = this.props;
 		const { password } = this.state;
 
-		if (password && password.length < 8) {
+		if (!password || (password && password.length < 8)) {
 			this.setState({ errorMessage: 'Passwords must be at least 8 characters.' });
 			this.savePasswordButton.error();
 			this.savePasswordButton.reset();
@@ -32,14 +32,16 @@ class AddSecurityForm extends Component {
 		this.savePasswordButton.success();
 		this.setState({ errorMessage: undefined });
 		submit(password);
-		if (close) {
-			close();
-		}
 	}
 
 	render() { 
-		const { hideClose, close, submit } = this.props;
+		const { hideClose, close, submit, error } = this.props;
 		const { password, hasError, errorMessage } = this.state;
+
+		if (error) {
+			setTimeout(()=> this.savePasswordButton.reset(), 0);
+		}
+
 		return (
 			<ContainerFlex>
 				{
@@ -60,8 +62,10 @@ class AddSecurityForm extends Component {
 					/>
 					<View>
 					{ errorMessage && (<ErrorLabel>{errorMessage}</ErrorLabel>)	}
+					{ error && (<ErrorLabel>{error}</ErrorLabel>)	}
 					</View>
-					<SmallMessageLabel>Please, make sure to remember this password. We will ask it later to decrypt and authorize your transactions.</SmallMessageLabel>
+					<SmallMessageLabel>Keep your password secure. This password will be asked to encrypt and decrypt your secrets. Stellar Signer does not save it and will not be able to help you recover it if lost.</SmallMessageLabel>
+					
 				</Card>
 			<KeyboardAvoidingView>
 			<View style={{ alignSelf: 'center', paddingTop: 16 }}>

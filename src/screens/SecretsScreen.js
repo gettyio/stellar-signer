@@ -10,7 +10,7 @@ import { observer, inject } from "mobx-react";
 import base64 from 'base-64';
 import base64js from 'base64-js';
 import crypto from 'crypto-js/pbkdf2';
-import Icon from 'react-native-vector-icons/FontAwesome';
+import Icon from 'react-native-vector-icons/Feather';
 import Button from 'react-native-micro-animated-button';
 import { Screen, ContainerFlex, Header, Title, LoadButton, TextInput, ErrorLabel, CloseButton, Card, CardRow, CardLabel, CardTitle } from './../shared'
 import SecretList from './../modules/secrets/SecretList';
@@ -150,7 +150,7 @@ class SecretsScreen extends Component {
 				<Modal isVisible={isAddSecretModalVisible}>
 					<ContainerFlex>
 						<CloseButton onPress={this.toggleAddModal}>
-              <Icon name="times-circle" color="white" size={32}></Icon>
+              <Icon name="x-circle" color="white" size={32}></Icon>
             </CloseButton>
 						<Card>
 							<TextInput placeholder="Label" onChangeText={(alias)=> this.setState({ alias })} clearButtonMode={'always'} value={alias} />

@@ -8,6 +8,14 @@ export const Card = styled.View`
 	align-self: center;
 `
 
+export const CardFlex = styled.View`
+	width: 100%;
+  background-color: white;
+  border-radius: 16px;
+  padding: 16px;
+	align-self: center;
+`
+
 export const CardRow = styled.View`
   flex-direction: ${props => props.flexx ? props.flexx : "row"};
   align-items: ${props => props.align ? props.align : "center"};

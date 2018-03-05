@@ -49,9 +49,11 @@ class SecurePadScreen extends Component {
 			const secretStore = getSecretStore(encodedSecret);
 			const secretList = secretStore.objects('Secret').sorted('alias', true);
 			appStore.set('secretList', secretList);
+			appStore.set('securityFormError', undefined);
+			appStore.set('isSecurityRequired', false);
 		} catch (error) {
 			if (error.message.includes('Unable to open a realm at path')) {
-				alert('Invalid secret!')
+				appStore.set('securityFormError', 'Invalid password.');
 			} else {
 				alert(error.message)
 			}
@@ -66,9 +68,10 @@ class SecurePadScreen extends Component {
 	render() {
 		const { appStore } = this.props;
 		const isSecurityRequired = appStore.get('isSecurityRequired');
+		const securityFormError = appStore.get('securityFormError');
 		return (
 			<Modal isVisible={isSecurityRequired}>
-				<AddSecurityForm appStore={appStore} submit={this.submit} close={this.toggleModal} />
+				<AddSecurityForm appStore={appStore} submit={this.submit} error={securityFormError} close={this.toggleModal} />
 			</Modal>
 		)
 	}

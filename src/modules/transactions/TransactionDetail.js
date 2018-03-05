@@ -175,19 +175,23 @@ class TransactionDetail extends Component {
     if (!tx) {
       return <View></View>
     }
-		
+
     if (tx.type === 'error') {
       return (
         <Container>
           <ErrorMessage tx={tx} />
           <Button 
               ref={ref => (this.deleteTransactionButton = ref)}
-              foregroundColor={'#ff3b30'}
+							foregroundColor={'white'}
+							backgroundColor={'#ff3b30'}
+							errorColor={'#ff3b30'}
+							errorIconColor={'white'}
+							successIconColor={'white'}
               onPress={this.deleteTransaction}
               successIconName="check" 
               label="Delete"
               maxWidth={100}
-              style={{ marginLeft: 16 }}
+              style={{ marginLeft: 16, borderWidth: 0, alignSelf: 'center' }}
             /> 
         </Container>
       )

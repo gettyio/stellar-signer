@@ -18,7 +18,7 @@ import base64 from 'base-64';
 import base64js from 'base64-js';
 import crypto from 'crypto-js/pbkdf2';
 import { observer, inject } from "mobx-react";
-import Icon from 'react-native-vector-icons/FontAwesome';
+import Icon from 'react-native-vector-icons/Feather';
 import moment from 'moment';
 import Modal from 'react-native-modal';
 import cryptocore from 'crypto-js/core';
@@ -241,14 +241,14 @@ class HomeScreen extends Component {
           <TransactionList />
           <Modal isVisible={isAddModalVisible}>
             <CloseButton onPress={this.toggleAddModal}>
-              <Icon name="times-circle" color="white" size={32}></Icon>
+              <Icon name="x-circle" color="white" size={32}></Icon>
             </CloseButton>          
             <AddTransactionForm />
           </Modal>
 
           <Modal isVisible={isDetailModalVisible}>
             <CloseButton onPress={this.toggleDetailModal}>
-              <Icon name="times-circle" color="white" size={32}></Icon>
+              <Icon name="x-circle" color="white" size={32}></Icon>
             </CloseButton>
             <TransactionDetail 
               tx={currentTransaction} 
