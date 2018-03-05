@@ -28,9 +28,10 @@ class AddTransactionForm extends Component {
 			setTimeout(()=> {
 				appStore.set('isAddModalVisible', false)
 			}, 1000)
+		} else {
+			this.setState({ errorMessage: 'Invalid xdr value' })
+			this.addButton.reset();
 		}
-		this.setState({ errorMessage: 'Invalid xdr value' })
-		this.addButton.reset();
   }
 
   submitXdr = (xdr) => {

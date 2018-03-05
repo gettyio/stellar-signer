@@ -27,9 +27,11 @@ class AddSecurityForm extends Component {
 			this.savePasswordButton.error();
 			this.savePasswordButton.reset();
 			return;
+		} else {
+			this.savePasswordButton.success();
+			this.savePasswordButton.reset();
 		}
 
-		this.savePasswordButton.success();
 		this.setState({ errorMessage: undefined });
 		submit(password);
 	}

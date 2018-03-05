@@ -55,7 +55,7 @@ class SecurePadScreen extends Component {
 			if (error.message.includes('Unable to open a realm at path')) {
 				appStore.set('securityFormError', 'Invalid password.');
 			} else {
-				alert(error.message)
+				appStore.set('securityFormError', error.message);
 			}
 		}
 	}

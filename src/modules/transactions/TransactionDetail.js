@@ -2,8 +2,8 @@
 import React, { Component, Fragment } from 'react';
 import {
   View,
-	Text
-	
+	Text,
+	Alert
 } from 'react-native';
 import { TabViewAnimated, TabBar, SceneMap } from 'react-native-tab-view';
 import Button from 'react-native-micro-animated-button';
@@ -165,8 +165,21 @@ class TransactionDetail extends Component {
 		const { appStore } = this.props;
 		const secretList = appStore.get('secretList');
 		const secret = secretList[index];
-		this.props.signTransaction(secret.sk);
+		this.showConfirmSignatureAlert(secret);
 	}
+
+	showConfirmSignatureAlert = (secret) => {
+		Alert.alert(
+			`${secret.alias}`,
+			`${secret.sk.slice(1, 8)}...${secret.sk.substr(secret.sk.length - 8)}`,
+			[
+				{text: 'Cancel', onPress: () => {}, style: 'cancel'},
+				{text: 'Confirm', onPress: () => this.props.signTransaction(secret.sk) }, // Do not button
+			],
+			{ cancelable: true }
+		)
+	}
+	
 	
   render() {
 		const { appStore, tx, toggleModal } = this.props;
@@ -211,9 +224,7 @@ class TransactionDetail extends Component {
 						)}
 						{!showSecurityForm && this.renderActionBar()}
 						{showSecurityForm && (
-							<Fragment>
-								<AddSecurityForm submit={this.authTransaction} close={toggleModal} closeAfterSubmit={false} />
-							</Fragment>
+							<AddSecurityForm submit={this.authTransaction} close={toggleModal} closeAfterSubmit={false} />
 						)}
 						<ActionSheet
 							ref={o => this.actionSheet = o}
