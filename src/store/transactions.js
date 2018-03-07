@@ -1,10 +1,9 @@
 
 import Realm from "realm";
 
-class Transaction {
-}
+class Transaction {}
 
-const TransactionSchema = {
+Transaction.schema = {
   name: "Transaction",
   primaryKey: "id",
   properties: {
@@ -25,9 +24,7 @@ const TransactionSchema = {
     type: { type: "string", optional: true },
     createdAt: "date"
   }
-};
-
-Transaction.schema = TransactionSchema;
+}
 
 export default new Realm({
 	path: 'transactions___.realm',
