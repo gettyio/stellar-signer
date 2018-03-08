@@ -254,7 +254,8 @@ class HomeScreen extends Component {
       tx: currentTransaction,
       xdr: currentTransaction.xdr,
       sk
-    })
+		})
+		//console.warn('sk',sk)
     this.webview.postMessage(data)
     this.toggleDetailModal()
   }

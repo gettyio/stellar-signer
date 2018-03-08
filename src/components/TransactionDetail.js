@@ -1,5 +1,5 @@
 import React, { Component, Fragment } from 'react'
-import { View, Text, Alert } from 'react-native'
+import { View, Text, Alert, Clipboard } from 'react-native'
 import { TabViewAnimated, TabBar, SceneMap } from 'react-native-tab-view'
 import Button from 'react-native-micro-animated-button'
 import Icon from 'react-native-vector-icons/FontAwesome'
@@ -27,7 +27,14 @@ class TransactionDetail extends Component {
       ]
     },
     showSecurityForm: false
-  }
+	}
+	
+	copyToClipboard = () => {
+		const { tx } = this.props
+		Clipboard.setString(tx.sxdr);
+		this.copyButton.success();
+		setTimeout(()=> this.props.toggleModal(), 1000);
+	}
 
   handleTabIndexChange = index => {
     this.setState({
@@ -35,23 +42,6 @@ class TransactionDetail extends Component {
         index
       })
     })
-  }
-
-  renderTabHeader = props => {
-    return (
-      <TabBar
-        {...props}
-        style={{ backgroundColor: 'transparent' }}
-        labelStyle={{ color: 'black' }}
-        indicatorStyle={{ backgroundColor: '#00c400' }}
-        scrollEnabled={true}
-      />
-    )
-  }
-
-  rejectTransaction = () => {
-    this.cancelButton.success()
-    this.props.cancelTransaction()
   }
 
   signTransaction = () => {
@@ -76,6 +66,23 @@ class TransactionDetail extends Component {
 		} else {
 			this.actionSheet.show();
 		}
+	}
+	
+	renderTabHeader = props => {
+    return (
+      <TabBar
+        {...props}
+        style={{ backgroundColor: 'white', borderTopLeftRadius: 8, borderTopRightRadius: 8  }}
+        labelStyle={{ color: 'black' }}
+        indicatorStyle={{ backgroundColor: '#00c400' }}
+        scrollEnabled={true}
+      />
+    )
+  }
+
+  rejectTransaction = () => {
+    this.cancelButton.success()
+    this.props.cancelTransaction()
   }
 
   renderActionBar = () => {
@@ -86,18 +93,40 @@ class TransactionDetail extends Component {
 
     if (tx.status === 'SIGNED') {
       return (
-        <View
-          style={{
-            flexDirection: 'row',
-            justifyContent: 'center',
-            padding: 16,
-            backgroundColor: 'blue',
-            borderBottomLeftRadius: 8,
-            borderBottomRightRadius: 8
-          }}
-        >
-          <Text style={{ color: 'white', fontWeight: '700' }}>SIGNED</Text>
-        </View>
+				<View>
+					<View
+						style={{
+							flexDirection: 'row',
+							justifyContent: 'center',
+							padding: 16,
+							backgroundColor: 'blue',
+							borderBottomLeftRadius: 8,
+							borderBottomRightRadius: 8
+						}}
+					>
+						<Text style={{ color: 'white', fontWeight: '700' }}>SIGNED</Text>
+        	</View>
+					<Button
+							ref={ref => (this.copyButton = ref)}
+							foregroundColor={'white'}
+							backgroundColor={'#454545'}
+							successColor={'#4cd964'}
+							errorColor={'#ff3b30'}
+							errorIconColor={'white'}
+							successIconColor={'white'}
+							shakeOnError={true}
+							successIconName="check"
+							label="Copy Signed XDR"
+							onPress={this.copyToClipboard}
+							maxWidth={150}
+							style={{
+								marginLeft: 16,
+								borderWidth: 0,
+								alignSelf: 'center',
+								marginTop: 16
+							}}
+						/>
+				</View>
       )
     }
 
@@ -162,7 +191,6 @@ class TransactionDetail extends Component {
           label="Reject"
           maxWidth={100}
         />
-
         <Button
           ref={ref => (this.signButton = ref)}
           foregroundColor={'#4cd964'}
@@ -204,7 +232,8 @@ class TransactionDetail extends Component {
 
   getOptions = () => {
     const { appStore } = this.props
-    const secretList = appStore.get('secretList')
+		const secretList = appStore.get('secretList')
+		//console.warn('secretList',secretList)
 		let options = []
 		if (secretList) {
 			secretList.forEach(el => options.push(el.alias))
@@ -270,7 +299,7 @@ class TransactionDetail extends Component {
           style={{
             height: '80%',
             justifyContent: 'center',
-            backgroundColor: 'white',
+            backgroundColor: 'transparent',
             margin: 8,
             borderRadius: 8
           }}

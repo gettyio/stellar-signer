@@ -2,11 +2,11 @@ import { observable } from 'mobx'
 
 const initialState = {
   sk: undefined,
-  pwd: '12345678',
+  pwd: undefined,
   secretList: undefined,
   isAddModalVisible: false,
   isAddSecretModalVisible: false,
-  isSecurityRequired: false,
+  isSecurityRequired: true,
   isDetailModalVisible: false,
   currentXdr: undefined,
   currentLink: undefined,
