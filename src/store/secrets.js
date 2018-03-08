@@ -1,26 +1,23 @@
-import Realm from "realm";
+import Realm from 'realm'
 
-class Secret {
+class Secret {}
+
+Secret.schema = {
+	name: 'Secret',
+	primaryKey: 'alias',
+	properties: {
+		id: 'string',
+		sk: 'string',
+		alias: 'string',
+		createdAt: 'date'
+	}
 }
 
-const SecretSchema = {
-  name: "Secret",
-  primaryKey: "alias",
-  properties: {
-		id: "string",
-		sk: "string", 
-		alias: "string",
-    createdAt: "date"
-  }
-};
-
-Secret.schema = SecretSchema;
-
-export default (key) => {
-	return new Realm({
-		path: 'secrets_______________________.realm',
-		schema: [Secret],
-		schemaVersion: 13,
-		encryptionKey: key
-	});
+export default key => {
+  return new Realm({
+    path: 'secrets_______________________.realm',
+    schema: [Secret],
+    schemaVersion: 13,
+    encryptionKey: key
+  })
 }

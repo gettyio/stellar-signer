@@ -1,21 +1,18 @@
-import Realm from "realm";
+import Realm from 'realm'
 
-class Salt {
+class Salt {}
+
+Salt.schema = {
+  name: 'Salt',
+  primaryKey: 'id',
+  properties: {
+    id: 'string',
+    value: 'string'
+  }
 }
 
-const SaltSchema = {
-  name: "Salt",
-  primaryKey: "id",
-  properties: {
-		id: "string",
-		value: "string"
-  }
-};
-
-Salt.schema = SaltSchema;
-
 export default new Realm({
-	path: 'salt____.realm',
+  path: 'salt____.realm',
   schema: [Salt],
   schemaVersion: 10
-});
+})
