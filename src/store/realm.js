@@ -1,6 +1,17 @@
 
 import Realm from "realm";
 
+class Salt {}
+
+Salt.schema = {
+  name: 'Salt',
+  primaryKey: 'id',
+  properties: {
+    id: 'string',
+    value: 'string'
+  }
+}
+
 class Transaction {}
 
 Transaction.schema = {
@@ -27,7 +38,7 @@ Transaction.schema = {
 }
 
 export default new Realm({
-	path: 'transactions___.realm',
-  schema: [Transaction],
-  schemaVersion: 9
+	path: 'transactions.realm',
+  schema: [Transaction, Salt],
+  schemaVersion: 10
 });

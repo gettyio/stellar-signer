@@ -12,7 +12,7 @@ import EnvelopTab from './EnvelopTab'
 import SecurityForm from './SecurityForm'
 import { Container, SelectSecret } from './utils'
 
-import realm from '../store/transactions'
+import store from '../store/realm'
 
 @inject('appStore')
 @observer
@@ -60,7 +60,22 @@ class TransactionDetail extends Component {
   }
 
   authTransaction = pwd => {
-    this.actionSheet.show()
+		const { appStore } = this.props
+		const secretList = appStore.get('secretList')
+		if (!secretList || secretList.length === 0) {
+			Alert.alert(
+				`You don't have any secret!`,
+				`Please, add a new secret on the secrets tab.`,
+				[
+					{
+						text: 'Ok',
+						onPress: () => this.props.toggleModal()
+					}
+				]
+			)
+		} else {
+			this.actionSheet.show();
+		}
   }
 
   renderActionBar = () => {
@@ -180,8 +195,8 @@ class TransactionDetail extends Component {
     this.deleteTransactionButton.success()
     appStore.set('isDetailModalVisible', !appStore.get('isDetailModalVisible'))
     setTimeout(() => {
-      realm.write(() => {
-        realm.delete(currentTransaction)
+      store.write(() => {
+        store.delete(currentTransaction)
       })
       appStore.set('currentTransaction', undefined)
     }, 800)
@@ -192,7 +207,7 @@ class TransactionDetail extends Component {
     const secretList = appStore.get('secretList')
     let options = []
     secretList.forEach(el => options.push(el.alias))
-    return options
+    return options;
   }
 
   submitSignature = index => {
@@ -273,15 +288,17 @@ class TransactionDetail extends Component {
               close={toggleModal}
               closeAfterSubmit={false}
             />
-          )}
-          <ActionSheet
-            ref={o => (this.actionSheet = o)}
-            title={'Select a Secret'}
-            options={secretOptions}
-            cancelButtonIndex={1}
-            destructiveButtonIndex={2}
-            onPress={this.submitSignature}
-          />
+					)}
+					{(secretOptions && secretOptions.length > 0) && (
+						<ActionSheet
+							ref={o => (this.actionSheet = o)}
+							title={'Select a Secret'}
+							options={secretOptions}
+							cancelButtonIndex={1}
+							destructiveButtonIndex={2}
+							onPress={this.submitSignature}
+						/>
+					)}
         </Container>
       )
     }

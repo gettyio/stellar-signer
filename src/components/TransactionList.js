@@ -20,7 +20,7 @@ import { observer, inject } from 'mobx-react'
 import TransactionRow from './TransactionRow'
 import { Container, EmptyScreen } from './utils'
 
-import realm from './../store/transactions'
+import store from './../store/realm'
 
 @inject('appStore')
 @observer
@@ -33,16 +33,16 @@ class TransactionList extends Component {
   }
 
   componentDidMount() {
-    realm.addListener('change', this.refreshList)
+    store.addListener('change', this.refreshList)
     this.refreshList()
   }
 
   componentWillUnmount() {
-    realm.removeAllListeners()
+    store.removeAllListeners()
   }
 
   refreshList = () => {
-    const transactions = realm.objects('Transaction').sorted('createdAt', true)
+    const transactions = store.objects('Transaction').sorted('createdAt', true)
     this.setState({ transactions })
   }
 

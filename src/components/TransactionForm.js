@@ -14,7 +14,7 @@ import {
   ErrorLabel
 } from './utils'
 
-import realm from './../store/transactions'
+import store from './../store/realm'
 
 @inject('appStore')
 @observer

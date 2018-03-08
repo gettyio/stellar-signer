@@ -25,7 +25,7 @@ import {
   CardTitle
 } from '../components/utils'
 
-import saltStore from './../store/salt'
+import store from './../store/realm'
 import getSecretStore from './../store/secrets'
 
 @inject('appStore')
@@ -51,7 +51,7 @@ class SecretsScreen extends Component {
 
   getSecrets = () => {
     const { appStore } = this.props
-    const saltObject = saltStore.objects('Salt')[0]
+    const saltObject = store.objects('Salt')[0]
     try {
       if (saltObject) {
         const pwd = appStore.get('pwd')

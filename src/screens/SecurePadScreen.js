@@ -26,7 +26,7 @@ import {
   CardTitle
 } from '../components/utils'
 
-import saltStore from './../store/salt'
+import store from './../store/realm'
 import getSecretStore from './../store/secrets'
 
 @inject('appStore')
@@ -46,7 +46,7 @@ class SecurePadScreen extends Component {
   }
 
   getEncodedSecret = pwd => {
-    const saltObject = saltStore.objects('Salt')[0]
+    const saltObject = store.objects('Salt')[0]
     if (saltObject) {
       const salt = JSON.parse(saltObject.value)
       const passcode = crypto(pwd, salt, { keySize: 512 / 64 })
@@ -85,7 +85,7 @@ class SecurePadScreen extends Component {
     const isSecurityRequired = appStore.get('isSecurityRequired')
     const securityFormError = appStore.get('securityFormError')
     return (
-      <Modal isVisible={isSecurityRequired}>
+      <Modal isVisible={isSecurityRequired} style={{ paddingTop: 24 }}>
         <SecurityForm
           appStore={appStore}
           submit={this.submit}

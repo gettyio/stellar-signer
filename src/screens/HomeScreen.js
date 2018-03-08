@@ -39,12 +39,11 @@ import {
 } from '../components/utils'
 
 import getSecretStore from './../store/secrets'
-import saltStore from './../store/salt'
-import txStore from './../store/transactions'
+import store from './../store/realm'
 
 // Delete All
-// txStore.write(() => {
-//   txStore.deleteAll();
+// store.write(() => {
+//   store.deleteAll();
 // });
 
 import parseEnvelopeTree from './../utils/parseEnvelopeTree'
@@ -92,11 +91,11 @@ class HomeScreen extends Component {
   }
 
   checkSalt = () => {
-    const salt = saltStore.objects('Salt')[0]
+    const salt = store.objects('Salt')[0]
     if (!salt) {
-      saltStore.write(() => {
+      store.write(() => {
         const val = cryptocore.lib.WordArray.random(128 / 8)
-        saltStore.create('Salt', { id: uuid(), value: JSON.stringify(val) })
+        store.create('Salt', { id: uuid(), value: JSON.stringify(val) })
       })
     }
   }
@@ -209,11 +208,11 @@ class HomeScreen extends Component {
 
   saveTransaction = tx => {
     const { appStore } = this.props
-    txStore.write(() => {
+    store.write(() => {
       if (tx.type === 'sign') {
-        txStore.create('Transaction', { ...tx }, true)
+        store.create('Transaction', { ...tx }, true)
       } else {
-        txStore.create('Transaction', { id: uuid(), ...tx })
+        store.create('Transaction', { id: uuid(), ...tx })
       }
     })
     appStore.set('currentXdr', undefined)
@@ -233,10 +232,10 @@ class HomeScreen extends Component {
 
   cancelTransaction = () => {
     const { appStore } = this.props
-    txStore.write(() => {
+    store.write(() => {
       const currentTransaction = appStore.get('currentTransaction')
       currentTransaction.status = 'REJECTED'
-      txStore.create(
+      store.create(
         'Transaction',
         {
           ...currentTransaction,
@@ -280,25 +279,30 @@ class HomeScreen extends Component {
             <Icon name="plus-circle" color="white" size={32} />
           </LoadButton>
         </Header>
+
         <TransactionList />
-        <Modal isVisible={isAddModalVisible}>
+
+        <Modal isVisible={isAddModalVisible} style={{ paddingTop: 24 }}>
           <CloseButton onPress={this.toggleAddModal}>
             <Icon name="x-circle" color="white" size={32} />
           </CloseButton>
           <TransactionForm />
         </Modal>
 
-        <Modal isVisible={isDetailModalVisible}>
+        <Modal isVisible={isDetailModalVisible} style={{ paddingTop: 24 }}>
           <CloseButton onPress={this.toggleDetailModal}>
             <Icon name="x-circle" color="white" size={32} />
           </CloseButton>
           <TransactionDetail
-            tx={currentTransaction}
+						tx={currentTransaction}
+						toggleModal={this.toggleDetailModal}
             cancelTransaction={this.cancelTransaction}
             signTransaction={this.signTransaction}
           />
         </Modal>
+
         <StatusBar barStyle="light-content" />
+
         {this.renderWebview()}
       </Screen>
     )
