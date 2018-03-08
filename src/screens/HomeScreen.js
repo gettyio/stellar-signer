@@ -58,8 +58,6 @@ class HomeScreen extends Component {
   }
 
   componentDidMount() {
-    // const url = `stellar-signer://stellar-signer?${qs.stringify({ type: 'decode', xdr: 'AAAAAFIBKYc47PZpoxxY5Acltd9IaRANeap3Ja+FZg9fVtSBAAAAZABu6EUAAAACAAAAAAAAAAAAAAABAAAAAAAAAAEAAAAAr+SzF6CyMZracAojHWYWqhzdJZW+OiI9csaw1Nl4EZMAAAAAAAAAAAX14QAAAAAAAAAAAA==' })}`;
-
     if (Platform.OS === 'android') {
       Linking.getInitialURL().then(url => {
         if (url) {
@@ -74,7 +72,6 @@ class HomeScreen extends Component {
         }
       })
     }
-
     // Ensure that the salt will exists when create the realm file
     this.checkSalt()
   }
@@ -125,10 +122,9 @@ class HomeScreen extends Component {
 
   sendToViewer = () => {
     const url = `stellar-signer://stellar-signer?${qs.stringify({
-      type: 'decode',
-      xdr:
-        'AAAAAFIBKYc47PZpoxxY5Acltd9IaRANeap3Ja+FZg9fVtSBAAAAZABu6EUAAAACAAAAAAAAAAAAAAABAAAAAAAAAAEAAAAAr+SzF6CyMZracAojHWYWqhzdJZW+OiI9csaw1Nl4EZMAAAAAAAAAAAX14QAAAAAAAAAAAA=='
-    })}`
+      type: 'decode', xdr: 'AAAAAFIBKYc47PZpoxxY5Acltd9IaRANeap3Ja+FZg9fVtSBAAAAZABu6EUAAAACAAAAAAAAAAAAAAABAAAAAAAAAAEAAAAAr+SzF6CyMZracAojHWYWqhzdJZW+OiI9csaw1Nl4EZMAAAAAAAAAAAX14QAAAAAAAAAAAA=='
+		})}`;
+		
     Linking.canOpenURL(url)
       .then(supported => {
         if (!supported) {
@@ -151,8 +147,6 @@ class HomeScreen extends Component {
   }
 
   decodeXdr = xdr => {
-    //const testTx = 'AAAAAFIBKYc47PZpoxxY5Acltd9IaRANeap3Ja+FZg9fVtSBAAAAZABu6EUAAAACAAAAAAAAAAAAAAABAAAAAAAAAAEAAAAAr+SzF6CyMZracAojHWYWqhzdJZW+OiI9csaw1Nl4EZMAAAAAAAAAAAX14QAAAAAAAAAAAA==';
-
     const event = JSON.stringify({ type: 'decode', xdr })
     setTimeout(() => {
       this.webview.postMessage(event)
@@ -260,7 +254,8 @@ class HomeScreen extends Component {
       tx: currentTransaction,
       xdr: currentTransaction.xdr,
       sk
-    })
+		})
+		//console.warn('sk',sk)
     this.webview.postMessage(data)
     this.toggleDetailModal()
   }
