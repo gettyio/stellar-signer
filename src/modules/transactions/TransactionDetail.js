@@ -7,7 +7,7 @@ import {
 } from 'react-native';
 import { TabViewAnimated, TabBar, SceneMap } from 'react-native-tab-view';
 import Button from 'react-native-micro-animated-button';
-import Icon from 'react-native-vector-icons/FontAwesome';
+import Icon from 'react-native-vector-icons/Feather';
 import ActionSheet from 'react-native-actionsheet'
 import { observer, inject } from "mobx-react";
 import DisplayTab from './DisplayTab'
@@ -43,7 +43,7 @@ class TransactionDetail extends Component {
     return (
       <TabBar
         {...props}
-        style={{ backgroundColor: 'transparent' }}
+        style={{ backgroundColor: 'white', borderTopRightRadius: 8, borderTopLeftRadius: 8  }}
         labelStyle={{ color: 'black' }}
         indicatorStyle={{ backgroundColor: '#00c400' }}
         scrollEnabled={true}
@@ -52,7 +52,7 @@ class TransactionDetail extends Component {
   }
   
   rejectTransaction = () => {
-    this.cancelButton.success();
+    this.rejectButton.success();
     this.props.cancelTransaction();
   }
 
@@ -64,6 +64,17 @@ class TransactionDetail extends Component {
 	authTransaction = (pwd) => {
 		this.actionSheet.show()
 	}
+
+	sendToViewer = () => {
+    const url = `stellar-viewer://stellar-viewer?${qs.stringify({ type: 'decode', xdr: 'AAAAAFIBKYc47PZpoxxY5Acltd9IaRANeap3Ja+FZg9fVtSBAAAAZABu6EUAAAACAAAAAAAAAAAAAAABAAAAAAAAAAEAAAAAr+SzF6CyMZracAojHWYWqhzdJZW+OiI9csaw1Nl4EZMAAAAAAAAAAAX14QAAAAAAAAAAAA==' })}`;
+    Linking.canOpenURL(url).then(supported => {
+      if (!supported) {
+        console.log('Can\'t handle url: ' + url);
+      } else {
+        return Linking.openURL(url);
+      }
+    }).catch(err => console.error('An error occurred', err));
+  }
 
   renderActionBar = () => {
     const { tx } = this.props;
@@ -81,8 +92,28 @@ class TransactionDetail extends Component {
   
     if (tx.status === 'REJECTED') {
       return (
-        <View style={{flexDirection: 'row', justifyContent: 'center', padding: 16, backgroundColor: '#ff3b30', borderBottomLeftRadius: 8, borderBottomRightRadius: 8}}>
-          <Text style={{ color: 'white', fontWeight: '700' }}>REJECTED</Text>
+        <View style={{ backgroundColor: 'transparent' }}>
+					<View style={{flexDirection: 'row', justifyContent: 'center', padding: 16, backgroundColor: '#ff3b30', borderBottomLeftRadius: 8, borderBottomRightRadius: 8}}>
+          	<Text style={{ color: 'white', fontWeight: '700' }}>REJECTED</Text>
+					</View>
+					<View style={{ alignSelf: 'center' }}>
+					<Button 
+						ref={ref => (this.deleteButton = ref)}
+						foregroundColor={'white'}
+						backgroundColor={'#ff3b30'}
+						successColor={'#ff3b30'}
+						errorColor={'#ff3b30'}
+						errorIconColor={'white'}
+						successIconColor={'white'}
+						onPress={this.deleteTransaction}
+						successIconName="check" 
+						maxWidth={100}
+						label="Delete"
+						successIcon="trash-alt"
+						iconStyle={{ color: 'white' }}
+						style={{ alignSelf: 'center', borderWidth: 0 }}
+					/>
+					</View>
         </View>      
       )
     }
@@ -91,7 +122,7 @@ class TransactionDetail extends Component {
       return (
         <View style={{flexDirection: 'row', justifyContent: 'center', padding: 16, backgroundColor: '#ff8300', borderBottomLeftRadius: 8, borderBottomRightRadius: 8}}>
           <Text style={{ color: 'white', fontWeight: '700' }}>SUBMITTED</Text>
-        </View>      
+        </View>
       )
     }
     
@@ -106,8 +137,13 @@ class TransactionDetail extends Component {
     return (
       <View style={{flexDirection: 'row', justifyContent: 'center' }}>
         <Button 
-          ref={ref => (this.cancelButton = ref)}
-          foregroundColor={'#ff3b30'}
+          ref={ref => (this.rejectButton = ref)}
+					foregroundColor={'white'}
+					backgroundColor={'#ff3b30'}
+					successColor={'#ff3b30'}
+					errorColor={'#ff3b30'}
+					errorIconColor={'white'}
+					successIconColor={'white'}
           onPress={this.rejectTransaction}
           successIconName="check" 
           label="Reject"
@@ -116,7 +152,12 @@ class TransactionDetail extends Component {
   
         <Button 
           ref={ref => (this.signButton = ref)}
-          foregroundColor={'#4cd964'}
+					foregroundColor={'white'}
+					backgroundColor={'#4cd964'}
+					successColor={'#4cd964'}
+					errorColor={'#ff3b30'}
+					errorIconColor={'white'}
+					successIconColor={'white'}
           onPress={this.signTransaction}
           successIconName="check" 
           label="Sign"
@@ -142,8 +183,14 @@ class TransactionDetail extends Component {
 
   deleteTransaction = () => {
     const { appStore } = this.props;
-    const currentTransaction = appStore.get('currentTransaction');
-    this.deleteTransactionButton.success();
+		const currentTransaction = appStore.get('currentTransaction');
+		if (this.deleteButton) {
+			this.deleteButton.success();
+		}
+		if (this.deleteTransactionButton) {
+			this.deleteTransactionButton.success();
+		}
+
     appStore.set('isDetailModalVisible', !appStore.get('isDetailModalVisible'));
     setTimeout(()=> {
       realm.write(() => {
@@ -180,7 +227,6 @@ class TransactionDetail extends Component {
 		)
 	}
 	
-	
   render() {
 		const { appStore, tx, toggleModal } = this.props;
 		const { showSecurityForm } = this.state;
@@ -212,7 +258,7 @@ class TransactionDetail extends Component {
 
     if (tx) {
       return (
-        <Container style={{ height: '80%', justifyContent: 'center', backgroundColor: 'white' , margin: 8, borderRadius: 8 }}>
+        <Container style={{ height: '80%', justifyContent: 'center', backgroundColor: 'transparent' , margin: 8, borderRadius: 8 }}>
 					{/**<ActivityIndicator size="large" color="#4b9ed4"></ActivityIndicator> **/}
 						{!showSecurityForm && (
 							<TabViewAnimated
