@@ -1,5 +1,5 @@
 import React from 'react'
-import styled from 'styled-components/native'
+import styled from 'styled-components'
 import { WebView, View, Text } from 'react-native'
 
 const Container = styled.View`
@@ -17,7 +17,7 @@ export default ({ xdr }) => {
     return (
       <Container>
         <WebView 
-          source={require(`./../webviews/xdrviewer/index.html`)}
+          source={require(`../webviews/xdrviewer/index.html`)}
           injectedJavaScript={`window.xdr = "${xdr}";`}
           javaScriptEnabled={true}
         />
