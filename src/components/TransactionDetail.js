@@ -205,9 +205,12 @@ class TransactionDetail extends Component {
   getOptions = () => {
     const { appStore } = this.props
     const secretList = appStore.get('secretList')
-    let options = []
-    secretList.forEach(el => options.push(el.alias))
-    return options;
+		let options = []
+		if (secretList) {
+			secretList.forEach(el => options.push(el.alias))
+			return options;
+		}
+		return undefined
   }
 
   submitSignature = index => {
