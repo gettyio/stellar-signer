@@ -101,12 +101,20 @@ android {
         applicationId "com.stellarsigner"
         minSdkVersion 16
         targetSdkVersion 22
-        versionCode 3
-        versionName "2.0.1"
+        versionCode 5
+        versionName "2.1.1"
         ndk {
             abiFilters "armeabi-v7a", "x86"
         }
     }
+    signingConfigs {
+        release {
+            storeFile file(MYAPP_RELEASE_STORE_FILE)
+            storePassword System.getenv("STOREPASS")
+            keyAlias MYAPP_RELEASE_KEY_ALIAS
+            keyPassword System.getenv("KEYPASS")
+        }
+   }
     splits {
         abi {
             reset()
@@ -115,8 +123,10 @@ android {
             include "armeabi-v7a", "x86"
         }
     }
+    
     buildTypes {
         release {
+            signingConfig signingConfigs.release
             minifyEnabled enableProguardInReleaseBuilds
             proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
         }
