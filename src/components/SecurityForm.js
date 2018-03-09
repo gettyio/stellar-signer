@@ -63,7 +63,8 @@ class SecurityForm extends Component {
             placeholder="Password"
             onChangeText={password => this.setState({ password })}
             autoFocus={true}
-            value={password}
+						value={password}
+						underlineColorAndroid={'white'}
           />
           <View>
             {errorMessage && <ErrorLabel>{errorMessage}</ErrorLabel>}

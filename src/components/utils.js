@@ -52,11 +52,9 @@ export const Header = styled.View`
   height: 100px;
   flex-direction: row;
   align-items: center;
-  justify-content: flex-start;
-  padding-top: 16px;
-  padding-right: 16px;
   background-color: blue;
 `
+
 
 export const Container = styled.View`
   height: ${props => (props.height ? props.height : 'auto')};
@@ -115,13 +113,16 @@ export const AddTransactionInput = styled.TextInput`
 `
 
 export const LoadButton = styled.TouchableOpacity`
-  position: absolute;
-  padding-top: 8px;
-  padding-right: 8px;
-  right: 0;
-  height: 24px;
-  width: 40px;
+  height: 32px;
+  width: 32px;
   border-radius: 10px;
+`
+
+export const LoadButtonWrapper = styled.View`
+  height: 50px;
+  width: 50px;
+	align-self: center;
+	justify-content: center;
 `
 
 export const Title = styled.Text`
@@ -130,6 +131,15 @@ export const Title = styled.Text`
   padding-left: 16;
   font-size: 28;
 `
+
+
+export const TitleWrapper = styled.View`
+	flex: 1;
+	height: 100%;
+	background-color: blue;
+	justify-content: center;
+`
+
 
 export const TransactionRow = styled.View`
   padding: 8px;
