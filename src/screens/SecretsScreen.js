@@ -22,7 +22,9 @@ import {
   Card,
   CardRow,
   CardLabel,
-  CardTitle
+	CardTitle,
+	LoadButtonWrapper,
+	TitleWrapper
 } from '../components/utils'
 
 import store from './../store/realm'
@@ -172,10 +174,14 @@ class SecretsScreen extends Component {
     return (
       <Screen>
         <Header>
-          <Title>My Secrets</Title>
-          <LoadButton onPress={this.toggleAddModal}>
-            <Icon name="plus-circle" color="white" size={32} />
-          </LoadButton>
+						<TitleWrapper>
+							<Title>My Secrets</Title>
+							</TitleWrapper>
+							<LoadButtonWrapper>
+							<LoadButton onPress={this.toggleAddModal}>
+								<Icon name="plus-circle" color="white" size={32} />
+							</LoadButton>
+					</LoadButtonWrapper>					
         </Header>
         <SecretList secrets={secrets} show={this.showSecretAlert} />
         <Modal isVisible={isAddSecretModalVisible}>
@@ -187,13 +193,15 @@ class SecretsScreen extends Component {
               <TextInput
                 placeholder="Label"
                 onChangeText={alias => this.setState({ alias })}
-                clearButtonMode={'always'}
+								clearButtonMode={'always'}
+								underlineColorAndroid={'white'}
                 value={alias}
               />
               <TextInput
                 placeholder="Secret Key"
                 onChangeText={sk => this.setState({ sk })}
-                clearButtonMode={'always'}
+								clearButtonMode={'always'}
+								underlineColorAndroid={'white'}
                 value={sk}
               />
               <View>

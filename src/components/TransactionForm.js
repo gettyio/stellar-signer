@@ -60,7 +60,8 @@ class TransactionForm extends Component {
             value={inputValue}
             onChangeText={inputValue => {
               this.setState({ inputValue })
-            }}
+						}}
+						underlineColorAndroid={'white'}
           />
           <ErrorLabel>{errorMessage}</ErrorLabel>
         </Card>

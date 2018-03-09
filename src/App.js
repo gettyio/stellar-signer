@@ -35,10 +35,13 @@ const NavigatorScreen = TabNavigator(
         // icon component from react-native-vector-icons
         return <Icon name={iconName} size={25} color={tintColor} />
       }
-    }),
+		}),
+		tabBarPosition: 'bottom',
+		tabBarComponent: TabBarBottom,
     tabBarOptions: {
       activeTintColor: '#0b24fb',
-      inactiveTintColor: 'gray',
+			inactiveTintColor: 'gray',
+
       style: {
         height: 45,
         backgroundColor: 'white'

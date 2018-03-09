@@ -35,7 +35,9 @@ import {
   Title,
   LoadButton,
   TextInput,
-  CloseButton
+	CloseButton,
+	TitleWrapper,
+	LoadButtonWrapper
 } from '../components/utils'
 
 import getSecretStore from './../store/secrets'
@@ -269,10 +271,14 @@ class HomeScreen extends Component {
     return (
       <Screen>
         <Header>
-          <Title>Stellar Signer</Title>
-          <LoadButton onPress={this.toggleAddModal}>
-            <Icon name="plus-circle" color="white" size={32} />
-          </LoadButton>
+					<TitleWrapper>
+          	<Title>Stellar Signer</Title>
+					</TitleWrapper>
+					<LoadButtonWrapper>
+						<LoadButton onPress={this.toggleAddModal}>
+							<Icon name="plus-circle" color="white" size={32} />
+						</LoadButton>
+					</LoadButtonWrapper>
         </Header>
 
         <TransactionList />
