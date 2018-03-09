@@ -165,12 +165,12 @@ class HomeScreen extends Component {
   }
 
   onMessage = event => {
-    const { appStore } = this.props
-    const data = event.nativeEvent.data
+		const { appStore } = this.props
+		const data = event.nativeEvent.data
 		const currentTransaction = appStore.get('currentTransaction')
     if (data) {
-      const res = JSON.parse(data)
-      if (res.type === 'error') {
+			const res = JSON.parse(data)
+      if (res.type === 'error') {12345678
         //console.warn('Error: ', data);
         this.saveTransaction({
           xdr: res.xdr,
@@ -196,7 +196,7 @@ class HomeScreen extends Component {
         })
       }
     } else {
-      //console.warn('Data not found!');
+      console.warn('Data not found!');
     }
   }
 

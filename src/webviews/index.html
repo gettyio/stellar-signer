@@ -46,16 +46,17 @@
       // TODO: input validation
       var xdrObject;
       try {
-        xdrObject = xdr[type].fromXDR(input, 'base64');
-      } catch(error) {
-        postMessage(JSON.stringify({ type: 'error', message: 'Input XDR could not be parsed', xdr: input }));
-        throw new Error('Input XDR could not be parsed');
-      }
+				xdrObject = xdr[type].fromXDR(input, 'base64');
 
-      var tree = [{}];
-      buildTreeFromObject(xdrObject, tree[0], type);
-      postMessage(JSON.stringify({ tx: tree, xdr: input }));
-      return tree;
+				var tree = [{}];
+				buildTreeFromObject(xdrObject, tree[0], type);
+				postMessage(JSON.stringify({ tx: tree, xdr: input }));
+				return tree;
+
+      } catch(error) {
+				postMessage(JSON.stringify({ type: 'error', message: 'Input XDR could not be parsed', xdr: input }));
+        throw new Error('Input XDR could not be parsed');
+			}
     }
 
     function buildTreeFromObject(object, anchor, name) {
