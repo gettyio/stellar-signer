@@ -44,7 +44,7 @@
     function decodeFromXdr(input, type) {
       // TODO: Check to see if type exists
       // TODO: input validation
-      let xdrObject;
+      var xdrObject;
       try {
         xdrObject = xdr[type].fromXDR(input, 'base64');
       } catch(error) {
@@ -52,7 +52,7 @@
         throw new Error('Input XDR could not be parsed');
       }
 
-      let tree = [{}];
+      var tree = [{}];
       buildTreeFromObject(xdrObject, tree[0], type);
       postMessage(JSON.stringify({ tx: tree, xdr: input }));
       return tree;
@@ -117,7 +117,7 @@
       return true;
     }
 
-    const amountFields = ['amount', 'startingBalance', 'sendMax', 'destAmount', 'limit'];
+    var amountFields = ['amount', 'startingBalance', 'sendMax', 'destAmount', 'limit'];
 
     function getValue(object, name) {
       if (_.includes(amountFields, name)) {
@@ -162,10 +162,10 @@
         // byte 34:                                                                            # 54### 55
         // byte 35:                                                                                      ### 56###
         //
-        let hintBytes = new Buffer(object, 'base64');
-        let partialPublicKey = Buffer.concat([new Buffer(28).fill(0), hintBytes]);
-        let keypair = new Keypair({type: 'ed25519', publicKey: partialPublicKey});
-        let partialPublicKeyString =
+        var hintBytes = new Buffer(object, 'base64');
+        var partialPublicKey = Buffer.concat([new Buffer(28).fill(0), hintBytes]);
+        var keypair = new Keypair({type: 'ed25519', publicKey: partialPublicKey});
+        var partialPublicKeyString =
           'G'+
           (new Buffer(46).fill('_').toString())+
           keypair.publicKey().substr(47, 5)+

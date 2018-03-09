@@ -40,7 +40,7 @@ class TransactionForm extends Component {
   }
 
   submitXdr = xdr => {
-    const { appStore } = this.props
+		const { appStore } = this.props
     appStore.set('currentXdr', xdr)
   }
 
@@ -56,7 +56,7 @@ class TransactionForm extends Component {
             Add Transaction Envelope
           </AddTransactionHeaderLabel>
           <AddTransactionInput
-            placeholder="Past your XDR here!"
+            placeholder="Paste your XDR here!"
             value={inputValue}
             onChangeText={inputValue => {
               this.setState({ inputValue })

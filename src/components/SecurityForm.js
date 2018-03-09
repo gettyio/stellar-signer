@@ -77,7 +77,7 @@ class SecurityForm extends Component {
           </SmallMessageLabel>
         </Card>
         <KeyboardAvoidingView>
-          <View style={{ alignSelf: 'center', paddingTop: 16 }}>
+          <View style={{ alignSelf: 'center' }}>
             <Button
               ref={ref => (this.savePasswordButton = ref)}
               foregroundColor={'#4cd964'}

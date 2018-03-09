@@ -157,10 +157,8 @@ class HomeScreen extends Component {
 
   // Must use encodeURIComponent
   postMessage = tx => {
-    //const testTx = 'AAAAAFIBKYc47PZpoxxY5Acltd9IaRANeap3Ja+FZg9fVtSBAAAAZABu6EUAAAACAAAAAAAAAAAAAAABAAAAAAAAAAEAAAAAr+SzF6CyMZracAojHWYWqhzdJZW+OiI9csaw1Nl4EZMAAAAAAAAAAAX14QAAAAAAAAAAAA==';
     const xdr = decodeURIComponent(tx.xdr)
     const event = JSON.stringify({ type: 'decode', xdr: xdr })
-    //this.showReceiveTransactionModal();
     setTimeout(() => {
       this.webview.postMessage(event)
     }, 1000)
@@ -169,7 +167,7 @@ class HomeScreen extends Component {
   onMessage = event => {
     const { appStore } = this.props
     const data = event.nativeEvent.data
-    const currentTransaction = appStore.get('currentTransaction')
+		const currentTransaction = appStore.get('currentTransaction')
     if (data) {
       const res = JSON.parse(data)
       if (res.type === 'error') {
@@ -218,10 +216,13 @@ class HomeScreen extends Component {
     return (
       <WebView
         ref={webview => (this.webview = webview)}
-        style={{ width: 0, height: 0 }}
-        source={require(`../webviews/index.html`)}
-        javaScriptEnabled={true}
-        onMessage={event => this.onMessage(event)}
+				style={{ width: 300, height: 100 }}
+				width={0}
+				height={0}
+        source={require(`./../webviews/index.html`)}
+				onMessage={event => this.onMessage(event)}
+				javaScriptEnabled
+				domStorageEnabled
       />
     )
   }
@@ -267,7 +268,7 @@ class HomeScreen extends Component {
     const isAddModalVisible = appStore.get('isAddModalVisible')
     const isDetailModalVisible = appStore.get('isDetailModalVisible')
     const currentTransaction = appStore.get('currentTransaction')
-
+		
     return (
       <Screen>
         <Header>
