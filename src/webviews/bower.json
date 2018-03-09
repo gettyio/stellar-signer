@@ -1,0 +1,22 @@
+{
+  "name": "webviews",
+  "homepage": "https://github.com/gettyio/stellar-signer",
+  "authors": [
+    "dio <dio@getty.io>"
+  ],
+  "description": "",
+  "main": "",
+  "license": "MIT",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "lodash": "3.10.1",
+    "stellar-sdk": "^0.8.0"
+  }
+}

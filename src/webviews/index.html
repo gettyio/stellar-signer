@@ -4,9 +4,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <script src="./lodash.min.js"></script><!-- Lodash Version: 3.10.1 -->
-  <script src="./stellar-sdk.min.js"></script><!-- Stellar SDK Version: 0.8 -->
-  
+  <script src="./bower_components/lodash/lodash.min.js"></script><!-- Lodash Version: 3.10.1 -->
+  <script src="./bower_components/stellar-sdk/stellar-sdk.min.js"></script><!-- Stellar SDK Version: 0.8 -->
 </head>
 <body>
   <div id="root"></div>
@@ -14,7 +13,6 @@
     var xdr = StellarSdk.xdr;
     var StrKey = StellarSdk.StrKey;
     var Operation = StellarSdk.Operation;
-
     StellarSdk.Network.useTestNetwork();
 
     function signTx(data) {
