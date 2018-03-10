@@ -23,6 +23,7 @@ import moment from 'moment'
 import Modal from 'react-native-modal'
 import cryptocore from 'crypto-js/core'
 import Button from 'react-native-micro-animated-button'
+import SplashScreen from 'react-native-splash-screen'
 
 import TransactionForm from '../components/TransactionForm'
 import TransactionDetail from '../components/TransactionDetail'
@@ -61,6 +62,7 @@ class HomeScreen extends Component {
   }
 
   componentDidMount() {
+    SplashScreen.hide();
     if (Platform.OS === 'android') {
       Linking.getInitialURL().then(url => {
         if (url) {
@@ -127,7 +129,7 @@ class HomeScreen extends Component {
     const url = `stellar-signer://stellar-signer?${qs.stringify({
       type: 'decode', xdr: 'AAAAAFIBKYc47PZpoxxY5Acltd9IaRANeap3Ja+FZg9fVtSBAAAAZABu6EUAAAACAAAAAAAAAAAAAAABAAAAAAAAAAEAAAAAr+SzF6CyMZracAojHWYWqhzdJZW+OiI9csaw1Nl4EZMAAAAAAAAAAAX14QAAAAAAAAAAAA=='
 		})}`;
-		
+
     Linking.canOpenURL(url)
       .then(supported => {
         if (!supported) {
@@ -162,7 +164,7 @@ class HomeScreen extends Component {
 		// const event = JSON.stringify({ type: 'decode', xdr: xdr })
 		const currentDecodedTx = decodeFromXdr(xdr, 'TransactionEnvelope');
 		//	this.setState({  currentDecodedTx })
-		
+
     // setTimeout(() => {
     //   this.webview.postMessage(event)
     // }, 1000)
@@ -262,7 +264,7 @@ class HomeScreen extends Component {
 
 		const signedTx = signXdr(data);
 		this.saveCurrentTransaction(signedTx)
-    
+
     this.toggleDetailModal()
   }
 
@@ -271,7 +273,7 @@ class HomeScreen extends Component {
     const isAddModalVisible = appStore.get('isAddModalVisible')
     const isDetailModalVisible = appStore.get('isDetailModalVisible')
     const currentTransaction = appStore.get('currentTransaction')
-		
+
     return (
       <Screen>
         <Header>
@@ -314,9 +316,9 @@ class HomeScreen extends Component {
 {
   /**
   Paste Button
-<TextInput 
+<TextInput
   onChangeText={(text) => this.setAccountValue(text)}
-  clearButtonMode={'always'} 
+  clearButtonMode={'always'}
   value={accountInputValue}
 ></TextInput>
   <PasteButton account={accountInputValue} setAccountValue={this.setAccountValue}/>
