@@ -182,7 +182,6 @@ class HomeScreen extends Component {
           status: 'ERROR'
         })
       } else if (data.type === 'sign') {
-				console.warn('sxdr',data.sxdr)
         this.saveTransaction({
           ...currentTransaction,
           ...data,
