@@ -2,7 +2,7 @@ import React from 'react'
 import styled from 'styled-components'
 import { WebView, View, Text, ScrollView} from 'react-native'
 import TreeView from './TreeView';
-import { decodeFromXdr } from './../utils/xdrParser';
+import { decodeFromXdr } from './../utils/xdrUtils';
 
 const Container = styled.View`
   flex: 1;
@@ -11,6 +11,7 @@ const Container = styled.View`
 export default ({ tx }) => {
   if (tx) {
 		const decoded = decodeFromXdr(tx, 'TransactionEnvelope');
+		console.log('decoded',decoded)
     return (
       <Container>
 				<ScrollView>

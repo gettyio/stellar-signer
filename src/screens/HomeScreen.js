@@ -42,8 +42,7 @@ import {
 
 import getSecretStore from './../store/secrets'
 import store from './../store/realm'
-import { decodeFromXdr } from './../utils/xdrParser';
-
+import { decodeFromXdr, signXdr } from './../utils/xdrUtils';
 // Delete All
 // store.write(() => {
 //   store.deleteAll();
@@ -162,7 +161,7 @@ class HomeScreen extends Component {
     const xdr = decodeURIComponent(tx.xdr)
 		// const event = JSON.stringify({ type: 'decode', xdr: xdr })
 		const currentDecodedTx = decodeFromXdr(xdr, 'TransactionEnvelope');
-	//	this.setState({  currentDecodedTx })
+		//	this.setState({  currentDecodedTx })
 		
     // setTimeout(() => {
     //   this.webview.postMessage(event)
@@ -183,6 +182,7 @@ class HomeScreen extends Component {
           status: 'ERROR'
         })
       } else if (data.type === 'sign') {
+				console.warn('sxdr',data.sxdr)
         this.saveTransaction({
           ...currentTransaction,
           ...data,
@@ -190,7 +190,6 @@ class HomeScreen extends Component {
         })
       } else {
 				const tx = parseEnvelopeTree(data.tx)
-				console.warn(tx);
         this.saveTransaction({
 					...tx,
           type: data.type,
@@ -255,14 +254,16 @@ class HomeScreen extends Component {
   signTransaction = sk => {
     const { appStore } = this.props
     const currentTransaction = appStore.get('currentTransaction')
-    const data = JSON.stringify({
+    const data = {
       type: 'sign',
       tx: currentTransaction,
       xdr: currentTransaction.xdr,
       sk
-		})
-		//console.warn('sk',sk)
-   //this.webview.postMessage(data)
+		};
+
+		const signedTx = signXdr(data);
+		this.saveCurrentTransaction(signedTx)
+    
     this.toggleDetailModal()
   }
 
