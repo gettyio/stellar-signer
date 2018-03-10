@@ -209,9 +209,9 @@ class TransactionDetail extends Component {
       case 'display':
         return <DisplayTab tx={tx} />
       case 'envelop':
-        return <EnvelopTab xdr={tx.xdr} />
+        return <EnvelopTab tx={tx} />
       case 'signed':
-        return <EnvelopTab xdr={tx.sxdr} />
+        return <EnvelopTab tx={tx} />
       default:
         return null
     }

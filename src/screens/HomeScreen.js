@@ -193,9 +193,8 @@ class HomeScreen extends Component {
 				console.warn(tx);
         this.saveTransaction({
 					...tx,
-					tree: currentDecodedTx.tx,
           type: data.type,
-          xdr: data.xdr,
+					xdr: data.xdr,
           createdAt: new Date(),
           status: 'CREATED'
         })

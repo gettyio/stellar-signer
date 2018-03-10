@@ -10,7 +10,7 @@ import { View, Text } from 'react-native'
 // @param {array} props.nodes - Array of TreeView compatible nodes
 export default class TreeView extends React.Component {
   render() {
-    let {nodes, className} = this.props;
+		let {nodes, className} = this.props;
     let rootClass = 'TreeView ' + (className) ? className : '';
 
     let result = <View className={rootClass}>
@@ -68,7 +68,7 @@ function RowValue(props) {
 function convertTypedValue({type, value}) {
   switch(type) {
   case 'code':
-    return <code>{value}</code>;
+    return <Text>{value}</Text>;
   case 'amount':
     return <Text>{value.parsed} (raw: <Text>{value.raw}</Text>)</Text>;
   }

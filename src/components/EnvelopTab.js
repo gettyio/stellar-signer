@@ -6,6 +6,7 @@ import { decodeFromXdr } from './../utils/xdrParser';
 
 const Container = styled.View`
   flex: 1;
+	background-color: white;
 `
 // Because the current blockchain sdk doesn't support react native 
 // we had to create a alternative way to decode the xdr locally to 
@@ -14,14 +15,18 @@ const Container = styled.View`
 // the xdr before the user approve it
 
 // Inject the XDR to the static xdr-viewer html
-export default ({ xdr }) => {
-  if (xdr) {
+export default ({ tx }) => {
+  if (tx.sxdr || tx.xdr) {
+		const decoded = decodeFromXdr(tx.sxdr || tx.xdr, 'TransactionEnvelope');
     return (
       <Container>
-        <TreeView nodes={xdr}></TreeView>
+        <TreeView nodes={decoded.tx}></TreeView>
       </Container>
     );
-  }
+	}
+	
+
+
   return (
     <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: 'white'}}>
       <Text>Transaction not signed!</Text>
