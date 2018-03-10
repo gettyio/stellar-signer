@@ -4,9 +4,34 @@
 import React from 'react';
 import _ from 'lodash';
 import { View, Text } from 'react-native'
+import styled from 'styled-components'
 
-//import './TreeView.css';
+const Container = styled.View`
+  flex: 1;
+	background-color: white;
+`
+const TreeViewSpan = styled.View`
+	word-break: break-all;
+`
 
+const TreeViewChild = styled.View`
+	border-left-width: 10px;
+	border-color: #e6f8fc;
+`
+const EasySelect = styled.View`
+  cursor: pointer;
+  border-bottom: 1px dotted currentColor;
+`
+const TreeViewRow = styled.View`
+	padding: 5px 10px;
+`
+
+const XdrViewerResults = styled.Text`
+`
+
+const TreeViewLabel = styled.Text`
+	font-weight: 700;
+`
 // @param {array} props.nodes - Array of TreeView compatible nodes
 export default class TreeView extends React.Component {
   render() {
@@ -18,15 +43,15 @@ export default class TreeView extends React.Component {
         let childNodes;
 
         if (typeof node.nodes !== 'undefined') {
-          childNodes = <View className="TreeView__child">
+          childNodes = <TreeViewChild>
             <TreeView nodes={node.nodes} />
-          </View>;
+          </TreeViewChild>;
         }
 
         return <View className="TreeView__set" key={index}>
-          <View className="TreeView__row" key={index + node.type}>
+          <TreeViewRow key={index + node.type}>
             <RowValue node={node} />
-          </View>
+          </TreeViewRow>
           {childNodes}
         </View>
       })}
@@ -58,7 +83,7 @@ function RowValue(props) {
     separator = ': ';
   }
 
-  return <Text><Text>{node.type}</Text>{separator}{value}</Text>
+  return <Text><TreeViewLabel>{node.type}</TreeViewLabel>{separator}{value}</Text>
 }
 
 // Types values are values that will be displayed with special formatting to
@@ -68,8 +93,8 @@ function RowValue(props) {
 function convertTypedValue({type, value}) {
   switch(type) {
   case 'code':
-    return <Text>{value}</Text>;
+    return <TreeViewLabel>{value}</TreeViewLabel>;
   case 'amount':
-    return <Text>{value.parsed} (raw: <Text>{value.raw}</Text>)</Text>;
+    return <TreeViewLabel>{value.parsed} (raw: <TreeViewLabel>{value.raw}</TreeViewLabel>)</TreeViewLabel>;
   }
 }

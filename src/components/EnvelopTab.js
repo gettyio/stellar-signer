@@ -1,6 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
-import { WebView, View, Text } from 'react-native'
+import { WebView, View, Text, ScrollView} from 'react-native'
 import TreeView from './TreeView';
 import { decodeFromXdr } from './../utils/xdrParser';
 
@@ -16,17 +16,17 @@ const Container = styled.View`
 
 // Inject the XDR to the static xdr-viewer html
 export default ({ tx }) => {
-  if (tx.sxdr || tx.xdr) {
-		const decoded = decodeFromXdr(tx.sxdr || tx.xdr, 'TransactionEnvelope');
+  if (tx) {
+		const decoded = decodeFromXdr(tx, 'TransactionEnvelope');
     return (
       <Container>
-        <TreeView nodes={decoded.tx}></TreeView>
+				<ScrollView>
+        	<TreeView nodes={decoded.tx}></TreeView>
+				</ScrollView>
       </Container>
     );
 	}
 	
-
-
   return (
     <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: 'white'}}>
       <Text>Transaction not signed!</Text>
