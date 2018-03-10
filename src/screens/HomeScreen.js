@@ -42,13 +42,14 @@ import {
 
 import getSecretStore from './../store/secrets'
 import store from './../store/realm'
+import { decodeFromXdr } from './../utils/xdrParser';
 
 // Delete All
 // store.write(() => {
 //   store.deleteAll();
 // });
-
 import parseEnvelopeTree from './../utils/parseEnvelopeTree'
+
 
 @inject('appStore')
 @observer
@@ -56,7 +57,8 @@ class HomeScreen extends Component {
   state = {
     realm: undefined,
     currentXdr: undefined,
-    currentTransaction: undefined
+		currentTransaction: undefined,
+		currentDecodedTx: undefined
   }
 
   componentDidMount() {
@@ -149,48 +151,51 @@ class HomeScreen extends Component {
   }
 
   decodeXdr = xdr => {
-    const event = JSON.stringify({ type: 'decode', xdr })
-    setTimeout(() => {
-      this.webview.postMessage(event)
-    }, 1000)
+		// const event = JSON.stringify({ type: 'decode', xdr: xdr })
+		const decodedTx = decodeFromXdr(xdr, 'TransactionEnvelope');
+		this.saveCurrentTransaction(decodedTx);
   }
 
   // Must use encodeURIComponent
   postMessage = tx => {
+		console.log('postMessage',tree);
     const xdr = decodeURIComponent(tx.xdr)
-    const event = JSON.stringify({ type: 'decode', xdr: xdr })
-    setTimeout(() => {
-      this.webview.postMessage(event)
-    }, 1000)
+		// const event = JSON.stringify({ type: 'decode', xdr: xdr })
+		const currentDecodedTx = decodeFromXdr(xdr, 'TransactionEnvelope');
+	//	this.setState({  currentDecodedTx })
+		
+    // setTimeout(() => {
+    //   this.webview.postMessage(event)
+    // }, 1000)
   }
 
-  onMessage = event => {
+  saveCurrentTransaction = data => {
 		const { appStore } = this.props
-		const data = event.nativeEvent.data
 		const currentTransaction = appStore.get('currentTransaction')
     if (data) {
-			const res = JSON.parse(data)
-      if (res.type === 'error') {
+      if (data.type === 'error') {
         //console.warn('Error: ', data);
         this.saveTransaction({
-          xdr: res.xdr,
+          xdr: data.xdr,
           createdAt: new Date(),
           type: 'error',
-          message: res.message,
+          message: data.message,
           status: 'ERROR'
         })
-      } else if (res.type === 'sign') {
+      } else if (data.type === 'sign') {
         this.saveTransaction({
           ...currentTransaction,
-          ...res,
+          ...data,
           status: 'SIGNED'
         })
       } else {
-        const tx = parseEnvelopeTree(res.tx)
+				const tx = parseEnvelopeTree(data.tx)
+				console.warn(tx);
         this.saveTransaction({
-          ...tx,
-          type: res.type,
-          xdr: res.xdr,
+					...tx,
+					tree: currentDecodedTx.tx,
+          type: data.type,
+          xdr: data.xdr,
           createdAt: new Date(),
           status: 'CREATED'
         })
@@ -258,7 +263,7 @@ class HomeScreen extends Component {
       sk
 		})
 		//console.warn('sk',sk)
-    this.webview.postMessage(data)
+   //this.webview.postMessage(data)
     this.toggleDetailModal()
   }
 
@@ -303,8 +308,6 @@ class HomeScreen extends Component {
         </Modal>
 
         <StatusBar barStyle="light-content" />
-
-        {this.renderWebview()}
       </Screen>
     )
   }

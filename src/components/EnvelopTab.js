@@ -1,6 +1,8 @@
 import React from 'react'
 import styled from 'styled-components'
 import { WebView, View, Text } from 'react-native'
+import TreeView from './TreeView';
+import { decodeFromXdr } from './../utils/xdrParser';
 
 const Container = styled.View`
   flex: 1;
@@ -16,11 +18,7 @@ export default ({ xdr }) => {
   if (xdr) {
     return (
       <Container>
-        <WebView 
-          source={require(`../webviews/xdrviewer/index.html`)}
-          injectedJavaScript={`window.xdr = "${xdr}";`}
-          javaScriptEnabled={true}
-        />
+        <TreeView nodes={xdr}></TreeView>
       </Container>
     );
   }
