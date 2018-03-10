@@ -21,6 +21,7 @@ Transaction.schema = {
     id: "string",
     xdr: "string",
     sxdr: { type: "string", optional: true },
+    tree: { type: "string", optional: true },
     decodedXdr: { type: "string", optional: true },
     sourceAccount: { type: "string", optional: true },
     fee: { type: "string", optional: true },
@@ -40,5 +41,5 @@ Transaction.schema = {
 export default new Realm({
 	path: 'transactions.realm',
   schema: [Transaction, Salt],
-  schemaVersion: 10
+  schemaVersion: 12
 });

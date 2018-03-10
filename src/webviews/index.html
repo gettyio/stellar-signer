@@ -73,7 +73,7 @@
 			}
 
 			function parseArray(anchor, object) {
-				anchor.value = `Array[${object.length}]`;
+				anchor.value = 'Array['+ object.length +']';
 				anchor.nodes = [];
 				for (var i = 0; i < object.length; i++) {
 					anchor.nodes.push({});
@@ -216,7 +216,7 @@
 				}
 			});			
 		} catch (error) {
-			alert(error.message)
+			alert('Error: '+error.message)
 		}
   </script>
 </body>
