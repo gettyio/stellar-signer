@@ -170,7 +170,7 @@ class HomeScreen extends Component {
 		const currentTransaction = appStore.get('currentTransaction')
     if (data) {
 			const res = JSON.parse(data)
-      if (res.type === 'error') {12345678
+      if (res.type === 'error') {
         //console.warn('Error: ', data);
         this.saveTransaction({
           xdr: res.xdr,
@@ -216,7 +216,6 @@ class HomeScreen extends Component {
     return (
       <WebView
         ref={webview => (this.webview = webview)}
-				style={{ width: 300, height: 100 }}
 				width={0}
 				height={0}
         source={require(`./../webviews/index.html`)}
