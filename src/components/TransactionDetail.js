@@ -12,8 +12,6 @@ import EnvelopTab from './EnvelopTab'
 import SecurityForm from './SecurityForm'
 import { Container, SelectSecret } from './utils'
 
-import store from '../store/realm'
-
 @inject('appStore')
 @observer
 class TransactionDetail extends Component {
@@ -218,14 +216,12 @@ class TransactionDetail extends Component {
   }
 
   deleteTransaction = () => {
-    const { appStore } = this.props
+    const { appStore, deleteTransaction } = this.props
     const currentTransaction = appStore.get('currentTransaction')
     this.deleteTransactionButton.success()
     appStore.set('isDetailModalVisible', !appStore.get('isDetailModalVisible'))
     setTimeout(() => {
-      store.write(() => {
-        store.delete(currentTransaction)
-      })
+			deleteTransaction(currentTransaction);
       appStore.set('currentTransaction', undefined)
     }, 800)
   }

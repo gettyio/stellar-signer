@@ -1,3 +1,4 @@
+import 'babel-polyfill';
 import React, { Component } from 'react'
 import {
   Platform,
@@ -51,7 +52,14 @@ import getSecretStore from './../store/secrets'
 import store from './../store/realm'
 import { decodeFromXdr, signXdr } from './../utils/xdrUtils';
 import parseEnvelopeTree from './../utils/parseEnvelopeTree'
-import { createDb, schema } from './../store/db'
+
+import PouchDB from 'pouchdb-react-native'
+import SQLite from 'react-native-sqlite-2'
+import SQLiteAdapterFactory from 'pouchdb-adapter-react-native-sqlite'
+
+const SQLiteAdapter = SQLiteAdapterFactory(SQLite)
+PouchDB.plugin(SQLiteAdapter)
+var db = new PouchDB('Transactions', { adapter: 'react-native-sqlite' })
 
 @inject('appStore') @observer
 class HomeScreen extends Component {
@@ -62,7 +70,7 @@ class HomeScreen extends Component {
 		currentDecodedTx: undefined
   }
 
-  async componentDidMount() {
+  componentDidMount() {
     SplashScreen.hide();
     if (Platform.OS === 'android') {
       Linking.getInitialURL().then(url => {
@@ -80,36 +88,6 @@ class HomeScreen extends Component {
     }
     // Ensure that the salt will exists when create the realm file
 		this.checkSalt();
-    await this.createDb();
-	}
-
-	createDb = async () => {
-    try {
-      const db = await RxDB.create({
-        name: 'stellarsigner',
-        adapter: 'asyncstorage',
-        multiInstance: false,
-      });
-
-      const transactions = await db.collection({
-        name: 'transactions',
-        schema: schema,
-      });
-
-      await transactions
-                  .find()
-                  .$.subscribe(result => {
-                          if (!result) return;
-                          console.log('observable fired');
-                          this.setState({ result });
-                  });
-
-      console.log('db',db)
-      this.db = db;
-    } catch (error){
-      console.log(error.message)
-      alert(error.message)
-    }
 	}
 
 	componentDidUpdate(prevProps, prevState) {
@@ -123,14 +101,14 @@ class HomeScreen extends Component {
     // }
   }
 
-  checkSalt = () => {
+  checkSalt = async () => {
     // const salt = store.objects('Salt')[0]
     // if (!salt) {
     //   store.write(() => {
     //     const val = cryptocore.lib.WordArray.random(128 / 8)
     //     store.create('Salt', { id: uuid(), value: JSON.stringify(val) })
     //   })
-    // }
+		// }
   }
 
   handleCurrentTx = () => {
@@ -209,7 +187,7 @@ class HomeScreen extends Component {
         //console.warn('Error: ', data);
         this.saveTransaction({
           xdr: data.xdr,
-          createdAt: new Date().toString(),
+          createdAt: new Date().toISOString(),
           type: 'error',
           message: data.message,
           status: 'ERROR'
@@ -218,7 +196,8 @@ class HomeScreen extends Component {
         this.saveTransaction({
           ...currentTransaction,
           ...data,
-          status: 'SIGNED'
+					status: 'SIGNED',
+					createdAt: new Date().toISOString()
         })
       } else {
 				const tx = parseEnvelopeTree(data.tx)
@@ -226,7 +205,7 @@ class HomeScreen extends Component {
 					...tx,
           type: data.type,
 					xdr: data.xdr,
-          createdAt: new Date().toString(),
+          createdAt: new Date().toISOString(),
           status: 'CREATED'
         })
       }
@@ -239,12 +218,10 @@ class HomeScreen extends Component {
     const { appStore } = this.props
 
 		try {
-      console.log(this.db)
-      const transactions = await this.db.collection({
-        name: 'transactions',
-        schema: schema,
-      });
-			await transactions.insert(omit(tx, ['data']));
+      db.put({
+				_id: uuid(),
+				...tx
+			});
 		} catch (error) {
       console.log(error.message)
 			alert(error.message)
@@ -280,7 +257,16 @@ class HomeScreen extends Component {
       appStore.set('currentTransaction', undefined)
       this.toggleDetailModal()
     }, 1000)
-  }
+	}
+	
+	deleteTransaction = async (doc) => {
+		try {
+			const res = await db.remove(doc);
+			console.log(res);
+		} catch (error) {
+			alert(error.message);
+		}
+	}
 
   signTransaction = sk => {
     const { appStore } = this.props
@@ -299,7 +285,8 @@ class HomeScreen extends Component {
   }
 
   render() {
-    const { appStore } = this.props
+		const { appStore } = this.props
+		const { transactions } = this.state;
     const isAddModalVisible = appStore.get('isAddModalVisible')
     const isDetailModalVisible = appStore.get('isDetailModalVisible')
     const currentTransaction = appStore.get('currentTransaction')
@@ -317,7 +304,7 @@ class HomeScreen extends Component {
 					</LoadButtonWrapper>
         </Header>
 
-        <TransactionList db={this.db} />
+        <TransactionList db={db} />
 
         <Modal isVisible={isAddModalVisible} style={{ paddingTop: 24 }}>
           <CloseButton onPress={this.toggleAddModal}>
@@ -333,6 +320,7 @@ class HomeScreen extends Component {
           <TransactionDetail
 						tx={currentTransaction}
 						toggleModal={this.toggleDetailModal}
+						deleteTransaction={this.deleteTransaction}
             cancelTransaction={this.cancelTransaction}
             signTransaction={this.signTransaction}
           />
