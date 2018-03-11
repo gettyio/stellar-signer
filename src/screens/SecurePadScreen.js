@@ -9,7 +9,6 @@ import base64js from 'base64-js'
 import crypto from 'crypto-js/pbkdf2'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import Button from 'react-native-micro-animated-button'
-
 import SecurityForm from '../components/SecurityForm'
 import {
   Screen,

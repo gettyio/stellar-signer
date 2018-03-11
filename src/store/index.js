@@ -1,12 +1,14 @@
-import { observable } from 'mobx'
+import { AsyncStorage } from 'react-native'
+import { observable, action } from 'mobx'
 
-const initialState = {
+// App Initial State
+const appStore = {
   sk: undefined,
   pwd: undefined,
   secretList: undefined,
   isAddModalVisible: false,
   isAddSecretModalVisible: false,
-  isSecurityRequired: true,
+  isSecurityRequired: false,
   isDetailModalVisible: false,
   currentXdr: undefined,
   currentLink: undefined,
@@ -14,4 +16,5 @@ const initialState = {
   securityFormError: undefined
 }
 
-export default observable.map(initialState)
+// create the state
+export default observable.map(appStore)
