@@ -9,7 +9,8 @@ import {
   StatusBar,
   WebView,
   ActivityIndicator,
-  Linking
+	Linking,
+	AsyncStorage
 } from 'react-native'
 import qs from 'qs'
 import uuid from 'uuid/v4'
@@ -24,11 +25,16 @@ import Modal from 'react-native-modal'
 import cryptocore from 'crypto-js/core'
 import Button from 'react-native-micro-animated-button'
 import SplashScreen from 'react-native-splash-screen'
+import RxDB from 'rxdb';
+import { omit } from 'lodash'
+
+RxDB.plugin(require('pouchdb-adapter-asyncstorage').default);
 
 import TransactionForm from '../components/TransactionForm'
 import TransactionDetail from '../components/TransactionDetail'
 import PasteButton from '../components/PasteButton'
 import TransactionList from '../components/TransactionList'
+
 import {
   Screen,
   Container,
@@ -44,15 +50,10 @@ import {
 import getSecretStore from './../store/secrets'
 import store from './../store/realm'
 import { decodeFromXdr, signXdr } from './../utils/xdrUtils';
-// Delete All
-// store.write(() => {
-//   store.deleteAll();
-// });
 import parseEnvelopeTree from './../utils/parseEnvelopeTree'
+import { createDb, schema } from './../store/db'
 
-
-@inject('appStore')
-@observer
+@inject('appStore') @observer
 class HomeScreen extends Component {
   state = {
     realm: undefined,
@@ -61,7 +62,7 @@ class HomeScreen extends Component {
 		currentDecodedTx: undefined
   }
 
-  componentDidMount() {
+  async componentDidMount() {
     SplashScreen.hide();
     if (Platform.OS === 'android') {
       Linking.getInitialURL().then(url => {
@@ -78,28 +79,58 @@ class HomeScreen extends Component {
       })
     }
     // Ensure that the salt will exists when create the realm file
-    this.checkSalt()
-  }
+		this.checkSalt();
+    await this.createDb();
+	}
 
-  componentDidUpdate(prevProps, prevState) {
+	createDb = async () => {
+    try {
+      const db = await RxDB.create({
+        name: 'stellarsigner',
+        adapter: 'asyncstorage',
+        multiInstance: false,
+      });
+
+      const transactions = await db.collection({
+        name: 'transactions',
+        schema: schema,
+      });
+
+      await transactions
+                  .find()
+                  .$.subscribe(result => {
+                          if (!result) return;
+                          console.log('observable fired');
+                          this.setState({ result });
+                  });
+
+      console.log('db',db)
+      this.db = db;
+    } catch (error){
+      console.log(error.message)
+      alert(error.message)
+    }
+	}
+
+	componentDidUpdate(prevProps, prevState) {
     this.handleCurrentTx()
   }
 
   componentWillUnmount() {
-    const { secretStore } = this.state
-    if (secretStore) {
-      secretStore.removeAllListeners()
-    }
+    // const { secretStore } = this.state
+    // if (secretStore) {
+    //   secretStore.removeAllListeners()
+    // }
   }
 
   checkSalt = () => {
-    const salt = store.objects('Salt')[0]
-    if (!salt) {
-      store.write(() => {
-        const val = cryptocore.lib.WordArray.random(128 / 8)
-        store.create('Salt', { id: uuid(), value: JSON.stringify(val) })
-      })
-    }
+    // const salt = store.objects('Salt')[0]
+    // if (!salt) {
+    //   store.write(() => {
+    //     const val = cryptocore.lib.WordArray.random(128 / 8)
+    //     store.create('Salt', { id: uuid(), value: JSON.stringify(val) })
+    //   })
+    // }
   }
 
   handleCurrentTx = () => {
@@ -178,7 +209,7 @@ class HomeScreen extends Component {
         //console.warn('Error: ', data);
         this.saveTransaction({
           xdr: data.xdr,
-          createdAt: new Date(),
+          createdAt: new Date().toString(),
           type: 'error',
           message: data.message,
           status: 'ERROR'
@@ -195,7 +226,7 @@ class HomeScreen extends Component {
 					...tx,
           type: data.type,
 					xdr: data.xdr,
-          createdAt: new Date(),
+          createdAt: new Date().toString(),
           status: 'CREATED'
         })
       }
@@ -204,47 +235,46 @@ class HomeScreen extends Component {
     }
   }
 
-  saveTransaction = tx => {
+  saveTransaction = async tx => {
     const { appStore } = this.props
-    store.write(() => {
-      if (tx.type === 'sign') {
-        store.create('Transaction', { ...tx }, true)
-      } else {
-        store.create('Transaction', { id: uuid(), ...tx })
-      }
-    })
-    appStore.set('currentXdr', undefined)
-  }
 
-  renderWebview = () => {
-    return (
-      <WebView
-        ref={webview => (this.webview = webview)}
-				width={0}
-				height={0}
-        source={require(`./../webviews/index.html`)}
-				onMessage={event => this.onMessage(event)}
-				javaScriptEnabled
-				domStorageEnabled
-      />
-    )
+		try {
+      console.log(this.db)
+      const transactions = await this.db.collection({
+        name: 'transactions',
+        schema: schema,
+      });
+			await transactions.insert(omit(tx, ['data']));
+		} catch (error) {
+      console.log(error.message)
+			alert(error.message)
+		}
+		//alert('saveTransaction')
+    // store.write(() => {
+    //   if (tx.type === 'sign') {
+    //     store.create('Transaction', { ...tx }, true)
+    //   } else {
+    //     store.create('Transaction', { id: uuid(), ...tx })
+    //   }
+    // })
+    appStore.set('currentXdr', undefined)
   }
 
   cancelTransaction = () => {
     const { appStore } = this.props
-    store.write(() => {
-      const currentTransaction = appStore.get('currentTransaction')
-      currentTransaction.status = 'REJECTED'
-      store.create(
-        'Transaction',
-        {
-          ...currentTransaction,
-          id: currentTransaction.id,
-          status: 'REJECTED'
-        },
-        true
-      )
-    })
+    // store.write(() => {
+    //   const currentTransaction = appStore.get('currentTransaction')
+    //   currentTransaction.status = 'REJECTED'
+    //   store.create(
+    //     'Transaction',
+    //     {
+    //       ...currentTransaction,
+    //       id: currentTransaction.id,
+    //       status: 'REJECTED'
+    //     },
+    //     true
+    //   )
+    // })
 
     setTimeout(() => {
       appStore.set('currentTransaction', undefined)
@@ -287,7 +317,7 @@ class HomeScreen extends Component {
 					</LoadButtonWrapper>
         </Header>
 
-        <TransactionList />
+        <TransactionList db={this.db} />
 
         <Modal isVisible={isAddModalVisible} style={{ paddingTop: 24 }}>
           <CloseButton onPress={this.toggleAddModal}>
