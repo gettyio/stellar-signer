@@ -32,15 +32,20 @@ class TransactionList extends Component {
   }
 
   async componentDidMount() {
+    console.log(this.props.db)
     // store.addListener('change', this.refreshList)
 		//
 		// await this.refreshList()
-	}
-	
+  }
+
+  componentDidUpdate(){
+    console.log(this.props.db)
+  }
+
   componentWillUnmount() {
     // store.removeAllListeners()
 	}
-	
+
 	dataLoader = async () => {
 	}
 

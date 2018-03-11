@@ -21,9 +21,9 @@ export const schema = {
     asset: { type: "string" },
     amount: { type: "string" },
     status: { type: "string" },
-    message: { type: "string" },
+    message: { type: "object" },
     type: { type: "string" },
-    createdAt: "date"
+    createdAt: { type: "string" },
   },
   required: []
 }
@@ -39,6 +39,6 @@ export const createDb = async () => {
 		name: 'transactions',
 		schema: schema,
 	});
-	
+
 	return db;
 }

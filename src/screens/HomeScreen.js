@@ -26,6 +26,7 @@ import cryptocore from 'crypto-js/core'
 import Button from 'react-native-micro-animated-button'
 import SplashScreen from 'react-native-splash-screen'
 import RxDB from 'rxdb';
+import { omit } from 'lodash'
 
 RxDB.plugin(require('pouchdb-adapter-asyncstorage').default);
 
@@ -79,22 +80,36 @@ class HomeScreen extends Component {
     }
     // Ensure that the salt will exists when create the realm file
 		this.checkSalt();
-		await this.createDb();
+    await this.createDb();
 	}
 
 	createDb = async () => {
-		const db = await RxDB.create({
-			name: 'signer',
-			adapter: 'asyncstorage',
-			multiInstance: false,
-		});
-	
-		const transactions = await db.collection({
-			name: 'transactions',
-			schema: schema,
-		});
-		console.log('db',db)
-		this.db = db;
+    try {
+      const db = await RxDB.create({
+        name: 'stellarsigner',
+        adapter: 'asyncstorage',
+        multiInstance: false,
+      });
+
+      const transactions = await db.collection({
+        name: 'transactions',
+        schema: schema,
+      });
+
+      await transactions
+                  .find()
+                  .$.subscribe(result => {
+                          if (!result) return;
+                          console.log('observable fired');
+                          this.setState({ result });
+                  });
+
+      console.log('db',db)
+      this.db = db;
+    } catch (error){
+      console.log(error.message)
+      alert(error.message)
+    }
 	}
 
 	componentDidUpdate(prevProps, prevState) {
@@ -194,7 +209,7 @@ class HomeScreen extends Component {
         //console.warn('Error: ', data);
         this.saveTransaction({
           xdr: data.xdr,
-          createdAt: new Date(),
+          createdAt: new Date().toString(),
           type: 'error',
           message: data.message,
           status: 'ERROR'
@@ -211,7 +226,7 @@ class HomeScreen extends Component {
 					...tx,
           type: data.type,
 					xdr: data.xdr,
-          createdAt: new Date(),
+          createdAt: new Date().toString(),
           status: 'CREATED'
         })
       }
@@ -221,10 +236,17 @@ class HomeScreen extends Component {
   }
 
   saveTransaction = async tx => {
-		const { appStore } = this.props
+    const { appStore } = this.props
+
 		try {
-			await this.db.transactions.insert(tx);
+      console.log(this.db)
+      const transactions = await this.db.collection({
+        name: 'transactions',
+        schema: schema,
+      });
+			await transactions.insert(omit(tx, ['data']));
 		} catch (error) {
+      console.log(error.message)
 			alert(error.message)
 		}
 		//alert('saveTransaction')
