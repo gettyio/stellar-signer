@@ -1,5 +1,5 @@
 import React, { Component, Fragment } from 'react'
-import { View } from 'react-native'
+import { View, AsyncStorage } from 'react-native'
 import { Provider } from 'mobx-react'
 import { StackNavigator } from 'react-navigation'
 import { TabNavigator, TabBarBottom } from 'react-navigation'
@@ -8,8 +8,8 @@ import Icon from 'react-native-vector-icons/Feather'
 import HomeScreen from './screens/HomeScreen'
 import SecretsScreen from './screens/SecretsScreen'
 import SecurePadScreen from './screens/SecurePadScreen'
-
 import store from './store'
+
 
 const NavigatorScreen = TabNavigator(
   {
@@ -52,8 +52,8 @@ const NavigatorScreen = TabNavigator(
   }
 )
 
-export default (App = () => (
-  <Provider appStore={store}>
+export default (() => (
+  <Provider appStore={store} >
     <Fragment>
       <NavigatorScreen />
       <SecurePadScreen />

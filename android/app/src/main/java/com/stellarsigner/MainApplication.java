@@ -3,8 +3,8 @@ package com.stellarsigner;
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
+import dog.craftz.sqlite_2.RNSqlite2Package;
 import com.cboy.rn.splashscreen.SplashScreenReactPackage;
-import io.realm.react.RealmReactPackage;
 import com.oblador.vectoricons.VectorIconsPackage;
 import com.swmansion.gesturehandler.react.RNGestureHandlerPackage;
 import com.facebook.react.ReactNativeHost;
@@ -27,8 +27,8 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
+            new RNSqlite2Package(),
             new SplashScreenReactPackage(),
-            new RealmReactPackage(),
             new VectorIconsPackage(),
             new RNGestureHandlerPackage()
       );

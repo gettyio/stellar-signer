@@ -11,48 +11,92 @@ import {
   Image,
   TouchableOpacity,
   ActivityIndicator,
-  Dimensions
+	Dimensions,
+	AsyncStorage
 } from 'react-native'
 import moment from 'moment'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import { observer, inject } from 'mobx-react'
-
 import TransactionRow from './TransactionRow'
 import { Container, EmptyScreen } from './utils'
+// import { schema } from './../store/db';
+// import { createDb } from './../store/db'
 
-import store from './../store/realm'
-
-@inject('appStore')
-@observer
+@inject('appStore') @observer
 class TransactionList extends Component {
   state = {
     transactions: [],
     currentTx: undefined,
     hasError: undefined,
-    isLoadingList: false
+    isLoadingList: true
   }
 
   componentDidMount() {
-    store.addListener('change', this.refreshList)
-    this.refreshList()
-  }
-
+    // store.addListener('change', this.refreshList)
+		//
+		// await this.refreshList()
+		const { db } = this.props;
+		let self = this;
+		db.allDocs({
+			include_docs: true,
+			attachments: true
+		}).then((res)=> {
+			self.setState({ transactions: res.rows, isLoadingList: false });
+		})
+	}
+	
   componentWillUnmount() {
-    store.removeAllListeners()
-  }
 
-  refreshList = () => {
-    const transactions = store.objects('Transaction').sorted('createdAt', true)
-    this.setState({ transactions })
+	}
+
+	componentWillReceiveProps(nextProps) {
+		const { db } = this.props;
+		let self = this;
+		db.allDocs({
+			include_docs: true,
+			attachments: true
+		}).then((res)=> {
+			self.setState({ transactions: res.rows });
+		})
+
+		db.changes().on('change', function() {
+			db.allDocs({
+				include_docs: true,
+				attachments: true
+			}).then((res)=> {
+				self.setState({ transactions: res.rows });
+			})
+		});
+	}
+	
+	dataLoader = async () => {
+	}
+
+  refreshList = async () => {
+		const { db } = this.props;
+		try {
+			// await db.transactions
+			// 	.find()
+			// 	.$.subscribe(transactions => {
+			// 			if (!transactions) return;
+			// 			console.log('observable fired');
+			// 			this.setState({ transactions });
+			// 	});
+		} catch (error) {
+			alert(`TL ${error.message}`);
+		}
+		// const { transactionsStore } = this.props
+		// const transactions = transactionsStore.list.entries().map(item => item);
+    //
   }
 
   renderRow = ({ item }) => {
-    const { appStore } = this.props
-    return <TransactionRow item={item} appStore={appStore} />
+		const { appStore } = this.props
+    return <TransactionRow item={item.doc} appStore={appStore} />
   }
 
   render() {
-    const { height } = Dimensions.get('window')
+		const { height } = Dimensions.get('window')
     const { isLoadingList, hasError, transactions } = this.state
 
     if (isLoadingList) {
