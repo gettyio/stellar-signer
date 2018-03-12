@@ -32,18 +32,12 @@ export const DateLabel = styled.Text`
   align-self: center;
 `
 
-// Return the first 5 and last 5 chars concatenated by ...
-const parseSK = sk => {
-  return `${sk.slice(1, 8)}...${sk.substr(sk.length - 8)}`
-}
-
 const SecretRow = ({ item, appStore, onPress }) => {
-	console.log('item',item)
   return (
     <TouchableOpacity onPress={() => onPress(item)}>
       <Row>
         <AliasLabel>{`${item.alias}`}</AliasLabel>
-        <SKLabel>{`${parseSK(item.sk)}`}</SKLabel>
+        <SKLabel>{`${item.sk}`}</SKLabel>
         <DateLabel>
           {item.createdAt}
         </DateLabel>

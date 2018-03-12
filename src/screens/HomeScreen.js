@@ -24,7 +24,6 @@ import { observer, inject } from 'mobx-react'
 import Icon from 'react-native-vector-icons/Feather'
 import moment from 'moment'
 import Modal from 'react-native-modal'
-import cryptocore from 'crypto-js/core'
 import Button from 'react-native-micro-animated-button'
 import SplashScreen from 'react-native-splash-screen'
 import TransactionForm from '../components/TransactionForm'
@@ -54,6 +53,8 @@ const SQLiteAdapter =
 PouchDB.plugin(SQLiteAdapterFactory(SQLite))
 PouchDB.plugin(require('pouchdb-upsert'))
 const db = new PouchDB('Transactions', { adapter: 'react-native-sqlite' })
+//var nacl = require('./../utils/nacl');
+//import StellarSdk from 'stellar-sdk';
 
 @inject('appStore') @observer
 class HomeScreen extends Component {
@@ -85,7 +86,12 @@ class HomeScreen extends Component {
 	}
 
 	componentDidUpdate(prevProps, prevState) {
-    this.handleCurrentTx()
+		this.handleCurrentTx()
+		// const secret = randomBytes(32);
+		// const keypair = StellarSdk.Keypair.fromRawEd25519Seed(secret);
+    
+		// console.warn('keypair',keypair.publicKey())
+		// console.warn('keypair',keypair.secret())
   }
 
   loadTransactions = () => {
@@ -202,7 +208,6 @@ class HomeScreen extends Component {
 
   saveTransaction = async tx => {
     const { appStore } = this.props
-
 		try {
       db.put({
 				_id: uuid(),
@@ -213,14 +218,6 @@ class HomeScreen extends Component {
       console.log(error.message)
 			alert(error.message)
 		}
-		//alert('saveTransaction')
-    // store.write(() => {
-    //   if (tx.type === 'sign') {
-    //     store.create('Transaction', { ...tx }, true)
-    //   } else {
-    //     store.create('Transaction', { id: uuid(), ...tx })
-    //   }
-    // })
     appStore.set('currentXdr', undefined)
   }
 
@@ -243,10 +240,8 @@ class HomeScreen extends Component {
     //     true
     //   )
     // })
-    setTimeout(() => {
-      appStore.set('currentTransaction', undefined)
-      this.toggleDetailModal()
-    }, 1000)
+		appStore.set('currentTransaction', undefined)
+		this.toggleDetailModal()
 	}
 
 	deleteTransaction = async (doc) => {
