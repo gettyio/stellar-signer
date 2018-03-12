@@ -43,7 +43,7 @@ export default ({ item, appStore }) => {
               <LabelsRow>
                 <StatusLabel status={item.status}>{item.status}</StatusLabel>
                 <CreatedAtLabel>
-                  {moment(item.createdAt, 'YYYYMMDD hh:mm:ss').fromNow()}
+                  {item.createdAt}
                 </CreatedAtLabel>
               </LabelsRow>
             </CardContent>

@@ -38,13 +38,14 @@ const parseSK = sk => {
 }
 
 const SecretRow = ({ item, appStore, onPress }) => {
+	console.log('item',item)
   return (
     <TouchableOpacity onPress={() => onPress(item)}>
       <Row>
         <AliasLabel>{`${item.alias}`}</AliasLabel>
         <SKLabel>{`${parseSK(item.sk)}`}</SKLabel>
         <DateLabel>
-          {moment(item.createdAt).format('YYYY-MM-DD hh:mm:ss')}
+          {item.createdAt}
         </DateLabel>
       </Row>
     </TouchableOpacity>

@@ -20,19 +20,24 @@ import SecretRow from './SecretRow'
 class SecretList extends Component {
   state = {
     hasError: undefined,
-    isLoadingList: false
-  }
+		isLoadingList: false,
+		secrets: []
+	}
+	
+	componentWillReceiveProps(nextProps) {
+		this.setState({ secrets: nextProps.secrets })
+	}
 
   renderRow = ({ item }) => {
     const { appStore } = this.props
     return (
-      <SecretRow item={item} appStore={appStore} onPress={this.props.show} />
+      <SecretRow item={item.doc} appStore={appStore} onPress={this.props.show} />
     )
   }
 
   render() {
     const { height } = Dimensions.get('window')
-    const { secrets } = this.props
+    const { secrets } = this.state
 
     if (secrets.length < 1) {
       return (

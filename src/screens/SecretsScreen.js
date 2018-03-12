@@ -45,17 +45,20 @@ class SecretsScreen extends Component {
   }
 
   componentDidMount() {
-    // this.getSecrets()
-  }
+		// this.getSecrets()
+		this.loadData();
+	}
+	
+	loadData = () => {
+		let self = this;
+		db.allDocs({
+			include_docs: true
+		}).then((res)=> {
+			self.setState({ secrets: res.rows, isLoadingList: false });
+		})
+	}
 
-  componentWillUnmount() {
-    // const { realm } = this.state
-    // if (realm) {
-    //   realm.removeAllListeners()
-    // }
-  }
-
-  getSecrets = () => {
+	getSecrets = () => {
     // const { appStore } = this.props
     // const saltObject = store.objects('Salt')[0]
     // try {
@@ -117,41 +120,25 @@ class SecretsScreen extends Component {
   }
 
   saveSecret = secret => {
-    const { realm } = this.state
-    if (realm) {
-      try {
-        // realm.write(() => {
-        //   realm.create('Secret', {
-        //     id: uuid(),
-        //     createdAt: new Date(),
-        //     ...secret
-        //   })
-        // })
-      } catch (error) {
-        if (
-          error.message.includes(
-            "Attempting to create an object of type 'Secret' with an existing primary key value"
-          )
-        ) {
-          setTimeout(
-            () =>
-              alert(
-                'A secret with this alias already exists. Please, choose another alias.'
-              ),
-            1000
-          )
-        }
-      }
-    }
+		try {
+			db.put({
+				_id: uuid(),
+				...secret,
+				createdAt: new Date().toISOString()
+			});
+			this.loadData();
+		} catch (error) {
+			alert(error.message)
+		}				
   }
 
-  deleteSecret = item => {
-    // const { realm } = this.state
-    // setTimeout(() => {
-    //   realm.write(() => {
-    //     realm.delete(item)
-    //   })
-    // }, 100)
+  deleteSecret = async doc => {
+		try {
+			const res = await db.remove(doc);
+			this.loadData();
+		} catch (error) {
+			alert(error.message);
+		}
   }
 
   showSecretAlert = item => {

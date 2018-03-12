@@ -58,7 +58,8 @@ const db = new PouchDB('Transactions', { adapter: 'react-native-sqlite' })
 @inject('appStore') @observer
 class HomeScreen extends Component {
   state = {
-    realm: undefined,
+		transactions: [],
+		isLoadingList: true,
     currentXdr: undefined,
 		currentTransaction: undefined,
 		currentDecodedTx: undefined
@@ -81,28 +82,20 @@ class HomeScreen extends Component {
       })
     }
     // Ensure that the salt will exists when create the realm file
-		this.checkSalt();
+		this.loadTransactions();
 	}
 
 	componentDidUpdate(prevProps, prevState) {
     this.handleCurrentTx()
   }
 
-  componentWillUnmount() {
-    // const { secretStore } = this.state
-    // if (secretStore) {
-    //   secretStore.removeAllListeners()
-    // }
-  }
-
-  checkSalt = async () => {
-    // const salt = store.objects('Salt')[0]
-    // if (!salt) {
-    //   store.write(() => {
-    //     const val = cryptocore.lib.WordArray.random(128 / 8)
-    //     store.create('Salt', { id: uuid(), value: JSON.stringify(val) })
-    //   })
-		// }
+  loadTransactions = () => {
+		const self = this;
+		db.allDocs({
+			include_docs: true
+		}).then((res)=> {
+			self.setState({ transactions: res.rows, isLoadingList: false });
+		})
   }
 
   handleCurrentTx = () => {
@@ -216,6 +209,7 @@ class HomeScreen extends Component {
 				_id: uuid(),
 				...tx
 			});
+			this.loadTransactions();
 		} catch (error) {
       console.log(error.message)
 			alert(error.message)
@@ -256,7 +250,7 @@ class HomeScreen extends Component {
 	deleteTransaction = async (doc) => {
 		try {
 			const res = await db.remove(doc);
-			console.log(res);
+			this.loadTransactions();
 		} catch (error) {
 			alert(error.message);
 		}
@@ -280,7 +274,7 @@ class HomeScreen extends Component {
 
   render() {
 		const { appStore } = this.props
-		const { transactions } = this.state;
+		const { transactions, isLoadingList } = this.state;
     const isAddModalVisible = appStore.get('isAddModalVisible')
     const isDetailModalVisible = appStore.get('isDetailModalVisible')
     const currentTransaction = appStore.get('currentTransaction')
@@ -298,26 +292,30 @@ class HomeScreen extends Component {
 					</LoadButtonWrapper>
         </Header>
 
-        <TransactionList db={db} />
+        <TransactionList transactions={transactions} isLoadingList={isLoadingList}/>
 
         <Modal isVisible={isAddModalVisible} style={{ paddingTop: 24 }} >
-          <CloseButton onPress={this.toggleAddModal}>
-            <Icon name="x-circle" color="white" size={32} />
-          </CloseButton>
-          <TransactionForm />
+          <View>
+						<CloseButton onPress={this.toggleAddModal}>
+							<Icon name="x-circle" color="white" size={32} />
+						</CloseButton>
+						<TransactionForm />
+					</View>
         </Modal>
 
         <Modal isVisible={isDetailModalVisible} style={{ paddingTop: 24 }}>
-          <CloseButton onPress={this.toggleDetailModal}>
-            <Icon name="x-circle" color="white" size={32} />
-          </CloseButton>
-          <TransactionDetail
-						tx={currentTransaction}
-						toggleModal={this.toggleDetailModal}
-						deleteTransaction={this.deleteTransaction}
-            cancelTransaction={this.cancelTransaction}
-            signTransaction={this.signTransaction}
-          />
+          <View>
+						<CloseButton onPress={this.toggleDetailModal}>
+							<Icon name="x-circle" color="white" size={32} />
+						</CloseButton>
+						<TransactionDetail
+							tx={currentTransaction}
+							toggleModal={this.toggleDetailModal}
+							deleteTransaction={this.deleteTransaction}
+							cancelTransaction={this.cancelTransaction}
+							signTransaction={this.signTransaction}
+						/>
+					</View>
         </Modal>
 
         <StatusBar barStyle="light-content" />

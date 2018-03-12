@@ -27,68 +27,13 @@ class TransactionList extends Component {
   state = {
     transactions: [],
     currentTx: undefined,
-    hasError: undefined,
-    isLoadingList: true
+		hasError: undefined,
+		isLoadingList: true,
   }
-
-  componentDidMount() {
-    // store.addListener('change', this.refreshList)
-		//
-		// await this.refreshList()
-		const { db } = this.props;
-		let self = this;
-		db.allDocs({
-			include_docs: true,
-			attachments: true
-		}).then((res)=> {
-			self.setState({ transactions: res.rows, isLoadingList: false });
-		})
-	}
-	
-  componentWillUnmount() {
-
-	}
 
 	componentWillReceiveProps(nextProps) {
-		const { db } = this.props;
-		let self = this;
-		db.allDocs({
-			include_docs: true,
-			attachments: true
-		}).then((res)=> {
-			self.setState({ transactions: res.rows });
-		})
-
-		db.changes().on('change', function() {
-			db.allDocs({
-				include_docs: true,
-				attachments: true
-			}).then((res)=> {
-				self.setState({ transactions: res.rows });
-			})
-		});
+		this.setState({ transactions: nextProps.transactions, isLoadingList: nextProps.isLoadingList })
 	}
-	
-	dataLoader = async () => {
-	}
-
-  refreshList = async () => {
-		const { db } = this.props;
-		try {
-			// await db.transactions
-			// 	.find()
-			// 	.$.subscribe(transactions => {
-			// 			if (!transactions) return;
-			// 			console.log('observable fired');
-			// 			this.setState({ transactions });
-			// 	});
-		} catch (error) {
-			alert(`TL ${error.message}`);
-		}
-		// const { transactionsStore } = this.props
-		// const transactions = transactionsStore.list.entries().map(item => item);
-    //
-  }
 
   renderRow = ({ item }) => {
 		const { appStore } = this.props
@@ -97,7 +42,7 @@ class TransactionList extends Component {
 
   render() {
 		const { height } = Dimensions.get('window')
-    const { isLoadingList, hasError, transactions } = this.state
+    const { hasError, transactions, isLoadingList } = this.state
 
     if (isLoadingList) {
       return (
