@@ -160,7 +160,7 @@ class HomeScreen extends Component {
 
   // Must use encodeURIComponent
   postMessage = tx => {
-		console.log('postMessage',tree);
+		//console.log('postMessage',tree);
     const xdr = decodeURIComponent(tx.xdr)
 		// const event = JSON.stringify({ type: 'decode', xdr: xdr })
 		const currentDecodedTx = decodeFromXdr(xdr, 'TransactionEnvelope');
@@ -224,24 +224,17 @@ class HomeScreen extends Component {
   cancelTransaction = () => {
 		const { appStore } = this.props
 		const currentTransaction = appStore.get('currentTransaction')
-		console.log('currentTransaction',currentTransaction)
-		alert('look the debug console');
-		//db.upsert()
-		    // store.write(() => {
-    //   const currentTransaction = appStore.get('currentTransaction')
-    //   currentTransaction.status = 'REJECTED'
-    //   store.create(
-    //     'Transaction',
-    //     {
-    //       ...currentTransaction,
-    //       id: currentTransaction.id,
-    //       status: 'REJECTED'
-    //     },
-    //     true
-    //   )
-    // })
-		appStore.set('currentTransaction', undefined)
-		this.toggleDetailModal()
+		try {
+      db.put({
+				_id: currentTransaction._id,
+				...currentTransaction
+			});
+			this.loadTransactions();
+			this.toggleDetailModal()
+			appStore.set('currentTransaction', undefined)
+		} catch (error) {
+			alert(error.message)
+		}
 	}
 
 	deleteTransaction = async (doc) => {
@@ -258,7 +251,6 @@ class HomeScreen extends Component {
 		const currentTransaction = appStore.get('currentTransaction')
 		
 		const pwd = appStore.get('pwd');
-		console.log('`${_id}:${pwd}`',`${_id}:${pwd}`)
     SInfo.getItem(_id,{}).then(value => {
       const bytes = crypto.AES.decrypt(value, `${_id}:${pwd}`);
 			const sk = bytes.toString(crypto.enc.Utf8);

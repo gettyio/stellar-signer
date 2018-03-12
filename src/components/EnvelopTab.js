@@ -11,7 +11,6 @@ const Container = styled.View`
 export default ({ tx }) => {
   if (tx) {
 		const decoded = decodeFromXdr(tx, 'TransactionEnvelope');
-		console.log('decoded',decoded)
     return (
       <Container>
 				<ScrollView>

@@ -246,9 +246,9 @@ class TransactionDetail extends Component {
   deleteTransaction = () => {
     const { appStore, deleteTransaction } = this.props
     const currentTransaction = appStore.get('currentTransaction')
-    this.deleteTransactionButton.success()
-    appStore.set('isDetailModalVisible', !appStore.get('isDetailModalVisible'))
+    this.deleteTransactionButton.success();
 		deleteTransaction(currentTransaction);
+    appStore.set('isDetailModalVisible', !appStore.get('isDetailModalVisible'))
 		appStore.set('currentTransaction', undefined)
   }
 
