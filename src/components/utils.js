@@ -103,7 +103,7 @@ export const AddTransactionHeaderLabel = styled.Text`
 `
 
 export const AddTransactionInput = styled.TextInput`
-  height: 40%;
+  height: 60%;
   width: 100%;
   color: #344b67;
   padding: 16px;
