@@ -56,10 +56,9 @@ import parseEnvelopeTree from './../utils/parseEnvelopeTree'
 import PouchDB from 'pouchdb-react-native'
 import SQLite from 'react-native-sqlite-2'
 import SQLiteAdapterFactory from 'pouchdb-adapter-react-native-sqlite'
-
 const SQLiteAdapter = SQLiteAdapterFactory(SQLite)
 PouchDB.plugin(SQLiteAdapter)
-var db = new PouchDB('Transactions', { adapter: 'react-native-sqlite' })
+const db = new PouchDB('Transactions', { adapter: 'react-native-sqlite' })
 
 @inject('appStore') @observer
 class HomeScreen extends Component {

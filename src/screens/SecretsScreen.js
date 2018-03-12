@@ -27,8 +27,12 @@ import {
 	TitleWrapper
 } from '../components/utils'
 
-import store from './../store/realm'
-import getSecretStore from './../store/secrets'
+import PouchDB from 'pouchdb-react-native'
+import SQLite from 'react-native-sqlite-2'
+import SQLiteAdapterFactory from 'pouchdb-adapter-react-native-sqlite'
+const SQLiteAdapter = SQLiteAdapterFactory(SQLite)
+PouchDB.plugin(SQLiteAdapter)
+const db = new PouchDB('Secrets', { adapter: 'react-native-sqlite' })
 
 @inject('appStore')
 @observer
@@ -41,49 +45,49 @@ class SecretsScreen extends Component {
   }
 
   componentDidMount() {
-    this.getSecrets()
+    // this.getSecrets()
   }
 
   componentWillUnmount() {
-    const { realm } = this.state
-    if (realm) {
-      realm.removeAllListeners()
-    }
+    // const { realm } = this.state
+    // if (realm) {
+    //   realm.removeAllListeners()
+    // }
   }
 
   getSecrets = () => {
-    const { appStore } = this.props
-    const saltObject = store.objects('Salt')[0]
-    try {
-      if (saltObject) {
-        const pwd = appStore.get('pwd')
-        if (pwd) {
-          const salt = JSON.parse(saltObject.value)
-          const passcode = crypto(pwd, salt, { keySize: 512 / 64 })
-          const encoded = base64.encode(passcode.toString())
-          const secret = base64js.toByteArray(encoded)
-          const { realm } = this.state
-          if (!realm) {
-            const secretStore = getSecretStore(secret)
-            const secrets = secretStore.objects('Secret').sorted('alias', true)
-            secretStore.addListener('change', this.getSecrets)
-            this.setState({ realm: secretStore, secrets })
-          } else {
-            const secrets = realm.objects('Secret').sorted('alias', true)
-            realm.addListener('change', this.getSecrets)
-            this.setState({ realm, secrets })
-          }
-        } else {
-          alert('Ask Password')
-        }
-      }
-    } catch (error) {
-      if (error.message.includes('Unable to open a realm at path')) {
-        alert('Invalid secret!')
-      } else {
-        alert(error.message)
-      }
-    }
+    // const { appStore } = this.props
+    // const saltObject = store.objects('Salt')[0]
+    // try {
+    //   if (saltObject) {
+    //     const pwd = appStore.get('pwd')
+    //     if (pwd) {
+    //       const salt = JSON.parse(saltObject.value)
+    //       const passcode = crypto(pwd, salt, { keySize: 512 / 64 })
+    //       const encoded = base64.encode(passcode.toString())
+    //       const secret = base64js.toByteArray(encoded)
+    //       const { realm } = this.state
+    //       if (!realm) {
+    //         const secretStore = getSecretStore(secret)
+    //         const secrets = secretStore.objects('Secret').sorted('alias', true)
+    //         secretStore.addListener('change', this.getSecrets)
+    //         this.setState({ realm: secretStore, secrets })
+    //       } else {
+    //         const secrets = realm.objects('Secret').sorted('alias', true)
+    //         realm.addListener('change', this.getSecrets)
+    //         this.setState({ realm, secrets })
+    //       }
+    //     } else {
+    //       alert('Ask Password')
+    //     }
+    //   }
+    // } catch (error) {
+    //   if (error.message.includes('Unable to open a realm at path')) {
+    //     alert('Invalid secret!')
+    //   } else {
+    //     alert(error.message)
+    //   }
+    // }
   }
 
   toggleAddModal = () => {
