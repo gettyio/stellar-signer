@@ -81,14 +81,12 @@ class SecurePadScreen extends Component {
     const securityFormError = appStore.get('securityFormError')
     return (
       <Modal isVisible={isSecurityRequired} style={{ paddingTop: 24 }}>
-        <View>
-					<SecurityForm
-						appStore={appStore}
-						submit={this.submit}
-						error={securityFormError}
-						close={this.toggleModal}
-					/>
-				</View>
+				<SecurityForm
+					appStore={appStore}
+					submit={this.submit}
+					error={securityFormError}
+					close={this.toggleModal}
+				/>
       </Modal>
     )
   }

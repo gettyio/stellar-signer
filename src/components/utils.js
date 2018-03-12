@@ -1,7 +1,6 @@
 import styled from 'styled-components'
 
 export const Card = styled.View`
-  width: 95%;
   background-color: white;
   border-radius: 16px;
   padding: 16px;
@@ -49,7 +48,7 @@ export const Screen = styled.View`
 `
 
 export const Header = styled.View`
-  height: 100px;
+  height: 90px;
   flex-direction: row;
   align-items: center;
   background-color: blue;
@@ -72,7 +71,8 @@ const EnvelopInfo = styled.View`
 
 export const EmptyScreen = styled.View`
   align-items: center;
-  margin-top: 16px;
+  padding-top: 16px;
+	background-color: white;
 `
 
 export const PasteButton = styled.TouchableOpacity`
@@ -99,14 +99,13 @@ export const AddTransactionHeaderLabel = styled.Text`
   font-size: 16px;
   font-weight: 700;
   color: white;
-  padding-bottom: 16px;
 `
 
 export const AddTransactionInput = styled.TextInput`
-  height: 60%;
+  height: 60px;
   width: 100%;
   color: #344b67;
-  padding: 16px;
+  padding: 8px;
   align-content: flex-start;
   background-color: white;
   border-radius: 16px;
@@ -236,7 +235,7 @@ export const AuthorizeButtonLabel = styled.Text`
 `
 
 export const TextInput = styled.TextInput`
-  height: 80px;
+	height: ${props => (props.height ? props.height : '60px')};
   padding: 8px;
   background-color: white;
   color: #a0a0a0;

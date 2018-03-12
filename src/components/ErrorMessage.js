@@ -3,11 +3,11 @@ import styled from 'styled-components'
 import { Text } from 'react-native'
 import Icon from 'react-native-vector-icons/Feather'
 
-import { Container, Card, CardRow, CardLabel, CardTitle, EnvelopCard } from './utils'
+import { Container, CardFlex, CardRow, CardLabel, CardTitle, EnvelopCard } from './utils'
 
 export default ({ tx }) => (
   <Container>
-    <Card>
+    <CardFlex>
       <CardRow>
         <Icon name="x-circle" color="red" size={32} />
         <CardTitle>Error</CardTitle>
@@ -16,6 +16,6 @@ export default ({ tx }) => (
         <CardLabel>{tx.message}</CardLabel>
         <CardLabel>{`XDR: ${tx.xdr}`}</CardLabel>
       </CardRow>
-    </Card>
+    </CardFlex>
   </Container>
 )

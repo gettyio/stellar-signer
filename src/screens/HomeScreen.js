@@ -11,7 +11,8 @@ import {
   WebView,
   ActivityIndicator,
 	Linking,
-	AsyncStorage
+	AsyncStorage,
+	SafeAreaView
 } from 'react-native'
 import qs from 'qs'
 import uuid from 'uuid/v4'
@@ -281,31 +282,29 @@ class HomeScreen extends Component {
     const currentTransaction = appStore.get('currentTransaction')
 
     return (
-      <Screen>
-        <Header>
-					<TitleWrapper>
-          	<Title>Stellar Signer</Title>
-					</TitleWrapper>
-					<LoadButtonWrapper>
-						<LoadButton onPress={this.toggleAddModal}>
-							<Icon name="plus-circle" color="white" size={32} />
-						</LoadButton>
-					</LoadButtonWrapper>
-        </Header>
+			<SafeAreaView style={{ backgroundColor: 'blue' }}>
+				<Screen>
+					<Header>
+						<TitleWrapper>
+							<Title>Stellar Signer</Title>
+						</TitleWrapper>
+						<LoadButtonWrapper>
+							<LoadButton onPress={this.toggleAddModal}>
+								<Icon name="plus-circle" color="white" size={32} />
+							</LoadButton>
+						</LoadButtonWrapper>
+					</Header>
 
-        <TransactionList transactions={transactions} isLoadingList={isLoadingList}/>
+					<TransactionList transactions={transactions} isLoadingList={isLoadingList}/>
 
-        <Modal isVisible={isAddModalVisible} >
-          <View>
+					<Modal isVisible={isAddModalVisible} >
 						<CloseButton onPress={this.toggleAddModal}>
 							<Icon name="x-circle" color="white" size={32} />
 						</CloseButton>
 						<TransactionForm />
-					</View>
-        </Modal>
+					</Modal>
 
-        <Modal isVisible={isDetailModalVisible}>
-          <View>
+					<Modal isVisible={isDetailModalVisible}>
 						<CloseButton onPress={this.toggleDetailModal}>
 							<Icon name="x-circle" color="white" size={32} />
 						</CloseButton>
@@ -316,11 +315,11 @@ class HomeScreen extends Component {
 							cancelTransaction={this.cancelTransaction}
 							signTransaction={this.signTransaction}
 						/>
-					</View>
-        </Modal>
+					</Modal>
 
-        <StatusBar barStyle="light-content" />
-      </Screen>
+					<StatusBar barStyle="light-content" />
+				</Screen>
+			</SafeAreaView>
     )
   }
 }

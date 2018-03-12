@@ -1,5 +1,4 @@
 import React, { Component, Fragment } from 'react'
-import { View, AsyncStorage } from 'react-native'
 import { Provider } from 'mobx-react'
 import { StackNavigator } from 'react-navigation'
 import { TabNavigator, TabBarBottom } from 'react-navigation'
@@ -40,7 +39,7 @@ const NavigatorScreen = TabNavigator(
     tabBarOptions: {
       activeTintColor: '#0b24fb',
 			inactiveTintColor: 'gray',
-
+			showLabel: false,
       style: {
         height: 45,
         backgroundColor: 'white'

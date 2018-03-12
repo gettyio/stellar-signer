@@ -7,7 +7,7 @@ import { observer, inject } from 'mobx-react'
 
 import {
   ContainerFlex,
-  Card,
+  CardFlex,
   CloseButton,
   AddTransactionInput,
   AddTransactionHeaderLabel,
@@ -48,8 +48,8 @@ class TransactionForm extends Component {
     const currentXdr = appStore.get('currentXdr')
 
     return (
-      <ContainerFlex>
-        <Card>
+      <View>
+        <CardFlex>
           <AddTransactionHeaderLabel>
             Add Transaction Envelope
           </AddTransactionHeaderLabel>
@@ -62,7 +62,7 @@ class TransactionForm extends Component {
 						underlineColorAndroid={'white'}
           />
           <ErrorLabel>{errorMessage}</ErrorLabel>
-        </Card>
+        </CardFlex>
         <Button
           ref={ref => (this.addButton = ref)}
           foregroundColor={'white'}
@@ -77,13 +77,12 @@ class TransactionForm extends Component {
           onPress={this.onPressHandler}
           maxWidth={100}
           style={{
-            marginLeft: 16,
             borderWidth: 0,
             alignSelf: 'center',
             marginTop: 8,
           }}
         />
-      </ContainerFlex>
+      </View>
     )
   }
 }

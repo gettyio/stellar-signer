@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { View, Alert, Dimensions } from 'react-native'
+import { View, Alert, Dimensions, KeyboardAvoidingView, SafeAreaView } from 'react-native'
 import Modal from 'react-native-modal'
 import uuid from 'uuid/v4'
 import { observer, inject } from 'mobx-react'
@@ -19,7 +19,7 @@ import {
   TextInput,
   ErrorLabel,
   CloseButton,
-  Card,
+  CardFlex,
   CardRow,
   CardLabel,
 	CardTitle,
@@ -163,62 +163,68 @@ class SecretsScreen extends Component {
     const isAddSecretModalVisible = appStore.get('isAddSecretModalVisible')
 
     return (
-      <Screen>
-        <Header>
-						<TitleWrapper>
-							<Title>My Secrets</Title>
-							</TitleWrapper>
-							<LoadButtonWrapper>
-							<LoadButton onPress={this.toggleAddModal}>
-								<Icon name="plus-circle" color="white" size={32} />
-							</LoadButton>
-					</LoadButtonWrapper>					
-        </Header>
-        <SecretList secrets={secrets} show={this.showSecretAlert} />
-        <Modal isVisible={isAddSecretModalVisible}>
-          <ContainerFlex>
-            <CloseButton onPress={this.toggleAddModal}>
-              <Icon name="x-circle" color="white" size={32} />
-            </CloseButton>
-            <Card>
-              <TextInput
-                placeholder="Label"
-                onChangeText={alias => this.setState({ alias })}
-								clearButtonMode={'always'}
-								underlineColorAndroid={'white'}
-                value={alias}
-              />
-              <TextInput
-                placeholder="Secret Key"
-                onChangeText={sk => this.setState({ sk })}
-								clearButtonMode={'always'}
-								underlineColorAndroid={'white'}
-                value={sk}
-              />
-              <View>
-                {hasError && <ErrorLabel>Invalid secret or label.</ErrorLabel>}
-              </View>
-            </Card>
-            <View style={{ alignSelf: 'center', paddingTop: 16 }}>
-              <Button
-                ref={ref => (this.addSecretButton = ref)}
-                foregroundColor={'#4cd964'}
-                onPress={this.addSecretToStore}
-                foregroundColor={'white'}
-                backgroundColor={'#4cd964'}
-                successColor={'#4cd964'}
-                errorColor={'#ff3b30'}
-                errorIconColor={'white'}
-                successIconColor={'white'}
-                successIconName="check"
-                label="Save"
-                maxWidth={100}
-                style={{ marginLeft: 16, borderWidth: 0 }}
-              />
-            </View>
-          </ContainerFlex>
-        </Modal>
-      </Screen>
+			<SafeAreaView style={{ backgroundColor: 'blue' }}>
+				<Screen>
+					<Header>
+							<TitleWrapper>
+								<Title>My Secrets</Title>
+								</TitleWrapper>
+								<LoadButtonWrapper>
+								<LoadButton onPress={this.toggleAddModal}>
+									<Icon name="plus-circle" color="white" size={32} />
+								</LoadButton>
+						</LoadButtonWrapper>					
+					</Header>
+					<SecretList secrets={secrets} show={this.showSecretAlert} />
+					<Modal isVisible={isAddSecretModalVisible}>
+						<SafeAreaView style={{ flex: 1 }}>
+							<ContainerFlex>
+								<CloseButton onPress={this.toggleAddModal}>
+									<Icon name="x-circle" color="white" size={32} />
+								</CloseButton>
+								<CardFlex>
+									<TextInput
+										placeholder="Label"
+										onChangeText={alias => this.setState({ alias })}
+										clearButtonMode={'always'}
+										underlineColorAndroid={'white'}
+										value={alias}
+									/>
+									<TextInput
+										placeholder="Secret Key"
+										onChangeText={sk => this.setState({ sk })}
+										clearButtonMode={'always'}
+										underlineColorAndroid={'white'}
+										value={sk}
+									/>
+									<View>
+										{hasError && <ErrorLabel>Invalid secret or label.</ErrorLabel>}
+									</View>
+								</CardFlex>
+								<KeyboardAvoidingView>
+									<View style={{ alignSelf: 'center', paddingTop: 8 }}>
+										<Button
+											ref={ref => (this.addSecretButton = ref)}
+											foregroundColor={'#4cd964'}
+											onPress={this.addSecretToStore}
+											foregroundColor={'white'}
+											backgroundColor={'#4cd964'}
+											successColor={'#4cd964'}
+											errorColor={'#ff3b30'}
+											errorIconColor={'white'}
+											successIconColor={'white'}
+											successIconName="check"
+											label="Save"
+											maxWidth={100}
+											style={{ borderWidth: 0 }}
+										/>
+									</View>
+								</KeyboardAvoidingView>
+							</ContainerFlex>
+						</SafeAreaView>
+					</Modal>
+				</Screen>
+			</SafeAreaView>
     )
   }
 }
