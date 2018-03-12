@@ -51,10 +51,10 @@ class TransactionForm extends Component {
 
     return (
       <ContainerFlex>
-        <Card style={{ height: 180 }}>
-          <AddTransactionHeaderLabel>
+        <Card style={{ height: 130 }}>
+          {/* <AddTransactionHeaderLabel>
             Add Transaction Envelope
-          </AddTransactionHeaderLabel>
+          </AddTransactionHeaderLabel> */}
           <AddTransactionInput
             placeholder="Paste your XDR here!"
             value={inputValue}
@@ -82,7 +82,7 @@ class TransactionForm extends Component {
             marginLeft: 16,
             borderWidth: 0,
             alignSelf: 'center',
-            marginTop: 16
+            marginTop: 16,
           }}
         />
       </ContainerFlex>

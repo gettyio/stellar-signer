@@ -257,7 +257,7 @@ class HomeScreen extends Component {
       this.toggleDetailModal()
     }, 1000)
 	}
-	
+
 	deleteTransaction = async (doc) => {
 		try {
 			const res = await db.remove(doc);
@@ -305,7 +305,7 @@ class HomeScreen extends Component {
 
         <TransactionList db={db} />
 
-        <Modal isVisible={isAddModalVisible} style={{ paddingTop: 24 }}>
+        <Modal isVisible={isAddModalVisible} style={{ paddingTop: 24 }} >
           <CloseButton onPress={this.toggleAddModal}>
             <Icon name="x-circle" color="white" size={32} />
           </CloseButton>
