@@ -120,13 +120,13 @@ class SecretsScreen extends Component {
     const { realm } = this.state
     if (realm) {
       try {
-        realm.write(() => {
-          realm.create('Secret', {
-            id: uuid(),
-            createdAt: new Date(),
-            ...secret
-          })
-        })
+        // realm.write(() => {
+        //   realm.create('Secret', {
+        //     id: uuid(),
+        //     createdAt: new Date(),
+        //     ...secret
+        //   })
+        // })
       } catch (error) {
         if (
           error.message.includes(
@@ -146,12 +146,12 @@ class SecretsScreen extends Component {
   }
 
   deleteSecret = item => {
-    const { realm } = this.state
-    setTimeout(() => {
-      realm.write(() => {
-        realm.delete(item)
-      })
-    }, 100)
+    // const { realm } = this.state
+    // setTimeout(() => {
+    //   realm.write(() => {
+    //     realm.delete(item)
+    //   })
+    // }, 100)
   }
 
   showSecretAlert = item => {
