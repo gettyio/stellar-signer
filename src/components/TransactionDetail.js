@@ -12,8 +12,14 @@ import EnvelopTab from './EnvelopTab'
 import SecurityForm from './SecurityForm'
 import { Container, SelectSecret } from './utils'
 
-@inject('appStore')
-@observer
+import PouchDB from 'pouchdb-react-native'
+import SQLite from 'react-native-sqlite-2'
+import SQLiteAdapterFactory from 'pouchdb-adapter-react-native-sqlite'
+const SQLiteAdapter = SQLiteAdapterFactory(SQLite)
+PouchDB.plugin(SQLiteAdapter)
+const db = new PouchDB('Secrets', { adapter: 'react-native-sqlite' })
+
+@inject('appStore') @observer
 class TransactionDetail extends Component {
   state = {
     tabView: {
@@ -23,8 +29,30 @@ class TransactionDetail extends Component {
         { key: 'envelop', title: 'Envelope' },
         { key: 'signed', title: 'Signed' }
       ]
-    },
+		},
+		secrets: [],
+		options: undefined,
     showSecurityForm: false
+	}
+
+  componentDidMount() {
+		this.loadData();
+	}
+	
+	loadData = () => {
+		try {
+			let self = this;
+			db.allDocs({
+				include_docs: true
+			}).then((res)=> {
+				const options = [];
+				const secrets = res.rows;
+				secrets.forEach(el => options.push(el.doc.alias));
+				self.setState({ secrets, options, isLoadingList: false });
+			})
+		} catch (error) {
+			alert(error.message)
+		}
 	}
 	
 	copyToClipboard = () => {
@@ -49,8 +77,8 @@ class TransactionDetail extends Component {
 
   authTransaction = pwd => {
 		const { appStore } = this.props
-		const secretList = appStore.get('secretList')
-		if (!secretList || secretList.length === 0) {
+		const { secrets } = this.state;
+		if (!secrets || secrets.length === 0) {
 			Alert.alert(
 				`You don't have any secret!`,
 				`Please, add a new secret on the secrets tab.`,
@@ -220,41 +248,26 @@ class TransactionDetail extends Component {
     const currentTransaction = appStore.get('currentTransaction')
     this.deleteTransactionButton.success()
     appStore.set('isDetailModalVisible', !appStore.get('isDetailModalVisible'))
-    setTimeout(() => {
-			deleteTransaction(currentTransaction);
-      appStore.set('currentTransaction', undefined)
-    }, 800)
-  }
-
-  getOptions = () => {
-    const { appStore } = this.props
-		const secretList = appStore.get('secretList')
-		//console.warn('secretList',secretList)
-		let options = []
-		if (secretList) {
-			secretList.forEach(el => options.push(el.alias))
-			return options;
-		}
-		return undefined
+		deleteTransaction(currentTransaction);
+		appStore.set('currentTransaction', undefined)
   }
 
   submitSignature = index => {
-    const { appStore } = this.props
-    const secretList = appStore.get('secretList')
-    const secret = secretList[index]
+    const { secrets } = this.state;
+    const secret = secrets[index]
     this.showConfirmSignatureAlert(secret)
   }
 
   showConfirmSignatureAlert = secret => {
     Alert.alert(
-      `${secret.alias}`,
-      `${secret.sk.slice(1, 8)}...${secret.sk.substr(secret.sk.length - 8)}`,
+      `${secret.doc.alias}`,
+      `${secret.doc.sk}`,
       [
         { text: 'Cancel', onPress: () => {}, style: 'cancel' },
         {
           text: 'Confirm',
-          onPress: () => this.props.signTransaction(secret.sk)
-        } // Do not button
+          onPress: () => this.props.signTransaction(secret.doc._id)
+        }
       ],
       { cancelable: true }
     )
@@ -262,8 +275,7 @@ class TransactionDetail extends Component {
 
   render() {
     const { appStore, tx, toggleModal } = this.props
-    const { showSecurityForm } = this.state
-    const secretOptions = this.getOptions()
+    const { showSecurityForm, options } = this.state
     if (!tx) {
       return <View />
     }
@@ -317,11 +329,11 @@ class TransactionDetail extends Component {
               closeAfterSubmit={false}
             />
 					)}
-					{(secretOptions && secretOptions.length > 0) && (
+					{(options && options.length > 0) && (
 						<ActionSheet
 							ref={o => (this.actionSheet = o)}
 							title={'Select a Secret'}
-							options={secretOptions}
+							options={options}
 							cancelButtonIndex={1}
 							destructiveButtonIndex={2}
 							onPress={this.submitSignature}
@@ -330,7 +342,6 @@ class TransactionDetail extends Component {
         </Container>
       )
     }
-
     return <View />
   }
 }

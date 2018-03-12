@@ -34,7 +34,6 @@ import SQLiteAdapterFactory from 'pouchdb-adapter-react-native-sqlite'
 const SQLiteAdapter = SQLiteAdapterFactory(SQLite)
 PouchDB.plugin(SQLiteAdapter)
 const db = new PouchDB('Secrets', { adapter: 'react-native-sqlite' })
-// import nacl from 'tweetnacl';
 
 @inject('appStore') @observer
 class SecretsScreen extends Component {
@@ -46,7 +45,6 @@ class SecretsScreen extends Component {
   }
 
   componentDidMount() {
-		// this.getSecrets()
 		this.loadData();
 	}
 	
