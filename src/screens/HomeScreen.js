@@ -26,11 +26,6 @@ import Modal from 'react-native-modal'
 import cryptocore from 'crypto-js/core'
 import Button from 'react-native-micro-animated-button'
 import SplashScreen from 'react-native-splash-screen'
-import RxDB from 'rxdb';
-import { omit } from 'lodash'
-
-RxDB.plugin(require('pouchdb-adapter-asyncstorage').default);
-
 import TransactionForm from '../components/TransactionForm'
 import TransactionDetail from '../components/TransactionDetail'
 import PasteButton from '../components/PasteButton'

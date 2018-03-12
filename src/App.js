@@ -10,7 +10,6 @@ import SecretsScreen from './screens/SecretsScreen'
 import SecurePadScreen from './screens/SecurePadScreen'
 import store from './store'
 
-
 const NavigatorScreen = TabNavigator(
   {
     Home: {
