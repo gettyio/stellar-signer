@@ -26,8 +26,8 @@ module.exports = ({ platform }, { module }) => ({
             loader: 'ts-loader'
           },
         ],
-      },
+			},
 			...module.rules
 		]
-	}
+	},
 });

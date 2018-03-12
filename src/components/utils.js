@@ -45,6 +45,7 @@ export const CardLabel = styled.Text`
 
 export const Screen = styled.View`
   display: flex;
+	background-color: white;
 `
 
 export const Header = styled.View`

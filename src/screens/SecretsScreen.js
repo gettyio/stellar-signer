@@ -5,10 +5,11 @@ import uuid from 'uuid/v4'
 import { observer, inject } from 'mobx-react'
 import base64 from 'base-64'
 import base64js from 'base64-js'
-import crypto from 'crypto-js/pbkdf2'
+import crypto from 'crypto-js'
 import Icon from 'react-native-vector-icons/Feather'
 import Button from 'react-native-micro-animated-button'
-
+import SInfo from 'react-native-sensitive-info';
+import { Keypair } from 'stellar-sdk';
 import SecretList from '../components/SecretList'
 import {
   Screen,
@@ -34,8 +35,7 @@ const SQLiteAdapter = SQLiteAdapterFactory(SQLite)
 PouchDB.plugin(SQLiteAdapter)
 const db = new PouchDB('Secrets', { adapter: 'react-native-sqlite' })
 
-@inject('appStore')
-@observer
+@inject('appStore') @observer
 class SecretsScreen extends Component {
   state = {
     sk: undefined,
@@ -45,7 +45,6 @@ class SecretsScreen extends Component {
   }
 
   componentDidMount() {
-		// this.getSecrets()
 		this.loadData();
 	}
 	
@@ -58,47 +57,9 @@ class SecretsScreen extends Component {
 		})
 	}
 
-	getSecrets = () => {
-    // const { appStore } = this.props
-    // const saltObject = store.objects('Salt')[0]
-    // try {
-    //   if (saltObject) {
-    //     const pwd = appStore.get('pwd')
-    //     if (pwd) {
-    //       const salt = JSON.parse(saltObject.value)
-    //       const passcode = crypto(pwd, salt, { keySize: 512 / 64 })
-    //       const encoded = base64.encode(passcode.toString())
-    //       const secret = base64js.toByteArray(encoded)
-    //       const { realm } = this.state
-    //       if (!realm) {
-    //         const secretStore = getSecretStore(secret)
-    //         const secrets = secretStore.objects('Secret').sorted('alias', true)
-    //         secretStore.addListener('change', this.getSecrets)
-    //         this.setState({ realm: secretStore, secrets })
-    //       } else {
-    //         const secrets = realm.objects('Secret').sorted('alias', true)
-    //         realm.addListener('change', this.getSecrets)
-    //         this.setState({ realm, secrets })
-    //       }
-    //     } else {
-    //       alert('Ask Password')
-    //     }
-    //   }
-    // } catch (error) {
-    //   if (error.message.includes('Unable to open a realm at path')) {
-    //     alert('Invalid secret!')
-    //   } else {
-    //     alert(error.message)
-    //   }
-    // }
-  }
-
   toggleAddModal = () => {
     const { appStore } = this.props
-    appStore.set(
-      'isAddSecretModalVisible',
-      !appStore.get('isAddSecretModalVisible')
-    )
+    appStore.set('isAddSecretModalVisible', !appStore.get('isAddSecretModalVisible'))
   }
 
   handleInputErrors = () => {
@@ -114,22 +75,31 @@ class SecretsScreen extends Component {
     } else {
       this.addSecretButton.success()
       this.toggleAddModal()
-      this.saveSecret({ sk, alias })
+      this.saveSecret({ sk: sk.trim(), alias: alias.trim() })
       this.setState({ hasError: false, sk: undefined, alias: undefined })
     }
-  }
+	}
+	
+	encryptSecret = (_id, sk) => {
+		const pwd = this.props.appStore.get('pwd');
+		var ciphertext = crypto.AES.encrypt(sk, `${_id}:${pwd}`);
+		SInfo.setItem(_id, ciphertext.toString(), {});
+	}
 
-  saveSecret = secret => {
+  saveSecret = ({ sk, alias }) => {
+		const _id = uuid();
 		try {
 			db.put({
-				_id: uuid(),
-				...secret,
+				_id,
+				alias,
+				sk: `${sk.slice(0,8)}...${sk.substr(sk.length - 8)}`,
 				createdAt: new Date().toISOString()
 			});
+			this.encryptSecret(_id, sk)
 			this.loadData();
 		} catch (error) {
 			alert(error.message)
-		}				
+		}
   }
 
   deleteSecret = async doc => {
