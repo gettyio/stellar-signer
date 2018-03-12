@@ -147,7 +147,7 @@ class TransactionDetail extends Component {
 							maxWidth={150}
 							style={{
 								marginLeft: 16,
-								borderWidth: 0,
+								borderWidth: 1,
 								alignSelf: 'center',
 								marginTop: 16
 							}}
