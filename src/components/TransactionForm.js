@@ -14,8 +14,6 @@ import {
   ErrorLabel
 } from './utils'
 
-import store from './../store/realm'
-
 @inject('appStore')
 @observer
 class TransactionForm extends Component {
@@ -51,10 +49,10 @@ class TransactionForm extends Component {
 
     return (
       <ContainerFlex>
-        <Card style={{ height: 130 }}>
-          {/* <AddTransactionHeaderLabel>
+        <Card>
+          <AddTransactionHeaderLabel>
             Add Transaction Envelope
-          </AddTransactionHeaderLabel> */}
+          </AddTransactionHeaderLabel>
           <AddTransactionInput
             placeholder="Paste your XDR here!"
             value={inputValue}
@@ -82,7 +80,7 @@ class TransactionForm extends Component {
             marginLeft: 16,
             borderWidth: 0,
             alignSelf: 'center',
-            marginTop: 16,
+            marginTop: 8,
           }}
         />
       </ContainerFlex>

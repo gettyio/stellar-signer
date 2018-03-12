@@ -25,8 +25,8 @@ import {
   CardTitle
 } from '../components/utils'
 
-import store from './../store/realm'
-import getSecretStore from './../store/secrets'
+// import store from './../store/realm'
+// import getSecretStore from './../store/secrets'
 
 @inject('appStore')
 @observer
@@ -38,10 +38,10 @@ class SecurePadScreen extends Component {
   }
 
   componentWillUnmount() {
-    const { realm } = this.state
-    if (realm) {
-      realm.removeAllListeners()
-    }
+    // const { realm } = this.state
+    // if (realm) {
+    //   realm.removeAllListeners()
+    // }
   }
 
   getEncodedSecret = pwd => {
@@ -59,18 +59,14 @@ class SecurePadScreen extends Component {
     const { appStore } = this.props
 
     try {
-      const encodedSecret = this.getEncodedSecret(pwd)
-      const secretStore = getSecretStore(encodedSecret)
-      const secretList = secretStore.objects('Secret').sorted('alias', true)
-      appStore.set('secretList', secretList)
+      // const encodedSecret = this.getEncodedSecret(pwd)
+      // const secretStore = getSecretStore(encodedSecret)
+      // const secretList = secretStore.objects('Secret').sorted('alias', true)
+      // appStore.set('secretList', secretList)
       appStore.set('securityFormError', undefined)
       appStore.set('isSecurityRequired', false)
     } catch (error) {
-      if (error.message.includes('Unable to open a realm at path')) {
-        appStore.set('securityFormError', 'Invalid password.')
-      } else {
-        appStore.set('securityFormError', error.message)
-      }
+			appStore.set('securityFormError', error.message)
     }
   }
 

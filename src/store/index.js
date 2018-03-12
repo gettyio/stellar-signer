@@ -8,7 +8,7 @@ const appStore = {
   secretList: undefined,
   isAddModalVisible: false,
   isAddSecretModalVisible: false,
-  isSecurityRequired: false,
+  isSecurityRequired: true,
   isDetailModalVisible: false,
   currentXdr: undefined,
   currentLink: undefined,

@@ -43,16 +43,15 @@ import {
 	LoadButtonWrapper
 } from '../components/utils'
 
-import getSecretStore from './../store/secrets'
-import store from './../store/realm'
 import { decodeFromXdr, signXdr } from './../utils/xdrUtils';
 import parseEnvelopeTree from './../utils/parseEnvelopeTree'
 
 import PouchDB from 'pouchdb-react-native'
 import SQLite from 'react-native-sqlite-2'
 import SQLiteAdapterFactory from 'pouchdb-adapter-react-native-sqlite'
-const SQLiteAdapter = SQLiteAdapterFactory(SQLite)
-PouchDB.plugin(SQLiteAdapter)
+const SQLiteAdapter = 
+PouchDB.plugin(SQLiteAdapterFactory(SQLite))
+PouchDB.plugin(require('pouchdb-upsert'))
 const db = new PouchDB('Transactions', { adapter: 'react-native-sqlite' })
 
 @inject('appStore') @observer
@@ -81,7 +80,6 @@ class HomeScreen extends Component {
         }
       })
     }
-    // Ensure that the salt will exists when create the realm file
 		this.loadTransactions();
 	}
 
@@ -226,8 +224,12 @@ class HomeScreen extends Component {
   }
 
   cancelTransaction = () => {
-    const { appStore } = this.props
-    // store.write(() => {
+		const { appStore } = this.props
+		const currentTransaction = appStore.get('currentTransaction')
+		console.log('currentTransaction',currentTransaction)
+		alert('look the debug console');
+		//db.upsert()
+		    // store.write(() => {
     //   const currentTransaction = appStore.get('currentTransaction')
     //   currentTransaction.status = 'REJECTED'
     //   store.create(
@@ -240,7 +242,6 @@ class HomeScreen extends Component {
     //     true
     //   )
     // })
-
     setTimeout(() => {
       appStore.set('currentTransaction', undefined)
       this.toggleDetailModal()
@@ -294,7 +295,7 @@ class HomeScreen extends Component {
 
         <TransactionList transactions={transactions} isLoadingList={isLoadingList}/>
 
-        <Modal isVisible={isAddModalVisible} style={{ paddingTop: 24 }} >
+        <Modal isVisible={isAddModalVisible} >
           <View>
 						<CloseButton onPress={this.toggleAddModal}>
 							<Icon name="x-circle" color="white" size={32} />
@@ -303,7 +304,7 @@ class HomeScreen extends Component {
 					</View>
         </Modal>
 
-        <Modal isVisible={isDetailModalVisible} style={{ paddingTop: 24 }}>
+        <Modal isVisible={isDetailModalVisible}>
           <View>
 						<CloseButton onPress={this.toggleDetailModal}>
 							<Icon name="x-circle" color="white" size={32} />
