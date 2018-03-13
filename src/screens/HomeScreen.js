@@ -277,7 +277,7 @@ class HomeScreen extends Component {
 				<Screen>
 					<Header>
 						<TitleWrapper>
-							<Title>Stellar Signer <Text style={{ fontSize: 10 }}>{`Beta`}</Text></Title>
+							<Title>StellarSigner <Text style={{ fontSize: 10 }}>{`Beta`}</Text></Title>
 						</TitleWrapper>
 						<LoadButtonWrapper>
 							<LoadButton onPress={this.toggleAddModal}>

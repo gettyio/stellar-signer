@@ -1,11 +1,12 @@
 import React, { Component } from 'react'
-import { View, Alert, Dimensions, KeyboardAvoidingView, SafeAreaView, Clipboard, Keyboard } from 'react-native'
+import { View, Text, ScrollView, Alert, Dimensions, KeyboardAvoidingView, SafeAreaView, Clipboard, Keyboard } from 'react-native'
 import Modal from 'react-native-modal'
 import uuid from 'uuid/v4'
 import { observer, inject } from 'mobx-react'
 import base64 from 'base-64'
 import base64js from 'base64-js'
-import crypto from 'crypto-js'
+import cryptojs from 'crypto-js'
+import cryptocore from 'crypto-js/core'
 import Icon from 'react-native-vector-icons/Feather'
 import Button from 'react-native-micro-animated-button'
 import SInfo from 'react-native-sensitive-info';
@@ -35,6 +36,7 @@ import SQLiteAdapterFactory from 'pouchdb-adapter-react-native-sqlite'
 const SQLiteAdapter = SQLiteAdapterFactory(SQLite)
 PouchDB.plugin(SQLiteAdapter)
 const db = new PouchDB('Secrets', { adapter: 'react-native-sqlite' })
+import crypto from 'crypto';
 
 @inject('appStore') @observer
 class SecretsScreen extends Component {
@@ -83,7 +85,7 @@ class SecretsScreen extends Component {
 	
 	encryptSecret = (_id, sk) => {
 		const pwd = this.props.appStore.get('pwd');
-		var ciphertext = crypto.AES.encrypt(sk, `${_id}:${pwd}`);
+		var ciphertext = cryptojs.AES.encrypt(sk, `${_id}:${pwd}`);
 		SInfo.setItem(_id, ciphertext.toString(), {});
 	}
 
@@ -101,7 +103,27 @@ class SecretsScreen extends Component {
 		} catch (error) {
 			alert(error.message)
 		}
-  }
+	}
+
+	createNewAccount = () => {
+		const secret = Keypair.random(32);
+		const keypair = Keypair.fromRawEd25519Seed(secret);
+		const pk = keypair.publicKey();
+		const sk = keypair.secret();
+		const _id = uuid();
+		try {
+			db.put({
+				_id,
+				alias: pk,
+				sk: `${secretkey.slice(0,8)}...${secretkey.substr(secretkey.length - 8)}`,
+				createdAt: new Date().toISOString()
+			});
+			this.encryptSecret(_id, sk)
+			this.loadData();
+		} catch (error) {
+			alert(error.message)
+		}		
+	}
 
   deleteSecret = async doc => {
 		try {
@@ -154,6 +176,7 @@ class SecretsScreen extends Component {
 					<SecretList secrets={secrets} show={this.showSecretAlert} />
 					<Modal isVisible={isAddSecretModalVisible}>
 						<SafeAreaView style={{ flex: 1 }}>
+							<ScrollView>
 							<ContainerFlex>
 								<CloseButton onPress={this.toggleAddModal}>
 									<Icon name="x-circle" color="white" size={32} />
@@ -186,25 +209,56 @@ class SecretsScreen extends Component {
 									</View>
 								</CardFlex>
 								<KeyboardAvoidingView>
-									<View style={{ alignSelf: 'center', paddingTop: 8 }}>
+									<View style={{ flex: 1, flexDirection: 'row', paddingTop: 8 }}>								
 										<Button
-											ref={ref => (this.addSecretButton = ref)}
-											foregroundColor={'#4cd964'}
-											onPress={this.addSecretToStore}
-											foregroundColor={'white'}
-											backgroundColor={'#4cd964'}
-											successColor={'#4cd964'}
-											errorColor={'#ff3b30'}
-											errorIconColor={'white'}
-											successIconColor={'white'}
-											successIconName="check"
-											label="Save"
-											maxWidth={100}
-											style={{ borderWidth: 0 }}
-										/>
+												ref={ref => (this.addSecretButton = ref)}
+												foregroundColor={'#276cf2'}
+												onPress={this.createNewAccount}
+												foregroundColor={'white'}
+												backgroundColor={'#276cf2'}
+												successColor={'#276cf2'}
+												errorColor={'#ff3b30'}
+												errorIconColor={'white'}
+												successIconColor={'white'}
+												successIconName="check"
+												label="Create New Account"
+												style={{ borderWidth: 0 }}
+											/>				
+											<Button
+												ref={ref => (this.addSecretButton = ref)}
+												foregroundColor={'#4cd964'}
+												onPress={this.addSecretToStore}
+												foregroundColor={'white'}
+												backgroundColor={'#4cd964'}
+												successColor={'#4cd964'}
+												errorColor={'#ff3b30'}
+												errorIconColor={'white'}
+												successIconColor={'white'}
+												successIconName="check"
+												label="Save"
+												maxWidth={80}
+												style={{ borderWidth: 0, marginLeft: 16}}
+											/>																		
+									</View>
+									<View>
+										<Text style={{ color: 'white', fontSize: 12, fontWeight: '700', marginBottom: 8 }}>Create Account Keypair </Text>
+										<Text style={{ color: 'white', fontSize: 12, marginBottom: 8 }}>
+											To get started on using the Stellar network, you must first create a keypair. The keypair consists of two parts:
+										</Text>
+										<Text style={{ color: 'white', fontSize: 12, marginBottom: 8 }}>
+											<Text style={{ color: 'white', fontSize: 12, fontWeight: '700'}}>Public key:</Text> The public key is used to identify the account. It is also known as an account. This public key is used for receiving funds.
+										</Text>
+										<Text style={{ color: 'white', fontSize: 12, marginBottom: 8 }}>
+											<Text style={{ color: 'white', fontSize: 12, fontWeight: '700'  }}>Secret key:</Text> The secret key is used to access your account and make transactions. Keep this code safe and secure. Anyone with the code will have full access to the account and funds. If you lose the key, you will no longer be able to access the funds and there is no recovery mechanism.
+										</Text>
+										<Text style={{ color: 'white', fontSize: 12, marginBottom: 8, fontWeight: '700' }}>Account generation security notes</Text>
+										<Text style={{ color: 'white', fontSize: 12 }}>
+											The key is generated using entropy from crypto randomBytes function which uses getRandomValues. However, using a secure random number generation does not protect you from a compromised computer. Take great care to make sure your computer is secure and do not run this on a computer you do not trust.
+										</Text>
 									</View>
 								</KeyboardAvoidingView>
 							</ContainerFlex>
+							</ScrollView>
 						</SafeAreaView>
 					</Modal>
 				</Screen>
