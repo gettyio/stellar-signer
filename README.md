@@ -1,4 +1,7 @@
+
 # StellarSigner
+
+https://github.com/gettyio/stellar-signer/raw/master/StellarSignerIcon.png
 
 StellarSigner is a new and free secure key store app to sign Stellar transactions for mobile phones. 
 
