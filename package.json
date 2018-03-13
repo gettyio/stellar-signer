@@ -1,6 +1,6 @@
 {
   "name": "stellar-signer",
-  "version": "1.0.3",
+  "version": "1.0.7",
   "private": true,
   "scripts": {
     "start": "node node_modules/react-native/local-cli/cli.js start",
@@ -10,6 +10,8 @@
     "dev-ios": "haul start --platform ios --dev true",
     "dev-android": "haul start --platform android --dev true",
     "dev-all": "haul start --platform all --dev true",
+    "prod-ios": "haul start --platform ios --dev false",
+    "prod-android": "haul start --platform android --dev false",
     "prod-all": "haul start --platform all --dev false",
     "bundle-ios": "haul bundle --platform ios --dev false"
   },
