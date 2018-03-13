@@ -167,17 +167,20 @@ class SecretsScreen extends Component {
 										underlineColorAndroid={'white'}
 										value={alias}
 									/>
-									<TextInput
-										autoCorrect={false}
-										placeholder="Secret Key"
-										onChangeText={sk => this.setState({ sk })}
-										clearButtonMode={'always'}
-										underlineColorAndroid={'white'}
-										value={sk}
-									/>
-									<MiniPasteButton onPress={this.pasteHandler}>
-										<Icon name="file-text" color="gray" size={24} />
-									</MiniPasteButton>
+									<View style={{ flexDirection: 'row' }}>
+										<TextInput
+											autoCorrect={false}
+											placeholder="Secret Key"
+											onChangeText={sk => this.setState({ sk })}
+											clearButtonMode={'always'}
+											underlineColorAndroid={'white'}
+											value={sk}
+											style={{ flex: 1, marginRight: 16, }}
+										/>
+										<MiniPasteButton onPress={this.pasteHandler}>
+											<Icon name="file-text" color="gray" size={24} />
+										</MiniPasteButton>
+									</View>
 									<View>
 										{hasError && <ErrorLabel>Invalid secret or label.</ErrorLabel>}
 									</View>

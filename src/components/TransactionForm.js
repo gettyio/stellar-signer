@@ -55,20 +55,22 @@ class TransactionForm extends Component {
     return (
       <ContainerFlex>
         <CardFlex>
-          <AddTransactionHeaderLabel>
-            Add Transaction Envelope
-          </AddTransactionHeaderLabel>
-          <AddTransactionInput
-						placeholder="Paste your XDR here!"
-            value={inputValue}
-            onChangeText={inputValue => {
-              this.setState({ inputValue })
-						}}
-						underlineColorAndroid={'white'}
-          />
-					<MiniPasteButton onPress={this.pasteHandler}>
-						<Icon name="file-text" color="gray" size={24} />
-					</MiniPasteButton>
+					<View style={{ flexDirection: 'row' }}>
+						<AddTransactionInput
+							placeholder="Paste your XDR here!"
+							autoCorrect={false}
+							clearButtonMode={'always'}
+							value={inputValue}
+							onChangeText={inputValue => {
+								this.setState({ inputValue })
+							}}
+							underlineColorAndroid={'white'}
+							style={{ flex: 1, marginRight: 16, }}
+						/>
+						<MiniPasteButton onPress={this.pasteHandler}>
+							<Icon name="file-text" color="gray" size={24} />
+						</MiniPasteButton>
+					</View>					
           <ErrorLabel>{errorMessage}</ErrorLabel>
         </CardFlex>
         <Button

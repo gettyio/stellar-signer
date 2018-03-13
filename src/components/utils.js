@@ -84,11 +84,9 @@ export const PasteButton = styled.TouchableOpacity`
 `
 
 export const MiniPasteButton = styled.TouchableOpacity`
-	right: 16;
-	bottom: 24;
   border-radius: 10px;
-	position: absolute;
   border-color: #cecece;
+	align-self: center;
 `
 
 export const PasteButtonLabel = styled.Text`
@@ -107,7 +105,7 @@ export const ErrorLabel = styled.Text`
 export const AddTransactionHeaderLabel = styled.Text`
   font-size: 16px;
   font-weight: 700;
-  color: white;
+  color: #333;
 `
 
 export const AddTransactionInput = styled.TextInput`
