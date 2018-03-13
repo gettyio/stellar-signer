@@ -1,6 +1,6 @@
 {
-  "name": "StellarSigner",
-  "version": "1.0.0",
+  "name": "stellar-signer",
+  "version": "1.0.1",
   "private": true,
   "scripts": {
     "start": "node node_modules/react-native/local-cli/cli.js start",
@@ -71,5 +71,6 @@
   },
   "jest": {
     "preset": "react-native"
-  }
+	},
+	"license": "Apache-2.0"
 }
