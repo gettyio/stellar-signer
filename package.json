@@ -14,7 +14,6 @@
     "bundle-ios": "haul bundle --platform ios --dev false"
   },
   "dependencies": {
-    "qs": "^6.5.1",
     "base-64": "^0.1.0",
     "base64-js": "^1.2.3",
     "crypto-js": "^3.1.9-1",
@@ -23,11 +22,12 @@
     "mobx": "^3.5.1",
     "mobx-react": "^4.4.2",
     "moment": "^2.20.1",
-    "react": "16.2.0",
     "pouchdb-adapter-asyncstorage": "6.4.0",
     "pouchdb-adapter-react-native-sqlite": "^1.0.3",
     "pouchdb-react-native": "^6.4.0",
     "pouchdb-upsert": "^2.2.0",
+    "qs": "^6.5.1",
+    "react": "16.2.0",
     "react-native": "0.53.0",
     "react-native-actionsheet": "^2.3.0",
     "react-native-animatable": "^1.2.4",

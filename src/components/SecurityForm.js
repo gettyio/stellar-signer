@@ -71,9 +71,10 @@ class SecurityForm extends Component {
             {error && <ErrorLabel>{error}</ErrorLabel>}
           </View>
           <SmallMessageLabel>
-            Keep your password secure. This password will be asked to encrypt
-            and decrypt your secrets. Stellar Signer does not save it and will
+            Keep your password secure. StellarSigner only save it on your phone. We will
             not be able to help you recover it if lost.
+
+						This password will be used to encrypt and decrypt your secrets and it only will be saved after you add your first secret.
           </SmallMessageLabel>
         </Card>
         <KeyboardAvoidingView>

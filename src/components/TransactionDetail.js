@@ -77,20 +77,26 @@ class TransactionDetail extends Component {
 
   authTransaction = pwd => {
 		const { appStore } = this.props
-		const { secrets } = this.state;
-		if (!secrets || secrets.length === 0) {
-			Alert.alert(
-				`You don't have any secret!`,
-				`Please, add a new secret on the secrets tab.`,
-				[
-					{
-						text: 'Ok',
-						onPress: () => this.props.toggleModal()
-					}
-				]
-			)
+		const currentPwd = appStore.get('pwd');
+		debugger;
+		if (currentPwd === pwd) {
+			const { secrets } = this.state;
+			if (!secrets || secrets.length === 0) {
+				Alert.alert(
+					`You don't have any secret!`,
+					`Please, add a new secret on the secrets tab.`,
+					[
+						{
+							text: 'Ok',
+							onPress: () => this.props.toggleModal()
+						}
+					]
+				)
+			} else {
+				this.actionSheet.show();
+			}
 		} else {
-			this.actionSheet.show();
+			appStore.set('securityFormError', 'Invalid password!')
 		}
 	}
 	
@@ -275,7 +281,8 @@ class TransactionDetail extends Component {
 
   render() {
     const { appStore, tx, toggleModal } = this.props
-    const { showSecurityForm, options } = this.state
+		const { showSecurityForm, options } = this.state
+		const securityFormError = appStore.get('securityFormError')
     if (!tx) {
       return <View />
     }
@@ -324,6 +331,7 @@ class TransactionDetail extends Component {
           {!showSecurityForm && this.renderActionBar()}
           {showSecurityForm && (
             <SecurityForm
+							error={securityFormError}
               submit={this.authTransaction}
               close={toggleModal}
               closeAfterSubmit={false}

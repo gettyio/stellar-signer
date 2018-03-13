@@ -317,16 +317,5 @@ class HomeScreen extends Component {
     )
   }
 }
-{
-  /**
-  Paste Button
-<TextInput
-  onChangeText={(text) => this.setAccountValue(text)}
-  clearButtonMode={'always'}
-  value={accountInputValue}
-></TextInput>
-  <PasteButton account={accountInputValue} setAccountValue={this.setAccountValue}/>
 
-**/
-}
 export default HomeScreen

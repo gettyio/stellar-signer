@@ -1,9 +1,10 @@
 import React, { Component } from 'react'
-import { View, Text } from 'react-native'
+import { View, Text, Clipboard, Keyboard } from 'react-native'
 import { TabViewAnimated, TabBar, SceneMap } from 'react-native-tab-view'
 import Button from 'react-native-micro-animated-button'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import { observer, inject } from 'mobx-react'
+import * as Animatable from 'react-native-animatable'
 
 import {
   ContainerFlex,
@@ -11,7 +12,9 @@ import {
   CloseButton,
   AddTransactionInput,
   AddTransactionHeaderLabel,
-  ErrorLabel
+	ErrorLabel,
+	PasteButton,
+	PasteButtonLabel
 } from './utils'
 
 @inject('appStore')
@@ -28,9 +31,7 @@ class TransactionForm extends Component {
       this.submitXdr(inputValue)
       this.addButton.success()
       this.setState({ errorMessage: undefined })
-      setTimeout(() => {
-        appStore.set('isAddModalVisible', false)
-      }, 1000)
+			appStore.set('isAddModalVisible', false)
     } else {
       this.setState({ errorMessage: 'Invalid xdr value' })
       this.addButton.reset()
@@ -40,6 +41,33 @@ class TransactionForm extends Component {
   submitXdr = xdr => {
 		const { appStore } = this.props
     appStore.set('currentXdr', xdr)
+	}
+
+	pasteHandler = async () => {
+    const content = await Clipboard.getString()
+    this.refs.view.fadeOutLeft(300).then(() =>
+      this.setState({ inputValue: content }, () => {
+        Keyboard.dismiss()
+      })
+    )
+  }
+	
+	renderPasteButton = () => {
+    const { inputValue } = this.state
+    if (!inputValue || inputValue === '') {
+      return (
+        <Animatable.View
+          ref="view"
+          style={{ position: 'absolute', marginTop: 18, marginLeft: -6 }}
+        >
+          <PasteButton onPress={this.pasteHandler}>
+            <PasteButtonLabel>
+              Click to paste your or start to type.
+            </PasteButtonLabel>
+          </PasteButton>
+        </Animatable.View>
+      )
+    }
   }
 
   render() {
@@ -48,19 +76,19 @@ class TransactionForm extends Component {
     const currentXdr = appStore.get('currentXdr')
 
     return (
-      <View>
+      <ContainerFlex>
         <CardFlex>
           <AddTransactionHeaderLabel>
             Add Transaction Envelope
           </AddTransactionHeaderLabel>
           <AddTransactionInput
-            placeholder="Paste your XDR here!"
             value={inputValue}
             onChangeText={inputValue => {
               this.setState({ inputValue })
 						}}
 						underlineColorAndroid={'white'}
           />
+					{this.renderPasteButton()}
           <ErrorLabel>{errorMessage}</ErrorLabel>
         </CardFlex>
         <Button
@@ -82,7 +110,7 @@ class TransactionForm extends Component {
             marginTop: 8,
           }}
         />
-      </View>
+      </ContainerFlex>
     )
   }
 }
