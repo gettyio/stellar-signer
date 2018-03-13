@@ -47,7 +47,7 @@ class TransactionDetail extends Component {
 			}).then((res)=> {
 				const options = [];
 				const secrets = res.rows;
-				secrets.forEach(el => options.push(el.doc.alias));
+				secrets.forEach(el => options.push(el.alias));
 				self.setState({ secrets, options, isLoadingList: false });
 			})
 		} catch (error) {
@@ -259,19 +259,19 @@ class TransactionDetail extends Component {
 
   submitSignature = index => {
     const { secrets } = this.state;
-    const secret = secrets[index]
+		const secret = secrets[index]
     this.showConfirmSignatureAlert(secret)
   }
 
   showConfirmSignatureAlert = secret => {
     Alert.alert(
-      `${secret.doc.alias}`,
-      `${secret.doc.sk}`,
+      `${secret.alias}`,
+      `${secret.sk}`,
       [
         { text: 'Cancel', onPress: () => {}, style: 'cancel' },
         {
           text: 'Confirm',
-          onPress: () => this.props.signTransaction(secret.doc._id)
+          onPress: () => this.props.signTransaction(secret._id)
         }
       ],
       { cancelable: true }

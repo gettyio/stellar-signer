@@ -37,7 +37,7 @@ class TransactionList extends Component {
 
   renderRow = ({ item }) => {
 		const { appStore } = this.props
-    return <TransactionRow item={item.doc} appStore={appStore} />
+    return <TransactionRow item={item} appStore={appStore} />
   }
 
   render() {
@@ -81,7 +81,7 @@ class TransactionList extends Component {
           data={transactions}
           removeClippedSubviews={true}
           renderItem={this.renderRow}
-          keyExtractor={(item, index) => `${item.id}`}
+          keyExtractor={(item, index) => `${item._id}`}
         />
       </View>
     )

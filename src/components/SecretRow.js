@@ -10,14 +10,14 @@ export const Row = styled.View`
 `
 
 export const AliasLabel = styled.Text`
-  font-size: 18px;
+  font-size: 16px;
   color: #333;
   font-weight: 700;
   align-self: center;
 `
 
 export const SKLabel = styled.Text`
-  font-size: 18px;
+  font-size: 16px;
   letter-spacing: 3px;
   color: #333;
   font-weight: 700;
@@ -39,7 +39,7 @@ const SecretRow = ({ item, appStore, onPress }) => {
         <AliasLabel>{`${item.alias}`}</AliasLabel>
         <SKLabel>{`${item.sk}`}</SKLabel>
         <DateLabel>
-          {item.createdAt}
+					{moment(item.createdAt, 'YYYYMMDD hh:mm:ss').fromNow()}
         </DateLabel>
       </Row>
     </TouchableOpacity>

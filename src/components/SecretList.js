@@ -31,7 +31,7 @@ class SecretList extends Component {
   renderRow = ({ item }) => {
     const { appStore } = this.props
     return (
-      <SecretRow item={item.doc} appStore={appStore} onPress={this.props.show} />
+      <SecretRow item={item} appStore={appStore} onPress={this.props.show} />
     )
   }
 
@@ -60,7 +60,7 @@ class SecretList extends Component {
           data={secrets}
           removeClippedSubviews={true}
           renderItem={this.renderRow}
-          keyExtractor={(item, index) => `${item.id}`}
+          keyExtractor={(item, index) => `${item._id}`}
         />
       </View>
     )

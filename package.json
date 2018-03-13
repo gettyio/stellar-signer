@@ -27,6 +27,7 @@
     "pouchdb-react-native": "^6.4.0",
     "pouchdb-upsert": "^2.2.0",
     "qs": "^6.5.1",
+    "randomatic": "^3.0.0",
     "react": "16.2.0",
     "react-native": "0.53.0",
     "react-native-actionsheet": "^2.3.0",

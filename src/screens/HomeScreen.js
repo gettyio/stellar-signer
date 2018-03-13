@@ -16,7 +16,7 @@ import {
 } from 'react-native'
 import qs from 'qs'
 import uuid from 'uuid/v4'
-import { get } from 'lodash'
+import { get, sortBy } from 'lodash'
 import base64 from 'base-64'
 import base64js from 'base64-js'
 import { observer, inject } from 'mobx-react'
@@ -96,7 +96,9 @@ class HomeScreen extends Component {
 		db.allDocs({
 			include_docs: true
 		}).then((res)=> {
-			self.setState({ transactions: res.rows, isLoadingList: false });
+			const rawTransactions = res.rows.map((item, index) => item.doc);
+			const transactions = sortBy(rawTransactions, 'createdAt').reverse()
+			self.setState({ transactions, isLoadingList: false });
 		})
   }
 
@@ -224,7 +226,8 @@ class HomeScreen extends Component {
 		try {
       db.put({
 				_id: currentTransaction._id,
-				...currentTransaction
+				...currentTransaction,
+				status: 'REJECTED'
 			});
 			this.loadTransactions();
 			this.toggleDetailModal()
@@ -246,23 +249,26 @@ class HomeScreen extends Component {
   signTransaction = _id => {
     const { appStore } = this.props
 		const currentTransaction = appStore.get('currentTransaction')
+		try {
+			const pwd = appStore.get('pwd');
+			SInfo.getItem(_id,{}).then(value => {
+				const bytes = crypto.AES.decrypt(value, `${_id}:${pwd}`);
+				const sk = bytes.toString(crypto.enc.Utf8);
+				console.log('secret ',sk)
+				const data = {
+					type: 'sign',
+					tx: currentTransaction,
+					xdr: currentTransaction.xdr,
+					sk
+				};
 		
-		const pwd = appStore.get('pwd');
-    SInfo.getItem(_id,{}).then(value => {
-      const bytes = crypto.AES.decrypt(value, `${_id}:${pwd}`);
-			const sk = bytes.toString(crypto.enc.Utf8);
-			
-			const data = {
-				type: 'sign',
-				tx: currentTransaction,
-				xdr: currentTransaction.xdr,
-				sk
-			};
-	
-			const signedTx = signXdr(data);
-			this.saveCurrentTransaction(signedTx)
-			this.toggleDetailModal()
-		});
+				const signedTx = signXdr(data);
+				this.saveCurrentTransaction(signedTx)
+				this.toggleDetailModal()
+			});
+		} catch (error) {
+			alert(error.message)
+		}
   }
 
   render() {

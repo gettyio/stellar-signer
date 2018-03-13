@@ -3,14 +3,16 @@ import { View, Text, ScrollView, Alert, Dimensions, KeyboardAvoidingView, SafeAr
 import Modal from 'react-native-modal'
 import uuid from 'uuid/v4'
 import { observer, inject } from 'mobx-react'
+import { sortBy } from 'lodash';
 import base64 from 'base-64'
 import base64js from 'base64-js'
 import cryptojs from 'crypto-js'
 import cryptocore from 'crypto-js/core'
+import randomize from 'randomatic'
 import Icon from 'react-native-vector-icons/Feather'
 import Button from 'react-native-micro-animated-button'
 import SInfo from 'react-native-sensitive-info';
-import { Keypair } from 'stellar-sdk';
+import StellarSdk from 'stellar-sdk';
 import SecretList from '../components/SecretList'
 import {
   Screen,
@@ -37,6 +39,7 @@ const SQLiteAdapter = SQLiteAdapterFactory(SQLite)
 PouchDB.plugin(SQLiteAdapter)
 const db = new PouchDB('Secrets', { adapter: 'react-native-sqlite' })
 import crypto from 'crypto';
+StellarSdk.Network.useTestNetwork();
 
 @inject('appStore') @observer
 class SecretsScreen extends Component {
@@ -56,7 +59,9 @@ class SecretsScreen extends Component {
 		db.allDocs({
 			include_docs: true
 		}).then((res)=> {
-			self.setState({ secrets: res.rows, isLoadingList: false });
+			const rawsecrets = res.rows.map((item, index) => item.doc);
+			const secrets = sortBy(rawsecrets, 'createdAt').reverse()
+			self.setState({ secrets });
 		})
 	}
 
@@ -76,10 +81,10 @@ class SecretsScreen extends Component {
       this.addSecretButton.error()
       this.addSecretButton.reset()
     } else {
-      this.addSecretButton.success()
-      this.toggleAddModal()
+      this.addSecretButton.success()      
       this.saveSecret({ sk: sk.trim(), alias: alias.trim() })
-      this.setState({ hasError: false, sk: undefined, alias: undefined })
+			this.setState({ hasError: false, sk: undefined, alias: undefined })
+			this.toggleAddModal()
     }
 	}
 	
@@ -106,8 +111,8 @@ class SecretsScreen extends Component {
 	}
 
 	createNewAccount = () => {
-		const secret = Keypair.random(32);
-		const keypair = Keypair.fromRawEd25519Seed(secret);
+		const secret = randomize('*', 32);
+		const keypair = StellarSdk.Keypair.fromRawEd25519Seed(secret);
 		const pk = keypair.publicKey();
 		const sk = keypair.secret();
 		const _id = uuid();
@@ -115,14 +120,15 @@ class SecretsScreen extends Component {
 			db.put({
 				_id,
 				alias: pk,
-				sk: `${secretkey.slice(0,8)}...${secretkey.substr(secretkey.length - 8)}`,
+				sk: `${sk.slice(0,8)}...${sk.substr(sk.length - 8)}`,
 				createdAt: new Date().toISOString()
 			});
 			this.encryptSecret(_id, sk)
 			this.loadData();
+			this.toggleAddModal()
 		} catch (error) {
 			alert(error.message)
-		}		
+		}
 	}
 
   deleteSecret = async doc => {
@@ -132,7 +138,12 @@ class SecretsScreen extends Component {
 		} catch (error) {
 			alert(error.message);
 		}
-  }
+	}
+	
+	copyToClipboard = (publicKey) => {
+		Clipboard.setString(publicKey);
+		alert('The public key was copied to the clipboard');
+	}
 
   showSecretAlert = item => {
     Alert.alert(
@@ -144,7 +155,7 @@ class SecretsScreen extends Component {
           onPress: () => this.deleteSecret(item),
           style: 'cancel'
         },
-        { text: 'Close', onPress: () => {} } // Do not button
+        { text: 'Close', onPress: () => this.copyToClipboard(item.alias) } // Do not button
       ],
       { cancelable: false }
     )
@@ -184,7 +195,7 @@ class SecretsScreen extends Component {
 								<CardFlex>
 									<TextInput
 										autoCorrect={false}
-										placeholder="Label"
+										placeholder="Public Key"
 										onChangeText={alias => this.setState({ alias })}
 										clearButtonMode={'always'}
 										underlineColorAndroid={'white'}
@@ -253,7 +264,7 @@ class SecretsScreen extends Component {
 										</Text>
 										<Text style={{ color: 'white', fontSize: 12, marginBottom: 8, fontWeight: '700' }}>Account generation security notes</Text>
 										<Text style={{ color: 'white', fontSize: 12 }}>
-											The key is generated using entropy from crypto randomBytes function which uses getRandomValues. However, using a secure random number generation does not protect you from a compromised computer. Take great care to make sure your computer is secure and do not run this on a computer you do not trust.
+											The key is generated using a random 32 length string. However, using a secure random number generation does not protect you from a compromised computer. Take great care to make sure your computer is secure and do not run this on a computer you do not trust.
 										</Text>
 									</View>
 								</KeyboardAvoidingView>
