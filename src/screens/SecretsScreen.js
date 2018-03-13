@@ -160,6 +160,7 @@ class SecretsScreen extends Component {
 								</CloseButton>
 								<CardFlex>
 									<TextInput
+										autoCorrect={false}
 										placeholder="Label"
 										onChangeText={alias => this.setState({ alias })}
 										clearButtonMode={'always'}
@@ -167,6 +168,7 @@ class SecretsScreen extends Component {
 										value={alias}
 									/>
 									<TextInput
+										autoCorrect={false}
 										placeholder="Secret Key"
 										onChangeText={sk => this.setState({ sk })}
 										clearButtonMode={'always'}

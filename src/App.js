@@ -12,10 +12,10 @@ import store from './store'
 
 const NavigatorScreen = TabNavigator(
   {
-    Home: {
-      screen: HomeScreen
-    },
-    Secrets: {
+		Home: {
+			screen: HomeScreen
+		},
+		Secrets: {
       screen: SecretsScreen
 		},
 		About: {
