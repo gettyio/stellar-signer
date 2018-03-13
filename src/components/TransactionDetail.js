@@ -31,7 +31,7 @@ class TransactionDetail extends Component {
       ]
 		},
 		secrets: [],
-		options: undefined,
+		options: [],
     showSecurityForm: false
 	}
 
@@ -47,7 +47,7 @@ class TransactionDetail extends Component {
 			}).then((res)=> {
 				const options = [];
 				const secrets = res.rows;
-				secrets.forEach(el => options.push(el.alias));
+				secrets.forEach(el => options.push(el.doc.alias));
 				self.setState({ secrets, options, isLoadingList: false });
 			})
 		} catch (error) {
@@ -265,13 +265,13 @@ class TransactionDetail extends Component {
 
   showConfirmSignatureAlert = secret => {
     Alert.alert(
-      `${secret.alias}`,
-      `${secret.sk}`,
+      `${secret.doc.alias}`,
+      `${secret.doc.sk}`,
       [
         { text: 'Cancel', onPress: () => {}, style: 'cancel' },
         {
           text: 'Confirm',
-          onPress: () => this.props.signTransaction(secret._id)
+          onPress: () => this.props.signTransaction(secret.doc._id)
         }
       ],
       { cancelable: true }

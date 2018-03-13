@@ -25,7 +25,7 @@ class AboutScreen extends Component {
 							<View>
 								<Text style={{ fontSize: 14, padding: 16, lineHeight: 24, textAlign: 'justify' }}>
 									<Text style={{ fontSize: 14, fontWeight: '700' }}>StellarSigner </Text> 
-									is a new and free secure key store app to sign Stellar transactions for mobile phones. 
+									is a new and free secure key store app to sign Stellar transactions. 
 									With StellarSigner you never share your secret keys with third party services.
 									StellarSigner is designed to be among the most secure apps to sign Stellar transactions on iOS and Android.
 									StellarSigner can already sign transactions submitted to it from other apps or through the copy/paste buffer.
