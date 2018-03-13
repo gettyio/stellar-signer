@@ -70,7 +70,7 @@ class SecurePadScreen extends Component {
 					}
 
 				}).catch(err => {
-					alert(err.message)
+					appStore.set('securityFormError', 'Invalid password!')
 				})
 			} else {
 				appStore.set('pwd', pwd)

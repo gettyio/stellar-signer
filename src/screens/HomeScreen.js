@@ -42,7 +42,6 @@ import {
 	TitleWrapper,
 	LoadButtonWrapper
 } from '../components/utils'
-
 import { decodeFromXdr, signXdr } from './../utils/xdrUtils';
 import parseEnvelopeTree from './../utils/parseEnvelopeTree'
 import crypto from 'crypto-js'
@@ -53,8 +52,6 @@ const SQLiteAdapter =
 PouchDB.plugin(SQLiteAdapterFactory(SQLite))
 PouchDB.plugin(require('pouchdb-upsert'))
 const db = new PouchDB('Transactions', { adapter: 'react-native-sqlite' })
-//var nacl = require('./../utils/nacl');
-//import StellarSdk from 'stellar-sdk';
 
 @inject('appStore') @observer
 class HomeScreen extends Component {
@@ -280,7 +277,7 @@ class HomeScreen extends Component {
 				<Screen>
 					<Header>
 						<TitleWrapper>
-							<Title>Stellar Signer</Title>
+							<Title>Stellar Signer <Text style={{ fontSize: 10 }}>{`Beta`}</Text></Title>
 						</TitleWrapper>
 						<LoadButtonWrapper>
 							<LoadButton onPress={this.toggleAddModal}>

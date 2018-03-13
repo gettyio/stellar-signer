@@ -7,6 +7,7 @@ import Icon from 'react-native-vector-icons/Feather'
 import HomeScreen from './screens/HomeScreen'
 import SecretsScreen from './screens/SecretsScreen'
 import SecurePadScreen from './screens/SecurePadScreen'
+import AboutScreen from './screens/AboutScreen'
 import store from './store'
 
 const NavigatorScreen = TabNavigator(
@@ -16,6 +17,9 @@ const NavigatorScreen = TabNavigator(
     },
     Secrets: {
       screen: SecretsScreen
+		},
+		About: {
+      screen: AboutScreen
     }
   },
   {
@@ -28,6 +32,8 @@ const NavigatorScreen = TabNavigator(
           iconName = `book`
         } else if (routeName === 'Secrets') {
           iconName = `shield`
+        } else if (routeName === 'About') {
+          iconName = `info`
         }
         // You can return any component that you like here! We usually use an
         // icon component from react-native-vector-icons

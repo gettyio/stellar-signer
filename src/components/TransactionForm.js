@@ -44,7 +44,7 @@ class TransactionForm extends Component {
 
 	pasteHandler = async () => {
     const content = await Clipboard.getString()
-		this.setState({ inputValue: content }, Keyboard.dismiss)
+		this.setState({ inputValue: content })
   }
 
   render() {

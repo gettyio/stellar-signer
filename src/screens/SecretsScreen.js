@@ -130,11 +130,7 @@ class SecretsScreen extends Component {
 	
 	pasteHandler = async () => {
     const content = await Clipboard.getString()
-    this.refs.view.fadeOutLeft(300).then(() =>
-      this.setState({ inputValue: content }, () => {
-        Keyboard.dismiss()
-      })
-    )
+		this.setState({ sk: content })
   }
 
   render() {
@@ -177,7 +173,7 @@ class SecretsScreen extends Component {
 										underlineColorAndroid={'white'}
 										value={sk}
 									/>
-									<MiniPasteButton>
+									<MiniPasteButton onPress={this.pasteHandler}>
 										<Icon name="file-text" color="gray" size={24} />
 									</MiniPasteButton>
 									<View>
