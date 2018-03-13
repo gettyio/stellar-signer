@@ -83,6 +83,14 @@ export const PasteButton = styled.TouchableOpacity`
   border-color: #cecece;
 `
 
+export const MiniPasteButton = styled.TouchableOpacity`
+	right: 16;
+	bottom: 24;
+  border-radius: 10px;
+	position: absolute;
+  border-color: #cecece;
+`
+
 export const PasteButtonLabel = styled.Text`
   padding: 10px;
   font-size: 14px;

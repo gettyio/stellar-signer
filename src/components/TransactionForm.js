@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { View, Text, Clipboard, Keyboard } from 'react-native'
 import { TabViewAnimated, TabBar, SceneMap } from 'react-native-tab-view'
 import Button from 'react-native-micro-animated-button'
-import Icon from 'react-native-vector-icons/FontAwesome'
+import Icon from 'react-native-vector-icons/Feather'
 import { observer, inject } from 'mobx-react'
 import * as Animatable from 'react-native-animatable'
 
@@ -13,8 +13,7 @@ import {
   AddTransactionInput,
   AddTransactionHeaderLabel,
 	ErrorLabel,
-	PasteButton,
-	PasteButtonLabel
+	MiniPasteButton
 } from './utils'
 
 @inject('appStore')
@@ -45,29 +44,7 @@ class TransactionForm extends Component {
 
 	pasteHandler = async () => {
     const content = await Clipboard.getString()
-    this.refs.view.fadeOutLeft(300).then(() =>
-      this.setState({ inputValue: content }, () => {
-        Keyboard.dismiss()
-      })
-    )
-  }
-	
-	renderPasteButton = () => {
-    const { inputValue } = this.state
-    if (!inputValue || inputValue === '') {
-      return (
-        <Animatable.View
-          ref="view"
-          style={{ position: 'absolute', marginTop: 18, marginLeft: -6 }}
-        >
-          <PasteButton onPress={this.pasteHandler}>
-            <PasteButtonLabel>
-              Click to paste your or start to type.
-            </PasteButtonLabel>
-          </PasteButton>
-        </Animatable.View>
-      )
-    }
+		this.setState({ inputValue: content }, Keyboard.dismiss)
   }
 
   render() {
@@ -82,13 +59,16 @@ class TransactionForm extends Component {
             Add Transaction Envelope
           </AddTransactionHeaderLabel>
           <AddTransactionInput
+						placeholder="Paste your XDR here!"
             value={inputValue}
             onChangeText={inputValue => {
               this.setState({ inputValue })
 						}}
 						underlineColorAndroid={'white'}
           />
-					{this.renderPasteButton()}
+					<MiniPasteButton onPress={this.pasteHandler}>
+						<Icon name="file-text" color="gray" size={24} />
+					</MiniPasteButton>
           <ErrorLabel>{errorMessage}</ErrorLabel>
         </CardFlex>
         <Button

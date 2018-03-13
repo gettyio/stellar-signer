@@ -78,7 +78,6 @@ class TransactionDetail extends Component {
   authTransaction = pwd => {
 		const { appStore } = this.props
 		const currentPwd = appStore.get('pwd');
-		debugger;
 		if (currentPwd === pwd) {
 			const { secrets } = this.state;
 			if (!secrets || secrets.length === 0) {

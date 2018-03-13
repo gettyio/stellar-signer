@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { View, Alert, Dimensions, KeyboardAvoidingView, SafeAreaView } from 'react-native'
+import { View, Alert, Dimensions, KeyboardAvoidingView, SafeAreaView, Clipboard, Keyboard } from 'react-native'
 import Modal from 'react-native-modal'
 import uuid from 'uuid/v4'
 import { observer, inject } from 'mobx-react'
@@ -25,7 +25,8 @@ import {
   CardLabel,
 	CardTitle,
 	LoadButtonWrapper,
-	TitleWrapper
+	TitleWrapper,
+	MiniPasteButton
 } from '../components/utils'
 
 import PouchDB from 'pouchdb-react-native'
@@ -125,6 +126,15 @@ class SecretsScreen extends Component {
       ],
       { cancelable: false }
     )
+	}
+	
+	pasteHandler = async () => {
+    const content = await Clipboard.getString()
+    this.refs.view.fadeOutLeft(300).then(() =>
+      this.setState({ inputValue: content }, () => {
+        Keyboard.dismiss()
+      })
+    )
   }
 
   render() {
@@ -167,6 +177,9 @@ class SecretsScreen extends Component {
 										underlineColorAndroid={'white'}
 										value={sk}
 									/>
+									<MiniPasteButton>
+										<Icon name="file-text" color="gray" size={24} />
+									</MiniPasteButton>
 									<View>
 										{hasError && <ErrorLabel>Invalid secret or label.</ErrorLabel>}
 									</View>

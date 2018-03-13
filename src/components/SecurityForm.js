@@ -11,7 +11,7 @@ import {
   CloseButton,
   Card,
   SmallMessageLabel,
-  PasswordFormTitle
+	PasswordFormTitle
 } from './utils'
 
 class SecurityForm extends Component {
