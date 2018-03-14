@@ -36,7 +36,7 @@ class TransactionList extends Component {
 	}
 
   renderRow = ({ item }) => {
-		const { appStore } = this.props
+		const { appStore, navigation } = this.props
     return <TransactionRow item={item} appStore={appStore} />
   }
 

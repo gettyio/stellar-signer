@@ -16,6 +16,15 @@ export const AliasLabel = styled.Text`
   align-self: center;
 `
 
+
+export const PKLabel = styled.Text`
+  font-size: 14px;
+  color: #333;
+  font-weight: 700;
+  align-self: center;
+`
+
+
 export const SKLabel = styled.Text`
   font-size: 16px;
   letter-spacing: 3px;
@@ -33,13 +42,14 @@ export const DateLabel = styled.Text`
 `
 
 const SecretRow = ({ item, appStore, onPress }) => {
+	const pk = item.pk;
   return (
     <TouchableOpacity onPress={() => onPress(item)}>
       <Row>
         <AliasLabel>{`${item.alias}`}</AliasLabel>
-        <SKLabel>{`${item.sk}`}</SKLabel>
+				<PKLabel>{`${pk.slice(0,8)}...${pk.substr(pk.length - 8)}`}</PKLabel>
         <DateLabel>
-					{moment(item.createdAt, 'YYYYMMDD hh:mm:ss').fromNow()}
+				{`${moment(new Date(item.createdAt)).format('YYYY-MM-DD hh:mm')}`}
         </DateLabel>
       </Row>
     </TouchableOpacity>

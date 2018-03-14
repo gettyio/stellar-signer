@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { SafeAreaView } from 'react-native'
+import { View, Text, Image, ScrollView, SafeAreaView } from 'react-native'
 import PropTypes from 'prop-types'
 import { observer, inject } from 'mobx-react'
 import crypto from 'crypto-js'
@@ -28,9 +28,10 @@ import SQLiteAdapterFactory from 'pouchdb-adapter-react-native-sqlite'
 const SQLiteAdapter = SQLiteAdapterFactory(SQLite)
 PouchDB.plugin(SQLiteAdapter)
 const db = new PouchDB('Secrets', { adapter: 'react-native-sqlite' })
+import { version } from './../../package.json'
 
 @inject('appStore') @observer
-class SecurePadScreen extends Component {
+class AuthScreen extends Component {
 
 	state = {
 		firstSecret: undefined
@@ -53,8 +54,8 @@ class SecurePadScreen extends Component {
 	}
 
   submit = pwd => {
-		const { appStore } = this.props
 		const { firstSecret } = this.state;
+		const { appStore, navigation } = this.props
 		try {
 			if (firstSecret) {
 				SInfo.getItem(firstSecret._id,{}).then(value => {
@@ -64,10 +65,10 @@ class SecurePadScreen extends Component {
 						appStore.set('pwd', pwd)
 						appStore.set('securityFormError', undefined)
 						appStore.set('isSecurityRequired', false)
+						navigation.navigate('Home');
 					} else {
 						appStore.set('securityFormError', 'Invalid password!')
 					}
-
 				}).catch(err => {
 					appStore.set('securityFormError', 'Invalid password!')
 				})
@@ -75,6 +76,7 @@ class SecurePadScreen extends Component {
 				appStore.set('pwd', pwd)
 				appStore.set('securityFormError', undefined)
 				appStore.set('isSecurityRequired', false)
+				navigation.navigate('Home');
 			}
 		} catch (error) {
 			appStore.set('securityFormError', 'Invalid password!')
@@ -91,18 +93,31 @@ class SecurePadScreen extends Component {
     const isSecurityRequired = appStore.get('isSecurityRequired')
     const securityFormError = appStore.get('securityFormError')
     return (
-      <Modal isVisible={isSecurityRequired}>
-				<SafeAreaView style={{ flex: 1, alignContent: 'flex-start', }}>
-					<SecurityForm
-						appStore={appStore}
-						submit={this.submit}
-						error={securityFormError}
-						close={this.toggleModal}
-					/>
+      <View style={{ flex: 1, alignContent: 'flex-start',	backgroundColor: 'white' }}>
+				<SafeAreaView>
+					<ScrollView
+						keyboardShouldPersistTaps="always"
+						keyboardDismissMode="interactive"
+					>
+						<View style={{ alignSelf: 'center', backgroundColor: 'white', marginTop: 16  }}>
+							<Image source={require('./../assets/logo.png')} style={{ height: 150 }} resizeMode='contain'/>
+						</View>
+						<SecurityForm
+								appStore={appStore}
+								submit={this.submit}
+								error={securityFormError}
+								close={this.toggleModal}
+							/>
+						<View style={{ alignSelf: 'center' }}>
+							<Text style={{ color: 'gray', fontSize: 10 }}>
+								{`v${version}`}
+							</Text>
+						</View>
+					</ScrollView>
 				</SafeAreaView>
-      </Modal>
+      </View>
     )
   }
 }
 
-export default SecurePadScreen
+export default AuthScreen

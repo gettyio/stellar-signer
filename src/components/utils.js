@@ -27,11 +27,13 @@ export const CardTitle = styled.Text`
 `
 
 export const SmallMessageLabel = styled.Text`
+	padding-top: 16px;
   font-size: 10px;
   color: #464646;
 `
 
 export const PasswordFormTitle = styled.Text`
+	margin-bottom: 16px;
   padding-top: 8px;
   font-size: 16px;
   font-weight: 700;
@@ -147,7 +149,7 @@ export const TitleWrapper = styled.View`
 `
 
 
-export const TransactionRow = styled.View`
+export const TransactionRowWrapper = styled.View`
   padding: 8px;
   border-bottom-width: 0.3px;
   border-color: #cecece;

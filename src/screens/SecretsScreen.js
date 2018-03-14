@@ -96,10 +96,13 @@ class SecretsScreen extends Component {
 
   saveSecret = ({ sk, alias }) => {
 		const _id = uuid();
+		const keypair = StellarSdk.Keypair.fromSecret(sk);
+		const pk = keypair.publicKey();
 		try {
 			db.put({
 				_id,
 				alias,
+				pk: `${pk.slice(0,8)}...${pk.substr(pk.length - 8)}`,
 				sk: `${sk.slice(0,8)}...${sk.substr(sk.length - 8)}`,
 				createdAt: new Date().toISOString()
 			});
@@ -111,23 +114,34 @@ class SecretsScreen extends Component {
 	}
 
 	createNewAccount = () => {
-		const secret = randomize('*', 32);
-		const keypair = StellarSdk.Keypair.fromRawEd25519Seed(secret);
-		const pk = keypair.publicKey();
-		const sk = keypair.secret();
-		const _id = uuid();
-		try {
-			db.put({
-				_id,
-				alias: pk,
-				sk: `${sk.slice(0,8)}...${sk.substr(sk.length - 8)}`,
-				createdAt: new Date().toISOString()
-			});
-			this.encryptSecret(_id, sk)
-			this.loadData();
-			this.toggleAddModal()
-		} catch (error) {
-			alert(error.message)
+		const { alias, hasError } = this.state;
+
+		if (!alias) {
+			this.setState({ hasError: true });
+			this.addSecretButton.error()
+      this.addSecretButton.reset()
+		} else {
+			try {
+				const _id = uuid();
+				const secret = randomize('*', 32);
+				const keypair = StellarSdk.Keypair.fromRawEd25519Seed(secret);
+				const pk = keypair.publicKey();
+				const sk = keypair.secret();
+
+				db.put({
+					_id,
+					pk,
+					alias,
+					sk: `${sk.slice(0,8)}...${sk.substr(sk.length - 8)}`,
+					createdAt: new Date().toISOString()
+				});
+				this.encryptSecret(_id, sk)
+				this.loadData();
+				this.toggleAddModal();
+				this.setState({ hasError: false, sk: undefined, alias: undefined })
+			} catch (error) {
+				alert(error.message)
+			}
 		}
 	}
 
@@ -148,14 +162,14 @@ class SecretsScreen extends Component {
   showSecretAlert = item => {
     Alert.alert(
       `${item.alias}`,
-      `${item.sk}`,
+      `${item.pk}`,
       [
         {
           text: 'Delete',
           onPress: () => this.deleteSecret(item),
           style: 'cancel'
         },
-        { text: 'Close', onPress: () => this.copyToClipboard(item.alias) } // Do not button
+        { text: 'Close', onPress: () => this.copyToClipboard(item.pk) } // Do not button
       ],
       { cancelable: false }
     )
@@ -195,32 +209,18 @@ class SecretsScreen extends Component {
 								<CardFlex>
 									<TextInput
 										autoCorrect={false}
-										placeholder="Public Key"
+										placeholder="Alias"
 										onChangeText={alias => this.setState({ alias })}
 										clearButtonMode={'always'}
 										underlineColorAndroid={'white'}
 										value={alias}
 									/>
-									<View style={{ flexDirection: 'row' }}>
-										<TextInput
-											autoCorrect={false}
-											placeholder="Secret Key"
-											onChangeText={sk => this.setState({ sk })}
-											clearButtonMode={'always'}
-											underlineColorAndroid={'white'}
-											value={sk}
-											style={{ flex: 1, marginRight: 16, }}
-										/>
-										<MiniPasteButton onPress={this.pasteHandler}>
-											<Icon name="file-text" color="gray" size={24} />
-										</MiniPasteButton>
-									</View>
 									<View>
-										{hasError && <ErrorLabel>Invalid secret or label.</ErrorLabel>}
+										{hasError && <ErrorLabel>Type an alias for your account.</ErrorLabel>}
 									</View>
 								</CardFlex>
 								<KeyboardAvoidingView>
-									<View style={{ flex: 1, flexDirection: 'row', paddingTop: 8 }}>								
+									<View style={{ flex: 1, flexDirection: 'row', paddingTop: 8, marginBottom: 16, alignSelf: 'center', }}>								
 										<Button
 												ref={ref => (this.addSecretButton = ref)}
 												foregroundColor={'#276cf2'}
@@ -232,10 +232,10 @@ class SecretsScreen extends Component {
 												errorIconColor={'white'}
 												successIconColor={'white'}
 												successIconName="check"
-												label="Create New Account"
+												label="Create Account"
 												style={{ borderWidth: 0 }}
 											/>				
-											<Button
+											{/* <Button
 												ref={ref => (this.addSecretButton = ref)}
 												foregroundColor={'#4cd964'}
 												onPress={this.addSecretToStore}
@@ -249,13 +249,14 @@ class SecretsScreen extends Component {
 												label="Save"
 												maxWidth={80}
 												style={{ borderWidth: 0, marginLeft: 16}}
-											/>																		
+											/>																		 */}
 									</View>
 									<View>
 										<Text style={{ color: 'white', fontSize: 12, fontWeight: '700', marginBottom: 8 }}>Create Account Keypair </Text>
 										<Text style={{ color: 'white', fontSize: 12, marginBottom: 8 }}>
-											To get started on using the Stellar network, you must first create a keypair. The keypair consists of two parts:
+											To get started on using the StellarSigner, you must first create an account, then, you must fund the account before start.
 										</Text>
+										<Text style={{ color: 'white', fontSize: 12, marginBottom: 8 }}>When you create an account with StellarSigner it will generate a new keypair. The keypair consists of two parts:</Text>
 										<Text style={{ color: 'white', fontSize: 12, marginBottom: 8 }}>
 											<Text style={{ color: 'white', fontSize: 12, fontWeight: '700'}}>Public key:</Text> The public key is used to identify the account. It is also known as an account. This public key is used for receiving funds.
 										</Text>

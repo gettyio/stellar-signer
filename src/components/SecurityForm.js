@@ -9,14 +9,14 @@ import {
   TextInput,
   ErrorLabel,
   CloseButton,
-  Card,
+  CardFlex,
   SmallMessageLabel,
 	PasswordFormTitle
 } from './utils'
 
 class SecurityForm extends Component {
   state = {
-    password: undefined,
+    password: '12345678',
     errorMessage: undefined
   }
 
@@ -41,7 +41,7 @@ class SecurityForm extends Component {
   }
 
   render() {
-    const { hideClose, close, submit, error } = this.props
+    const { hideClose, close, submit, error, version } = this.props
     const { password, hasError, errorMessage } = this.state
 
     if (error) {
@@ -49,13 +49,13 @@ class SecurityForm extends Component {
     }
 
     return (
-      <ContainerFlex>
+      <View style={{ padding: 16, backgroundColor: 'white' }}>
         {hideClose && (
           <CloseButton onPress={close}>
             <Icon name="times-circle" color="white" size={32} />
           </CloseButton>
         )}
-        <Card>
+        <CardFlex>
           <PasswordFormTitle>Type a password to continue.</PasswordFormTitle>
           <TextInput
             autoCorrect={false}
@@ -71,10 +71,10 @@ class SecurityForm extends Component {
             {error && <ErrorLabel>{error}</ErrorLabel>}
           </View>
           <SmallMessageLabel>
-					Enter the passphrase that should be used to encrypt/decrypt your secrets. This passphrase is specific for this device and will be stored in your local keychain (ios) and keystore (android).
+					Enter the passphrase that should be used to protect your secrets. This passphrase is specific for this device and will be stored in your local keychain (ios) or keystore (android).
 					Make sure to remember the password, as you'll need it when you sign transactions with StellarSigner. Keep your passphrase secure.
           </SmallMessageLabel>
-        </Card>
+        </CardFlex>
         <KeyboardAvoidingView>
           <View style={{ alignSelf: 'center' }}>
             <Button
@@ -94,7 +94,7 @@ class SecurityForm extends Component {
             />
           </View>
         </KeyboardAvoidingView>
-      </ContainerFlex>
+      </View>
     )
   }
 }

@@ -2,6 +2,7 @@ import React from 'react'
 import { TouchableOpacity } from 'react-native'
 import styled from 'styled-components'
 import moment from 'moment'
+import { withNavigation } from 'react-navigation';
 import Icon from 'react-native-vector-icons/Feather'
 
 import {
@@ -12,7 +13,7 @@ import {
   CardContent,
   ErrorMessageLabel,
   ErrorInputValueLabel,
-  TransactionRow,
+  TransactionRowWrapper,
   AmountCard,
   AmountLabel,
   LabelsRow,
@@ -22,19 +23,17 @@ import {
   AccountLabel
 } from './utils'
 
-const toggleModal = (item, appStore) => {
-  appStore.set('currentTransaction', item)
-  appStore.set('isDetailModalVisible', !appStore.get('isDetailModalVisible'))
-}
-
-export default ({ item, appStore }) => {
+const TransactionRow = ({ item, appStore, navigation }) => {
   if (item.type === 'error') {
     return (
       <TouchableOpacity
         key={item.id}
-        onPress={() => toggleModal(item, appStore)}
+        onPress={() => {
+					appStore.set('currentTransaction', item)
+					navigation.navigate('TransactionDetail')
+				}}
       >
-        <TransactionRow>
+        <TransactionRowWrapper>
           <CardWrapper pad="8px">
             <Icon name="x-circle" color="red" size={32} />
             <CardContent>
@@ -43,12 +42,12 @@ export default ({ item, appStore }) => {
               <LabelsRow>
                 <StatusLabel status={item.status}>{item.status}</StatusLabel>
                 <CreatedAtLabel>
-                	{moment(item.createdAt, 'YYYYMMDD hh:mm:ss').fromNow()}
+								{`${moment(new Date(item.createdAt)).format('YYYY-MM-DD hh:mm')}`}
                 </CreatedAtLabel>
               </LabelsRow>
             </CardContent>
           </CardWrapper>
-        </TransactionRow>
+        </TransactionRowWrapper>
       </TouchableOpacity>
     )
   }
@@ -67,8 +66,12 @@ export default ({ item, appStore }) => {
   }
 
   return (
-    <TouchableOpacity key={item.id} onPress={() => toggleModal(item, appStore)}>
-      <TransactionRow>
+		<TouchableOpacity key={item.id} 
+			onPress={() => {
+				appStore.set('currentTransaction', item)
+				navigation.navigate('TransactionDetail')
+			}}>
+      <TransactionRowWrapper>
         <CardWrapper pad="8px">
           <Icon name={iconName} color={iconColor} size={32} />
           <CardContent>
@@ -81,12 +84,14 @@ export default ({ item, appStore }) => {
             <LabelsRow>
               <StatusLabel status={item.status}>{item.status}</StatusLabel>
               <CreatedAtLabel>
-                {moment(item.createdAt, 'YYYYMMDD hh:mm:ss').fromNow()}
+                {`(${moment(new Date(item.createdAt)).format('YYYY-MM-DD hh:mm')})`}
               </CreatedAtLabel>
             </LabelsRow>
           </CardContent>
         </CardWrapper>
-      </TransactionRow>
+      </TransactionRowWrapper>
     </TouchableOpacity>
   )
 }
+
+export default withNavigation(TransactionRow);

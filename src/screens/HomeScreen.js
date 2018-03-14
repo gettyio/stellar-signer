@@ -27,7 +27,7 @@ import SInfo from 'react-native-sensitive-info';
 import Button from 'react-native-micro-animated-button'
 import SplashScreen from 'react-native-splash-screen'
 import TransactionForm from '../components/TransactionForm'
-import TransactionDetail from '../components/TransactionDetail'
+// import TransactionDetail from '../components/TransactionDetail'
 import PasteButton from '../components/PasteButton'
 import TransactionList from '../components/TransactionList'
 
@@ -84,6 +84,7 @@ class HomeScreen extends Component {
 
 	componentDidUpdate(prevProps, prevState) {
 		this.handleCurrentTx()
+		this.loadTransactions();
 		// const secret = randomBytes(32);
 		// const keypair = StellarSdk.Keypair.fromRawEd25519Seed(secret);
     
@@ -214,7 +215,6 @@ class HomeScreen extends Component {
 			});
 			this.loadTransactions();
 		} catch (error) {
-      console.log(error.message)
 			alert(error.message)
 		}
     appStore.set('currentXdr', undefined)
@@ -246,77 +246,54 @@ class HomeScreen extends Component {
 		}
 	}
 
-  signTransaction = _id => {
-    const { appStore } = this.props
-		const currentTransaction = appStore.get('currentTransaction')
-		try {
-			const pwd = appStore.get('pwd');
-			SInfo.getItem(_id,{}).then(value => {
-				const bytes = crypto.AES.decrypt(value, `${_id}:${pwd}`);
-				const sk = bytes.toString(crypto.enc.Utf8);
-				console.log('secret ',sk)
-				const data = {
-					type: 'sign',
-					tx: currentTransaction,
-					xdr: currentTransaction.xdr,
-					sk
-				};
-		
-				const signedTx = signXdr(data);
-				this.saveCurrentTransaction(signedTx)
-				this.toggleDetailModal()
-			});
-		} catch (error) {
-			alert(error.message)
-		}
-  }
-
   render() {
-		const { appStore } = this.props
+		const { appStore, navigation } = this.props
 		const { transactions, isLoadingList } = this.state;
     const isAddModalVisible = appStore.get('isAddModalVisible')
     const isDetailModalVisible = appStore.get('isDetailModalVisible')
     const currentTransaction = appStore.get('currentTransaction')
 
     return (
-			<SafeAreaView style={{ backgroundColor: 'blue' }}>
-				<Screen>
-					<Header>
-						<TitleWrapper>
-							<Title>StellarSigner <Text style={{ fontSize: 10 }}>{`Beta`}</Text></Title>
-						</TitleWrapper>
-						<LoadButtonWrapper>
-							<LoadButton onPress={this.toggleAddModal}>
-								<Icon name="plus-circle" color="white" size={32} />
-							</LoadButton>
-						</LoadButtonWrapper>
-					</Header>
+			<Screen>
+				<SafeAreaView style={{ backgroundColor: 'blue' }}/>
+				<Header>
+					<TitleWrapper>
+						<Title>StellarSigner</Title>
+					</TitleWrapper>
+					<LoadButtonWrapper>
+						<LoadButton onPress={this.toggleAddModal}>
+							<Icon name="plus-circle" color="white" size={32} />
+						</LoadButton>
+					</LoadButtonWrapper>
+				</Header>
 
-					<TransactionList transactions={transactions} isLoadingList={isLoadingList}/>
+				<TransactionList transactions={transactions} isLoadingList={isLoadingList}/>
+				<Modal isVisible={isAddModalVisible} >
+					<CloseButton onPress={this.toggleAddModal}>
+						<Icon name="x-circle" color="white" size={32} />
+					</CloseButton>
+					<TransactionForm />
+				</Modal>
+				{/**
 
-					<Modal isVisible={isAddModalVisible} >
-						<CloseButton onPress={this.toggleAddModal}>
-							<Icon name="x-circle" color="white" size={32} />
-						</CloseButton>
-						<TransactionForm />
-					</Modal>
 
-					<Modal isVisible={isDetailModalVisible}>
-						<CloseButton onPress={this.toggleDetailModal}>
-							<Icon name="x-circle" color="white" size={32} />
-						</CloseButton>
-						<TransactionDetail
-							tx={currentTransaction}
-							toggleModal={this.toggleDetailModal}
-							deleteTransaction={this.deleteTransaction}
-							cancelTransaction={this.cancelTransaction}
-							signTransaction={this.signTransaction}
-						/>
-					</Modal>
+				<Modal isVisible={isDetailModalVisible}>
+					<CloseButton onPress={this.toggleDetailModal}>
+						<Icon name="x-circle" color="white" size={32} />
+					</CloseButton>
+					<TransactionDetail
+						tx={currentTransaction}
+						toggleModal={this.toggleDetailModal}
+						deleteTransaction={this.deleteTransaction}
+						cancelTransaction={this.cancelTransaction}
+						signTransaction={this.signTransaction}
+					/>
+				</Modal>
+				**/}
 
-					<StatusBar barStyle="light-content" />
-				</Screen>
-			</SafeAreaView>
+
+				<StatusBar barStyle="light-content" />
+			</Screen>
     )
   }
 }

@@ -3,11 +3,11 @@ import { Provider } from 'mobx-react'
 import { StackNavigator } from 'react-navigation'
 import { TabNavigator, TabBarBottom } from 'react-navigation'
 import Icon from 'react-native-vector-icons/Feather'
-
 import HomeScreen from './screens/HomeScreen'
 import SecretsScreen from './screens/SecretsScreen'
 import AuthScreen from './screens/AuthScreen'
 import AboutScreen from './screens/AboutScreen'
+import TransactionDetailScreen from './screens/TransactionDetailScreen'
 import store from './store'
 
 const NavigationStack = TabNavigator(
@@ -23,7 +23,6 @@ const NavigationStack = TabNavigator(
     }
   },
   {
-    initialRouteName: 'Home',
     navigationOptions: ({ navigation }) => ({
       tabBarIcon: ({ focused, tintColor }) => {
         const { routeName } = navigation.state
@@ -42,6 +41,8 @@ const NavigationStack = TabNavigator(
 		}),
 		tabBarPosition: 'bottom',
 		tabBarComponent: TabBarBottom,
+		animationEnabled: true,
+		lazy: false,
     tabBarOptions: {
       activeTintColor: '#0b24fb',
 			inactiveTintColor: 'gray',
@@ -63,9 +64,13 @@ const RootStack = StackNavigator(
     },
     AuthModal: {
       screen: AuthScreen,
-    },
+		},
+		TransactionDetail: {
+			screen: TransactionDetailScreen,
+		}
   },
   {
+		initialRouteName: 'AuthModal',
     mode: 'modal',
     headerMode: 'none',
   }
