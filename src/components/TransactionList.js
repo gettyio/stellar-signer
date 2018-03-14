@@ -62,7 +62,7 @@ class TransactionList extends Component {
 
     if (transactions.length < 1) {
       return (
-        <EmptyScreen>
+        <EmptyScreen style={{ height: '100%' }}>
           <Image
             source={require('../assets/empty.png')}
             resizeMode="contain"

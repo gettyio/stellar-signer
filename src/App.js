@@ -6,11 +6,11 @@ import Icon from 'react-native-vector-icons/Feather'
 
 import HomeScreen from './screens/HomeScreen'
 import SecretsScreen from './screens/SecretsScreen'
-import SecurePadScreen from './screens/SecurePadScreen'
+import AuthScreen from './screens/AuthScreen'
 import AboutScreen from './screens/AboutScreen'
 import store from './store'
 
-const NavigatorScreen = TabNavigator(
+const NavigationStack = TabNavigator(
   {
 		Home: {
 			screen: HomeScreen
@@ -56,11 +56,23 @@ const NavigatorScreen = TabNavigator(
   }
 )
 
+const RootStack = StackNavigator(
+  {
+    Main: {
+      screen: NavigationStack,
+    },
+    AuthModal: {
+      screen: AuthScreen,
+    },
+  },
+  {
+    mode: 'modal',
+    headerMode: 'none',
+  }
+);
+
 export default (() => (
   <Provider appStore={store} >
-    <Fragment>
-      <NavigatorScreen />
-      <SecurePadScreen />
-    </Fragment>
+    <RootStack />
   </Provider>
 ))

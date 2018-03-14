@@ -41,7 +41,7 @@ class SecretList extends Component {
 
     if (secrets.length < 1) {
       return (
-        <EmptyScreen>
+        <EmptyScreen style={{ height: '100%' }}>
           <Image
             source={require('../assets/empty.png')}
             resizeMode="contain"

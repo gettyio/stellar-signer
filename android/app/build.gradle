@@ -102,9 +102,9 @@ android {
 
     defaultConfig {
         applicationId "com.stellarsigner"
-        minSdkVersion 23
+        minSdkVersion 17
         targetSdkVersion 23
-        versionCode 10
+        versionCode 11
         versionName "1.0.7"
         ndk {
             abiFilters "armeabi-v7a", "x86"

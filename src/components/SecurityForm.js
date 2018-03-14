@@ -71,10 +71,8 @@ class SecurityForm extends Component {
             {error && <ErrorLabel>{error}</ErrorLabel>}
           </View>
           <SmallMessageLabel>
-            Keep your password secure. StellarSigner only save it on your phone. We will
-            not be able to help you recover it if lost.
-
-						This password will be used to encrypt and decrypt your secrets and it only will be saved after you add your first secret.
+					Enter the passphrase that should be used to encrypt/decrypt your secrets. This passphrase is specific for this device and will be stored in your local keychain (ios) and keystore (android).
+					Make sure to remember the password, as you'll need it when you sign transactions with StellarSigner. Keep your passphrase secure.
           </SmallMessageLabel>
         </Card>
         <KeyboardAvoidingView>
