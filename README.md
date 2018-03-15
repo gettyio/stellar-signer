@@ -53,7 +53,7 @@ Thanks goes to these wonderful people: 😃
 * @gettyio
 
 ###  Sponsored by Getty/IO Inc.
-www.getty.io
+* www.getty.io
 
 ###  Security Nodes
 
