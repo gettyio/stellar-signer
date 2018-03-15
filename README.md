@@ -14,16 +14,17 @@ StellarSigner is also a standalone app and any application that wishes to use it
 
 Thanks goes to these wonderful people: 😃
 
-> @dbuarque
-> @mikefair
-> @marlonbrgomes
-> @vitorpereira
-> @julianorafael
-> @jordancassiano
-> @pnakibar
-> @nilocoelhojunior
-> @leocolodette
-> @gettyio
+@dbuarque
+@mikefair
+@marlonbrgomes
+@vitorpereira
+@julianorafael
+@jordancassiano
+@pnakibar
+@nilocoelhojunior
+@leocolodette
+@gettyio
+
 Sponsored by Getty/IO Inc.
 www.getty.io
 
