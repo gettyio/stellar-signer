@@ -13,7 +13,7 @@ StellarSigner can already sign transactions submitted to it from other apps or t
 
 StellarSigner is also a standalone app and any application that wishes to use it, including websites can use it to sign their transactions.
 
-Why?
+### Why?
 
 It does not have network permissions (no threat of network-based hack or transmission of secure keys directly from the app)
 It cannot create transactions
@@ -21,12 +21,22 @@ It will decode and display the XDR on screen for the user to review (both pretty
 It can sign and reject transactions offline
 It can offline return the response to the requesting app via copy/paste and/or deep links
 It will store the secret encrypting the database file on disk with AES-256+SHA2 by supplying a key typed by the user
-6.5. Stellar Signer is intended to integrate with hardware wallets for singing, though this work hasn't been implemented yet.
+6.5. StellarSigner is intended to integrate with hardware wallets for singing, though this work hasn't been implemented yet.
 All sensitive information is stored on the phone and can't be used outside the app
 Real Native Apps with React Native and Mobx.
 Available for iOS and Android
-								
 
+
+### Proudly built with
+StellarSigner is produly
+* React Native
+* Mobx
+* StellarSdk
+* Lodash
+* Styled-Components
+* PouchDB
+* Babel
+								
 ### Contributors
 
 Thanks goes to these wonderful people: 😃
