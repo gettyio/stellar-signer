@@ -15,16 +15,32 @@ StellarSigner is also a standalone app and any application that wishes to use it
 
 ### Why?
 
-It does not have network permissions (no threat of network-based hack or transmission of secure keys directly from the app)
-It cannot create transactions
-It will decode and display the XDR on screen for the user to review (both pretty and raw views)
-It can sign and reject transactions offline
-It can offline return the response to the requesting app via copy/paste and/or deep links
-It will store the secret encrypting the database file on disk with AES-256+SHA2 by supplying a key typed by the user
-6.5. StellarSigner is intended to integrate with hardware wallets for singing, though this work hasn't been implemented yet.
-All sensitive information is stored on the phone and can't be used outside the app
-Real Native Apps with React Native and Mobx.
-Available for iOS and Android
+* It does not have network permissions (no threat of network-based hack or transmission of secure keys directly from the app)
+* It cannot create transactions
+* It will decode and display the XDR on screen for the user to review (both pretty and raw views)
+* It can sign and reject transactions offline
+* It can offline return the response to the requesting app via copy/paste and/or deep links
+* It will store the secret encrypting the database file on disk with AES-256+SHA2 by supplying a key typed by the user
+* It is intended to integrate with hardware wallets for singing, though this work hasn't been implemented yet.
+* All sensitive information is stored on the phone and can't be used outside the app
+* Real Native Apps with React Native and Mobx.
+* Available for iOS and Android
+
+### Roadmap:
+
+[ X ] Add XDR 
+[ X ] Decode XDR 
+[ X ] Show Decoded XDR Tree
+[ X ] Add transaction via deep link
+[ X ] Encrypt Secrets 
+[ X ] Copy / Paste Button
+[ X ] List Secrets
+[ X ] Add Secret 
+[ X ] Choose Secret
+[ X ] Add Password Security
+[   ] Send transaction to viewer
+[   ] Integrate with Ledger Nano
+[   ] Integrate with Trezor
 
 
 ### StellarSigner is proudly built with:
