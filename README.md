@@ -3,11 +3,28 @@
 
 ![StellarSigner](https://github.com/gettyio/stellar-signer/raw/master/src/assets/logo.png)
 
-StellarSigner is a new and free secure key store app to sign Stellar transactions. 
-With StellarSigner you never share your secret keys with third party services.
+To empower the people who want to use Stellar apps, we need a simple, reliable and secure way to sign transactions without having to share secrets with third-party apps and tools. Because of that we have created StellarSigner, a new and free secure key store app to sign Stellar transactions. 
+
+StellarSigner enable you to never share your secret keys with third party services and apps.
+
 StellarSigner is designed to be among the most secure apps to sign Stellar transactions on iOS and Android.
+
 StellarSigner can already sign transactions submitted to it from other apps or through the copy/paste buffer.
+
 StellarSigner is also a standalone app and any application that wishes to use it, including websites can use it to sign their transactions.
+
+Why?
+
+It does not have network permissions (no threat of network-based hack or transmission of secure keys directly from the app)
+It cannot create transactions
+It will decode and display the XDR on screen for the user to review (both pretty and raw views)
+It can sign and reject transactions offline
+It can offline return the response to the requesting app via copy/paste and/or deep links
+It will store the secret encrypting the database file on disk with AES-256+SHA2 by supplying a key typed by the user
+6.5. Stellar Signer is intended to integrate with hardware wallets for singing, though this work hasn't been implemented yet.
+All sensitive information is stored on the phone and can't be used outside the app
+Real Native Apps with React Native and Mobx.
+Available for iOS and Android
 								
 
 ### Contributors
