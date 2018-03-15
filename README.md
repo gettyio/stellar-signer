@@ -27,8 +27,8 @@ Real Native Apps with React Native and Mobx.
 Available for iOS and Android
 
 
-### Proudly built with
-StellarSigner is produly
+### StellarSigner is proudly built with:
+
 * React Native
 * Mobx
 * StellarSdk
@@ -37,7 +37,7 @@ StellarSigner is produly
 * PouchDB
 * Babel
 								
-### Contributors
+### StellarSigner Contributors
 
 Thanks goes to these wonderful people: 😃
 
@@ -52,7 +52,7 @@ Thanks goes to these wonderful people: 😃
 * @leocolodette
 * @gettyio
 
-Sponsored by Getty/IO Inc.
+###  Sponsored by Getty/IO Inc.
 www.getty.io
 
 Notes: On mobile devices, nothing is 100% secure. Any data stored on the phone can be accessed by hardware and OS vendors because they have full control of the device, they can throw whatever computing power they want at cracking any security or encryption. A jailbroken device can access your iOS Keychain/ Android shared preference and key store in plain text, it is necessary to add another layer of protection so even jailbreaking won't leak your data. Because of that we encrypt your keys with a your password before store it locally on your phone. We are planning to add another layer using seed keys soon.
