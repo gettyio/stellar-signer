@@ -59,6 +59,7 @@ class TransactionForm extends Component {
 						<AddTransactionInput
 							placeholder="Paste your XDR here!"
 							autoCorrect={false}
+							autoCapitalize={'none'}
 							clearButtonMode={'always'}
 							value={inputValue}
 							onChangeText={inputValue => {

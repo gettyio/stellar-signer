@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { View, Text, Image, ScrollView, SafeAreaView } from 'react-native'
+import { View, Text, Image, ScrollView, SafeAreaView, KeyboardAvoidingView } from 'react-native'
 import PropTypes from 'prop-types'
 import { observer, inject } from 'mobx-react'
 import crypto from 'crypto-js'
@@ -101,20 +101,23 @@ class AuthScreen extends Component {
 					keyboardShouldPersistTaps="always"
 					keyboardDismissMode="interactive"
 				>
-					<View style={{ alignSelf: 'center', backgroundColor: 'white', marginTop: 16  }}>
-						<Image source={require('./../assets/logo.png')} style={{ height: 150 }} resizeMode='contain'/>
-					</View>
-					<SecurityForm
-							appStore={appStore}
-							submit={this.submit}
-							error={securityFormError}
-							close={this.toggleModal}
-						/>
-					<View style={{ alignSelf: 'center' }}>
-						<Text style={{ color: 'gray', fontSize: 10 }}>
-							{`v${version}`}
-						</Text>
-					</View>
+					<KeyboardAvoidingView behavior="position">
+						<View style={{ alignSelf: 'center', backgroundColor: 'white', marginTop: 16  }}>
+							<Image source={require('./../assets/logo.png')} style={{ height: 150 }} resizeMode='contain'/>
+						</View>
+						<SecurityForm
+								appStore={appStore}
+								submit={this.submit}
+								error={securityFormError}
+								close={this.toggleModal}
+							/>
+							
+						<View style={{ alignSelf: 'center' }}>
+							<Text style={{ color: 'gray', fontSize: 10 }}>
+								{`v${version}`}
+							</Text>
+						</View>
+					</KeyboardAvoidingView>
 				</ScrollView>
 			</SafeAreaView>
     )

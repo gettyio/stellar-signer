@@ -16,7 +16,7 @@ import {
 
 class SecurityForm extends Component {
   state = {
-    password: '12345678',
+    password: undefined,
     errorMessage: undefined
   }
 
@@ -58,11 +58,12 @@ class SecurityForm extends Component {
         <CardFlex>
           <PasswordFormTitle testID='passwordTitle'>Type a password to continue.</PasswordFormTitle>
           <TextInput
+            autoFocus={false}
             autoCorrect={false}
+            autoCapitalize={'none'}
             clearButtonMode={'always'}
             placeholder="Password"
             onChangeText={password => this.setState({ password })}
-            autoFocus={true}
 						value={password}
 						underlineColorAndroid={'white'}
           />
