@@ -28,7 +28,7 @@ StellarSigner is also a standalone app and any application that wishes to use it
 
 ### Roadmap:
 
-[ X ] Add XDR 
+- [x] Add XDR 
 [ X ] Decode XDR 
 [ X ] Show Decoded XDR Tree
 [ X ] Add transaction via deep link
