@@ -37,7 +37,7 @@ Available for iOS and Android
 * PouchDB
 * Babel
 								
-### StellarSigner Contributors
+### StellarSigner Contributors:
 
 Thanks goes to these wonderful people: 😃
 
@@ -52,8 +52,8 @@ Thanks goes to these wonderful people: 😃
 * @leocolodette
 * @gettyio
 
-###  Sponsored by Getty/IO Inc.
-* www.getty.io
+###  Sponsored by:
+* Getty/IO Inc. - www.getty.io
 
 ###  Security Nodes
 
