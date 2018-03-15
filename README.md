@@ -29,18 +29,18 @@ StellarSigner is also a standalone app and any application that wishes to use it
 ### Roadmap:
 
 - [x] Add XDR 
-[ X ] Decode XDR 
-[ X ] Show Decoded XDR Tree
-[ X ] Add transaction via deep link
-[ X ] Encrypt Secrets 
-[ X ] Copy / Paste Button
-[ X ] List Secrets
-[ X ] Add Secret 
-[ X ] Choose Secret
-[ X ] Add Password Security
-[   ] Send transaction to viewer
-[   ] Integrate with Ledger Nano
-[   ] Integrate with Trezor
+- [x] Decode XDR 
+- [x] Show Decoded XDR Tree
+- [x] Add transaction via deep link
+- [x] Encrypt Secrets 
+- [x] Copy / Paste Button
+- [x] List Secrets
+- [x] Add Secret 
+- [x] Choose Secret
+- [x] Add Password Security
+- [ ] Send transaction to viewer
+- [ ] Integrate with Ledger Nano
+- [ ] Integrate with Trezor
 
 
 ### StellarSigner is proudly built with:
