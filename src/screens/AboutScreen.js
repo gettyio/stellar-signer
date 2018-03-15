@@ -11,16 +11,27 @@ import { version } from './../../package.json'
 
 class AboutScreen extends Component {
 
+
+	static navigationOptions = ({ navigation }) => {
+    const params = navigation.state.params || {};
+    return {
+			header: (
+				<SafeAreaView style={{ backgroundColor: 'blue' }}>
+				<Header>
+					<TitleWrapper>
+						<Title>About <Text style={{ fontSize: 10 }}>{`v${version}`}</Text></Title>
+					</TitleWrapper>
+				</Header>
+				</SafeAreaView>
+			)
+		};
+	};
+
   render() {
     return (
-			<SafeAreaView style={{ backgroundColor: 'blue' }}>
 					<Screen style={{ backgroundColor: 'white' }}>
 						<ScrollView>
-						<Header>
-							<TitleWrapper>
-								<Title>About <Text style={{ fontSize: 10 }}>{`v${version}`}</Text></Title>
-							</TitleWrapper>
-						</Header>
+
 						<ContainerFlex>
 							<View>
 								<Text style={{ fontSize: 14, padding: 16, lineHeight: 24, textAlign: 'justify' }}>
@@ -53,7 +64,6 @@ class AboutScreen extends Component {
 						</ContainerFlex>
 						</ScrollView>
 					</Screen>
-			</SafeAreaView>
     )
   }
 }

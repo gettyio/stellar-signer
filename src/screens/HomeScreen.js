@@ -55,12 +55,38 @@ const db = new PouchDB('Transactions', { adapter: 'react-native-sqlite' })
 
 @inject('appStore') @observer
 class HomeScreen extends Component {
+  static navigationOptions = ({ navigation }) => {
+    const params = navigation.state.params || {};
+
+    return {
+			header: (
+				<SafeAreaView style={{ backgroundColor: 'blue' }}>
+					<Header>
+						<TitleWrapper>
+							<Title>StellarSigner</Title>
+						</TitleWrapper>
+						<LoadButtonWrapper>
+							<LoadButton onPress={params.toggleAddModal}>
+								<Icon name="plus-circle" color="white" size={32} />
+							</LoadButton>
+						</LoadButtonWrapper>
+					</Header>
+				</SafeAreaView>
+			)
+		};
+	};
+
+	
   state = {
 		transactions: [],
 		isLoadingList: true,
     currentXdr: undefined,
 		currentTransaction: undefined,
 		currentDecodedTx: undefined
+	}
+	
+	componentWillMount() {
+    this.props.navigation.setParams({ toggleAddModal: this.toggleAddModal });
   }
 
   componentDidMount() {
@@ -85,11 +111,6 @@ class HomeScreen extends Component {
 	componentDidUpdate(prevProps, prevState) {
 		this.handleCurrentTx()
 		this.loadTransactions();
-		// const secret = randomBytes(32);
-		// const keypair = StellarSdk.Keypair.fromRawEd25519Seed(secret);
-    
-		// console.warn('keypair',keypair.publicKey())
-		// console.warn('keypair',keypair.secret())
   }
 
   loadTransactions = () => {
@@ -119,7 +140,6 @@ class HomeScreen extends Component {
     const url = event instanceof String ? event : event.url
     if (url) {
       const tx = qs.parse(url.replace('stellar-signer://stellar-signer?', ''))
-      this.postMessage(tx)
       this.setState({ currentXdr: tx.xdr })
     } else {
       alert('Invalid Transaction! Please contact the support.')
@@ -156,19 +176,6 @@ class HomeScreen extends Component {
 		// const event = JSON.stringify({ type: 'decode', xdr: xdr })
 		const decodedTx = decodeFromXdr(xdr, 'TransactionEnvelope');
 		this.saveCurrentTransaction(decodedTx);
-  }
-
-  // Must use encodeURIComponent
-  postMessage = tx => {
-		//console.log('postMessage',tree);
-    const xdr = decodeURIComponent(tx.xdr)
-		// const event = JSON.stringify({ type: 'decode', xdr: xdr })
-		const currentDecodedTx = decodeFromXdr(xdr, 'TransactionEnvelope');
-		//	this.setState({  currentDecodedTx })
-
-    // setTimeout(() => {
-    //   this.webview.postMessage(event)
-    // }, 1000)
   }
 
   saveCurrentTransaction = data => {
@@ -255,42 +262,16 @@ class HomeScreen extends Component {
 
     return (
 			<Screen>
-				<SafeAreaView style={{ backgroundColor: 'blue' }}/>
-				<Header>
-					<TitleWrapper>
-						<Title>StellarSigner</Title>
-					</TitleWrapper>
-					<LoadButtonWrapper>
-						<LoadButton onPress={this.toggleAddModal}>
-							<Icon name="plus-circle" color="white" size={32} />
-						</LoadButton>
-					</LoadButtonWrapper>
-				</Header>
-
 				<TransactionList transactions={transactions} isLoadingList={isLoadingList}/>
+
 				<Modal isVisible={isAddModalVisible} >
-					<CloseButton onPress={this.toggleAddModal}>
-						<Icon name="x-circle" color="white" size={32} />
-					</CloseButton>
-					<TransactionForm />
+					<SafeAreaView style={{ flex: 1 }}>
+						<CloseButton onPress={this.toggleAddModal}>
+							<Icon name="x-circle" color="white" size={32} />
+						</CloseButton>
+						<TransactionForm />
+					</SafeAreaView>
 				</Modal>
-				{/**
-
-
-				<Modal isVisible={isDetailModalVisible}>
-					<CloseButton onPress={this.toggleDetailModal}>
-						<Icon name="x-circle" color="white" size={32} />
-					</CloseButton>
-					<TransactionDetail
-						tx={currentTransaction}
-						toggleModal={this.toggleDetailModal}
-						deleteTransaction={this.deleteTransaction}
-						cancelTransaction={this.cancelTransaction}
-						signTransaction={this.signTransaction}
-					/>
-				</Modal>
-				**/}
-
 
 				<StatusBar barStyle="light-content" />
 			</Screen>

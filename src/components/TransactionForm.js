@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { View, Text, Clipboard, Keyboard } from 'react-native'
+import { View, Text, Clipboard, Keyboard, SafeAreaView } from 'react-native'
 import { TabViewAnimated, TabBar, SceneMap } from 'react-native-tab-view'
 import Button from 'react-native-micro-animated-button'
 import Icon from 'react-native-vector-icons/Feather'
@@ -53,8 +53,8 @@ class TransactionForm extends Component {
     const currentXdr = appStore.get('currentXdr')
 
     return (
-      <ContainerFlex>
-        <CardFlex>
+			<ContainerFlex>
+				<CardFlex>
 					<View style={{ flexDirection: 'row' }}>
 						<AddTransactionInput
 							placeholder="Paste your XDR here!"
@@ -71,28 +71,28 @@ class TransactionForm extends Component {
 							<Icon name="file-text" color="gray" size={24} />
 						</MiniPasteButton>
 					</View>					
-          <ErrorLabel>{errorMessage}</ErrorLabel>
-        </CardFlex>
-        <Button
-          ref={ref => (this.addButton = ref)}
-          foregroundColor={'white'}
-          backgroundColor={'#4cd964'}
-          successColor={'#4cd964'}
-          errorColor={'#ff3b30'}
-          errorIconColor={'white'}
-          successIconColor={'white'}
-          shakeOnError={true}
-          successIconName="check"
-          label="Add"
-          onPress={this.onPressHandler}
-          maxWidth={100}
-          style={{
-            borderWidth: 0,
-            alignSelf: 'center',
-            marginTop: 8,
-          }}
-        />
-      </ContainerFlex>
+					<ErrorLabel>{errorMessage}</ErrorLabel>
+				</CardFlex>
+				<Button
+					ref={ref => (this.addButton = ref)}
+					foregroundColor={'white'}
+					backgroundColor={'#4cd964'}
+					successColor={'#4cd964'}
+					errorColor={'#ff3b30'}
+					errorIconColor={'white'}
+					successIconColor={'white'}
+					shakeOnError={true}
+					successIconName="check"
+					label="Add"
+					onPress={this.onPressHandler}
+					maxWidth={100}
+					style={{
+						borderWidth: 0,
+						alignSelf: 'center',
+						marginTop: 8,
+					}}
+				/>
+			</ContainerFlex>
     )
   }
 }

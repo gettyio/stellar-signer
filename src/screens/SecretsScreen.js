@@ -43,11 +43,36 @@ StellarSdk.Network.useTestNetwork();
 
 @inject('appStore') @observer
 class SecretsScreen extends Component {
+
+	static navigationOptions = ({ navigation }) => {
+    const params = navigation.state.params || {};
+    return {
+			header: (
+				<SafeAreaView style={{ backgroundColor: 'blue' }}>
+					<Header>
+						<TitleWrapper>
+							<Title>My Secrets</Title>
+							</TitleWrapper>
+							<LoadButtonWrapper>
+							<LoadButton onPress={params.toggleAddModal}>
+								<Icon name="plus-circle" color="white" size={32} />
+							</LoadButton>
+						</LoadButtonWrapper>					
+					</Header>
+				</SafeAreaView>
+			)
+		};
+	};
+
   state = {
     sk: undefined,
     alias: undefined,
     hasError: false,
     secrets: []
+	}
+	
+	componentWillMount() {
+    this.props.navigation.setParams({ toggleAddModal: this.toggleAddModal });
   }
 
   componentDidMount() {
@@ -188,20 +213,13 @@ class SecretsScreen extends Component {
     return (
 			<SafeAreaView style={{ backgroundColor: 'blue' }}>
 				<Screen>
-					<Header>
-							<TitleWrapper>
-								<Title>My Secrets</Title>
-								</TitleWrapper>
-								<LoadButtonWrapper>
-								<LoadButton onPress={this.toggleAddModal}>
-									<Icon name="plus-circle" color="white" size={32} />
-								</LoadButton>
-						</LoadButtonWrapper>					
-					</Header>
 					<SecretList secrets={secrets} show={this.showSecretAlert} />
 					<Modal isVisible={isAddSecretModalVisible}>
 						<SafeAreaView style={{ flex: 1 }}>
-							<ScrollView>
+							<ScrollView
+								keyboardShouldPersistTaps="always"
+								keyboardDismissMode="interactive"
+							>
 							<ContainerFlex>
 								<CloseButton onPress={this.toggleAddModal}>
 									<Icon name="x-circle" color="white" size={32} />

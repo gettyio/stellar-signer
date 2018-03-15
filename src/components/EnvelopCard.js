@@ -1,11 +1,11 @@
 import React, { PureComponent } from 'react'
 import styled from 'styled-components'
-import { Text, View, TouchableOpacity, Clipboard } from 'react-native'
+import { Text, View, TouchableOpacity, Clipboard, ScrollView } from 'react-native'
 import moment from 'moment'
 import Button from 'react-native-micro-animated-button'
 
 const Container = styled.View`
-  flex: 1;
+	flex: 1
 `
 const EnvelopCard = styled.View`
   flex: 1;
@@ -56,9 +56,10 @@ class EnvelopView extends PureComponent {
 	}
 
 	copy = () => {
-		const { tx, copyToClipboard } = this.props;
-		this.copyButton.success();
+		const { copyToClipboard } = this.props;
 		copyToClipboard();
+		this.copyButton.success();
+		this.copyButton.reset();
 	}
 
 	renderActionBar = () => {
@@ -207,49 +208,49 @@ class EnvelopView extends PureComponent {
 	render() {
 		const { tx } = this.props;
 		return (
-			<Container>
-				<EnvelopCard>
-					<StellarIcon
-						source={require('../assets/stellar-rocket.png')}
-						resizeMode="contain"
-						style={{
-							width: 42,
-							height: 42,
-							position: 'absolute',
-							marginTop: 8,
-							marginLeft: 8
-						}}
-					/>
-					<EnvelopAmount>
-						<EnvelopCardLabel>{`${tx.amount} XLM`}</EnvelopCardLabel>
-					</EnvelopAmount>
-					<EnvelopDetail>
-						<EnvelopInfo align="flex-start">
-							<EnvelopLabel>From:</EnvelopLabel>
-							<EnvelopLabel fontSize="10px">{tx.sourceAccount}</EnvelopLabel>
-						</EnvelopInfo>
-					</EnvelopDetail>
-					<EnvelopDetail>
-						<EnvelopInfo align="flex-start">
-							<EnvelopLabel>To:</EnvelopLabel>
-							<EnvelopLabel fontSize="10px">{tx.destination}</EnvelopLabel>
-						</EnvelopInfo>
-					</EnvelopDetail>
-					<EnvelopDetail>
-						<EnvelopInfo>
-							<EnvelopLabel>Memo:</EnvelopLabel>
-							<EnvelopLabel>{tx.memo}</EnvelopLabel>
-						</EnvelopInfo>
-						<EnvelopInfo align="flex-end">
-							<EnvelopLabel>Time:</EnvelopLabel>
-							<EnvelopLabel>
-								{moment(tx.createdAt).format('YYYY-MM-DD hh:mm:ss')}
-							</EnvelopLabel>
-						</EnvelopInfo>
-					</EnvelopDetail>
-					{this.renderActionBar()}
-				</EnvelopCard>
-			</Container>
+				<Container>
+					<EnvelopCard>
+						<StellarIcon
+							source={require('../assets/stellar-rocket.png')}
+							resizeMode="contain"
+							style={{
+								width: 42,
+								height: 42,
+								position: 'absolute',
+								marginTop: 8,
+								marginLeft: 8
+							}}
+						/>
+						<EnvelopAmount>
+							<EnvelopCardLabel>{`${tx.amount} XLM`}</EnvelopCardLabel>
+						</EnvelopAmount>
+						<EnvelopDetail>
+							<EnvelopInfo align="flex-start">
+								<EnvelopLabel>From:</EnvelopLabel>
+								<EnvelopLabel fontSize="10px">{tx.sourceAccount}</EnvelopLabel>
+							</EnvelopInfo>
+						</EnvelopDetail>
+						<EnvelopDetail>
+							<EnvelopInfo align="flex-start">
+								<EnvelopLabel>To:</EnvelopLabel>
+								<EnvelopLabel fontSize="10px">{tx.destination}</EnvelopLabel>
+							</EnvelopInfo>
+						</EnvelopDetail>
+						<EnvelopDetail>
+							<EnvelopInfo>
+								<EnvelopLabel>Memo:</EnvelopLabel>
+								<EnvelopLabel>{tx.memo}</EnvelopLabel>
+							</EnvelopInfo>
+							<EnvelopInfo align="flex-end">
+								<EnvelopLabel>Time:</EnvelopLabel>
+								<EnvelopLabel>
+									{moment(tx.createdAt).format('YYYY-MM-DD hh:mm:ss')}
+								</EnvelopLabel>
+							</EnvelopInfo>
+						</EnvelopDetail>
+						{this.renderActionBar()}
+					</EnvelopCard>
+				</Container>
 		)
 	}
 }

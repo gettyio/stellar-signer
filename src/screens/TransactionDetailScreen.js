@@ -26,6 +26,27 @@ const db2 = new PouchDB('Transactions', { adapter: 'react-native-sqlite' })
 @inject('appStore') @observer
 class TransactionDetail extends Component {
 
+	static navigationOptions = ({ navigation }) => {
+    const params = navigation.state.params || {};
+
+    return {
+			header: (
+				<SafeAreaView style={{ backgroundColor: 'blue' }}>
+					<Header>
+						<TitleWrapper>
+							<Title>Transaction Detail</Title>
+						</TitleWrapper>
+						<LoadButtonWrapper>
+							<LoadButton onPress={()=> navigation.goBack()}>
+								<Icon name="x-circle" color="white" size={32} />
+							</LoadButton>
+						</LoadButtonWrapper>						
+					</Header>
+				</SafeAreaView>
+			)
+		};
+	};
+
 	state = {
     tabView: {
       index: 0,
@@ -61,9 +82,9 @@ class TransactionDetail extends Component {
 	}
 	
 	copyToClipboard = () => {
-		const { tx } = this.props
+		const { appStore, navigation } = this.props
+		const tx = appStore.get('currentTransaction')
 		Clipboard.setString(tx.sxdr);
-		navigation.goBack()
 		alert('The signed xdr was copied to the clipboard.');
 	}
 
@@ -80,7 +101,7 @@ class TransactionDetail extends Component {
   }
 
   authTransaction = pwd => {
-		const { appStore } = this.props
+		const { appStore, navigation } = this.props
 		const currentPwd = appStore.get('pwd');
 		if (currentPwd === pwd) {
 			const { secrets } = this.state;
@@ -91,7 +112,7 @@ class TransactionDetail extends Component {
 					[
 						{
 							text: 'Ok',
-							onPress: () => this.props.toggleModal()
+							onPress: () => navigation.goBack()
 						}
 					]
 				)
@@ -305,48 +326,35 @@ class TransactionDetail extends Component {
 			<ScrollView
 				keyboardShouldPersistTaps="always"
 				keyboardDismissMode="interactive"
+				style={{ backgroundColor: 'white' }}
 			>
-				<ContainerFlex>					
-					<SafeAreaView style={{ backgroundColor: 'blue' }}/>
-					<Header>
-						<TitleWrapper>
-							<Title>Transaction Detail</Title>
-						</TitleWrapper>
-						<LoadButtonWrapper>
-							<LoadButton onPress={()=> this.props.navigation.goBack()}>
-								<Icon name="x-circle" color="white" size={32} />
-							</LoadButton>
-						</LoadButtonWrapper>						
-					</Header>
-					{/**<ActivityIndicator size="large" color="#4b9ed4"></ActivityIndicator> **/}
-					{!showSecurityForm && (
-						<TabViewAnimated
-							navigationState={this.state.tabView}
-							renderScene={({ route }) => this.renderTab(route, currentTransaction)}
-							renderHeader={this.renderTabHeader}
-							onIndexChange={this.handleTabIndexChange}
-						/>
-					)}
-					{showSecurityForm && (
-						<SecurityForm
-							error={securityFormError}
-							submit={this.authTransaction}
-							close={toggleModal}
-							closeAfterSubmit={false}
-						/>
-					)}
-					{(options && options.length > 0) && (
-						<ActionSheet
-							ref={o => (this.actionSheet = o)}
-							title={'Select a Secret'}
-							options={options}
-							cancelButtonIndex={1}
-							destructiveButtonIndex={2}
-							onPress={this.submitSignature}
-						/>
-					)}
-				</ContainerFlex>
-			</ScrollView>				
+				{!showSecurityForm && (
+					<TabViewAnimated
+						navigationState={this.state.tabView}
+						renderScene={({ route }) => this.renderTab(route, currentTransaction)}
+						renderHeader={this.renderTabHeader}
+						onIndexChange={this.handleTabIndexChange}
+					/>
+				)}
+				{showSecurityForm && (
+					<SecurityForm
+						error={securityFormError}
+						submit={this.authTransaction}
+						close={toggleModal}
+						closeAfterSubmit={false}
+					/>
+				)}
+				{(options && options.length > 0) && (
+					<ActionSheet
+						ref={o => (this.actionSheet = o)}
+						title={'Select a Secret'}
+						options={options}
+						cancelButtonIndex={1}
+						destructiveButtonIndex={2}
+						onPress={this.submitSignature}
+					/>
+				)}
+			</ScrollView>
 		)
   }
 }

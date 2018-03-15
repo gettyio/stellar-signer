@@ -37,6 +37,10 @@ const NavigationStack = TabNavigator(
         // You can return any component that you like here! We usually use an
         // icon component from react-native-vector-icons
         return <Icon name={iconName} size={25} color={tintColor} />
+			},
+      headerTintColor: '#fff',
+      headerTitleStyle: {
+        fontWeight: 'bold',
       }
 		}),
 		tabBarPosition: 'bottom',
@@ -71,8 +75,7 @@ const RootStack = StackNavigator(
   },
   {
 		initialRouteName: 'AuthModal',
-    mode: 'modal',
-    headerMode: 'none',
+    mode: 'modal'
   }
 );
 

@@ -32,6 +32,9 @@ import { version } from './../../package.json'
 
 @inject('appStore') @observer
 class AuthScreen extends Component {
+  static navigationOptions = {
+    header: null
+  };
 
 	state = {
 		firstSecret: undefined
@@ -93,29 +96,27 @@ class AuthScreen extends Component {
     const isSecurityRequired = appStore.get('isSecurityRequired')
     const securityFormError = appStore.get('securityFormError')
     return (
-      <View style={{ flex: 1, alignContent: 'flex-start',	backgroundColor: 'white' }}>
-				<SafeAreaView>
-					<ScrollView
-						keyboardShouldPersistTaps="always"
-						keyboardDismissMode="interactive"
-					>
-						<View style={{ alignSelf: 'center', backgroundColor: 'white', marginTop: 16  }}>
-							<Image source={require('./../assets/logo.png')} style={{ height: 150 }} resizeMode='contain'/>
-						</View>
-						<SecurityForm
-								appStore={appStore}
-								submit={this.submit}
-								error={securityFormError}
-								close={this.toggleModal}
-							/>
-						<View style={{ alignSelf: 'center' }}>
-							<Text style={{ color: 'gray', fontSize: 10 }}>
-								{`v${version}`}
-							</Text>
-						</View>
-					</ScrollView>
-				</SafeAreaView>
-      </View>
+			<SafeAreaView style={{ flex: 1, alignContent: 'flex-start',	backgroundColor: 'white' }}>
+				<ScrollView
+					keyboardShouldPersistTaps="always"
+					keyboardDismissMode="interactive"
+				>
+					<View style={{ alignSelf: 'center', backgroundColor: 'white', marginTop: 16  }}>
+						<Image source={require('./../assets/logo.png')} style={{ height: 150 }} resizeMode='contain'/>
+					</View>
+					<SecurityForm
+							appStore={appStore}
+							submit={this.submit}
+							error={securityFormError}
+							close={this.toggleModal}
+						/>
+					<View style={{ alignSelf: 'center' }}>
+						<Text style={{ color: 'gray', fontSize: 10 }}>
+							{`v${version}`}
+						</Text>
+					</View>
+				</ScrollView>
+			</SafeAreaView>
     )
   }
 }
