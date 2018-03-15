@@ -1,5 +1,5 @@
 
-# StellarSigner
+# StellarSigner [![Build Status](https://travis-ci.org/gettyio/stellar-signer.svg?branch=master)](https://travis-ci.org/gettyio/stellar-signer)
 
 ![StellarSigner](https://github.com/gettyio/stellar-signer/raw/master/StellarSignerIcon.png)
 
