@@ -40,7 +40,6 @@ StellarSigner is also a standalone app and any application that wishes to use it
 - [x] Add Password Security
 - [ ] Send transaction to viewer
 - [ ] Integrate with Ledger Nano
-- [ ] Integrate with Trezor
 
 
 ### StellarSigner is proudly built with:
