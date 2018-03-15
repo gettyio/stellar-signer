@@ -56,7 +56,7 @@ class SecurityForm extends Component {
           </CloseButton>
         )}
         <CardFlex>
-          <PasswordFormTitle>Type a password to continue.</PasswordFormTitle>
+          <PasswordFormTitle testID='passwordTitle'>Type a password to continue.</PasswordFormTitle>
           <TextInput
             autoCorrect={false}
             clearButtonMode={'always'}

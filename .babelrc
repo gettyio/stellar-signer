@@ -1,4 +1,10 @@
 {
-  "presets": ["es2015", "stage-0", "react-native"],
-  "plugins": ["transform-decorators-legacy", "transform-async-to-generator"]
+  "presets": ["env", "stage-0", "react-native"],
+	"plugins": ["transform-decorators-legacy", "transform-async-to-generator"],
+	"env": {
+		"test": {
+			"presets": [["env", { "modules": "commonjs" }], "stage-0", "react-native"],
+			"plugins": ["transform-es2015-modules-commonjs", "dynamic-import-node"]
+		}
+	}
 }
