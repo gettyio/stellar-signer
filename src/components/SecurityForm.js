@@ -16,7 +16,7 @@ import {
 
 class SecurityForm extends Component {
   state = {
-    password: undefined,
+    password: '12345678',
     errorMessage: undefined
   }
 
@@ -72,11 +72,11 @@ class SecurityForm extends Component {
             {error && <ErrorLabel>{error}</ErrorLabel>}
           </View>
           <SmallMessageLabel>
-					Enter the passphrase that should be used to protect your secrets. This passphrase is specific for this device and will be stored in your local keychain (ios) or keystore (android).
+					Enter the passphrase that should be used to protect your secrets. This passphrase is specific for this device and will be stored in a secure storage on your phone.
 					Make sure to remember the password, as you'll need it when you sign transactions with StellarSigner. Keep your passphrase secure.
           </SmallMessageLabel>
         </CardFlex>
-        <KeyboardAvoidingView>
+        <KeyboardAvoidingView  behavior="position">
           <View style={{ alignSelf: 'center' }}>
             <Button
               ref={ref => (this.savePasswordButton = ref)}

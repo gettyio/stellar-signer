@@ -5,35 +5,35 @@ import moment from 'moment'
 import Button from 'react-native-micro-animated-button'
 
 const Container = styled.View`
-	flex: 1
+	background-color: #5b6a71;
 `
-const EnvelopCard = styled.View`
-  flex: 1;
+const EnvelopeCard = styled.View`
+	flex: 1;
   padding: 16px;
   background-color: #d5eef7;
 `
 
-const EnvelopCardLabel = styled.Text`
+const EnvelopeCardLabel = styled.Text`
   font-size: 26px;
   font-weight: 700;
   color: #5b6a71;
 `
-const EnvelopAmount = styled.View`
+const EnvelopeAmount = styled.View`
   align-items: flex-end;
 `
-const EnvelopDetail = styled.View`
+const EnvelopeDetail = styled.View`
   flex-direction: row;
   padding-top: 4px;
   padding-bottom: 4px;
 `
 
-const EnvelopInfo = styled.View`
+const EnvelopeInfo = styled.View`
   flex: 1;
   align-items: ${props => (props.align ? props.align : 'flex-start')};
   justify-content: ${props => (props.justify ? props.justify : 'flex-start')};
 `
 
-const EnvelopLabel = styled.Text`
+const EnvelopeLabel = styled.Text`
   padding-top: 2px;
   font-size: ${props => (props.fontSize ? props.fontSize : '12px')};
   color: #5b6a71;
@@ -41,7 +41,7 @@ const EnvelopLabel = styled.Text`
 
 const StellarIcon = styled.Image``
 
-class EnvelopView extends PureComponent {
+class EnvelopeView extends PureComponent {
 
 	reject = () => {
 		const { tx, rejectTransaction } = this.props;
@@ -208,10 +208,10 @@ class EnvelopView extends PureComponent {
 	render() {
 		const { tx } = this.props;
 		return (
-				<Container>
-					<EnvelopCard>
+			<ScrollView style={{ backgroundColor: '#d5eef7'}}>
+					<EnvelopeCard>
 						<StellarIcon
-							source={require('../assets/stellar-rocket.png')}
+							source={require('./../assets/stellar-rocket.png')}
 							resizeMode="contain"
 							style={{
 								width: 42,
@@ -221,38 +221,38 @@ class EnvelopView extends PureComponent {
 								marginLeft: 8
 							}}
 						/>
-						<EnvelopAmount>
-							<EnvelopCardLabel>{`${tx.amount} XLM`}</EnvelopCardLabel>
-						</EnvelopAmount>
-						<EnvelopDetail>
-							<EnvelopInfo align="flex-start">
-								<EnvelopLabel>From:</EnvelopLabel>
-								<EnvelopLabel fontSize="10px">{tx.sourceAccount}</EnvelopLabel>
-							</EnvelopInfo>
-						</EnvelopDetail>
-						<EnvelopDetail>
-							<EnvelopInfo align="flex-start">
-								<EnvelopLabel>To:</EnvelopLabel>
-								<EnvelopLabel fontSize="10px">{tx.destination}</EnvelopLabel>
-							</EnvelopInfo>
-						</EnvelopDetail>
-						<EnvelopDetail>
-							<EnvelopInfo>
-								<EnvelopLabel>Memo:</EnvelopLabel>
-								<EnvelopLabel>{tx.memo}</EnvelopLabel>
-							</EnvelopInfo>
-							<EnvelopInfo align="flex-end">
-								<EnvelopLabel>Time:</EnvelopLabel>
-								<EnvelopLabel>
+						<EnvelopeAmount>
+							<EnvelopeCardLabel>{`${tx.amount} XLM`}</EnvelopeCardLabel>
+						</EnvelopeAmount>
+						<EnvelopeDetail>
+							<EnvelopeInfo align="flex-start">
+								<EnvelopeLabel>From:</EnvelopeLabel>
+								<EnvelopeLabel fontSize="10px">{tx.sourceAccount}</EnvelopeLabel>
+							</EnvelopeInfo>
+						</EnvelopeDetail>
+						<EnvelopeDetail>
+							<EnvelopeInfo align="flex-start">
+								<EnvelopeLabel>To:</EnvelopeLabel>
+								<EnvelopeLabel fontSize="10px">{tx.destination}</EnvelopeLabel>
+							</EnvelopeInfo>
+						</EnvelopeDetail>
+						<EnvelopeDetail>
+							<EnvelopeInfo>
+								<EnvelopeLabel>Memo:</EnvelopeLabel>
+								<EnvelopeLabel>{tx.memo}</EnvelopeLabel>
+							</EnvelopeInfo>
+							<EnvelopeInfo align="flex-end">
+								<EnvelopeLabel>Time:</EnvelopeLabel>
+								<EnvelopeLabel>
 									{moment(tx.createdAt).format('YYYY-MM-DD hh:mm:ss')}
-								</EnvelopLabel>
-							</EnvelopInfo>
-						</EnvelopDetail>
+								</EnvelopeLabel>
+							</EnvelopeInfo>
+						</EnvelopeDetail>
 						{this.renderActionBar()}
-					</EnvelopCard>
-				</Container>
+					</EnvelopeCard>
+					</ScrollView>
 		)
 	}
 }
 
-export default EnvelopView;
+export default EnvelopeView;

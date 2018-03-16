@@ -12,9 +12,11 @@ export default ({ tx }) => {
   if (tx) {
 		const decoded = decodeFromXdr(tx, 'TransactionEnvelope');
     return (
-			<Container>
-				<TreeView nodes={decoded.tx}></TreeView>
-			</Container>
+			<ScrollView style={{ paddingBottom: 24 }}>
+				<Container>
+					<TreeView nodes={decoded.tx}></TreeView>
+				</Container>
+			</ScrollView>
     );
 	}
 	

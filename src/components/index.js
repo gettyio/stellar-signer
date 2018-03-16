@@ -1,5 +1,5 @@
 import DisplayTab from './DisplayTab'
-import EnvelopCard from './EnvelopCard'
+import EnvelopeCard from './EnvelopeCard'
 import EnvelopeTab from './EnvelopeTab'
 import ErrorMessage from './ErrorMessage'
 import PasteButton from './PasteButton'
@@ -13,7 +13,7 @@ import TransactionRow from './TransactionRow'
 
 export {
   DisplayTab,
-  EnvelopCard,
+  EnvelopeCard,
   EnvelopeTab,
   ErrorMessage,
   PasteButton,

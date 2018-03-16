@@ -15,6 +15,13 @@ export const CardFlex = styled.View`
   align-self: center;
 `
 
+export const CardFlat = styled.View`
+  width: 100%;
+  background-color: white;
+  padding: 16px;
+  align-self: center;
+`
+
 export const CardRow = styled.View`
   flex-direction: ${props => (props.flexx ? props.flexx : 'row')};
   align-items: ${props => (props.align ? props.align : 'center')};
@@ -56,8 +63,6 @@ export const Header = styled.View`
   align-items: center;
   background-color: blue;
 `
-
-
 export const Container = styled.View`
   height: ${props => (props.height ? props.height : 'auto')};
 `
@@ -66,7 +71,7 @@ export const ContainerFlex = styled.View`
   flex: 1;
 `
 
-const EnvelopInfo = styled.View`
+const EnvelopeInfo = styled.View`
   flex: 1;
   align-items: ${props => (props.align ? props.align : 'flex-start')};
   justify-content: ${props => (props.justify ? props.justify : 'flex-start')};
@@ -137,7 +142,7 @@ export const Title = styled.Text`
   color: white;
   font-weight: 700;
   padding-left: 16;
-  font-size: 28;
+  font-size: 26;
 `
 
 
