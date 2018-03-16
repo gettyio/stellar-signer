@@ -58,7 +58,7 @@ class HomeScreen extends Component {
 
     return {
 			header: (
-				<SafeAreaView style={{ backgroundColor: 'blue' }}>
+				<SafeAreaView style={{ backgroundColor: '#2e3666' }}>
 					<Header>
 						<TitleWrapper>
 							<Title>StellarSigner</Title>

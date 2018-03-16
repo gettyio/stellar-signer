@@ -48,7 +48,7 @@ class SecretsScreen extends Component {
     const params = navigation.state.params || {};
     return {
 			header: (
-				<SafeAreaView style={{ backgroundColor: 'blue' }}>
+				<SafeAreaView style={{ backgroundColor: '#2e3666' }}>
 					<Header>
 						<TitleWrapper>
 							<Title>My Secrets</Title>
@@ -211,7 +211,7 @@ class SecretsScreen extends Component {
     const isAddSecretModalVisible = appStore.get('isAddSecretModalVisible')
 
     return (
-			<SafeAreaView style={{ backgroundColor: 'blue' }}>
+			<SafeAreaView style={{ backgroundColor: '#2e3666' }}>
 				<Screen>
 					<SecretList secrets={secrets} show={this.showSecretAlert} />
 					<Modal isVisible={isAddSecretModalVisible}>

@@ -61,7 +61,7 @@ export const Header = styled.View`
   height: 90px;
   flex-direction: row;
   align-items: center;
-  background-color: blue;
+  background-color: #2e3666;
 `
 export const Container = styled.View`
   height: ${props => (props.height ? props.height : 'auto')};
@@ -149,7 +149,7 @@ export const Title = styled.Text`
 export const TitleWrapper = styled.View`
 	flex: 1;
 	height: 100%;
-	background-color: blue;
+	background-color: #2e3666;
 	justify-content: center;
 `
 

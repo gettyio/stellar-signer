@@ -48,7 +48,7 @@ const NavigationStack = TabNavigator(
 		animationEnabled: true,
 		lazy: false,
     tabBarOptions: {
-      activeTintColor: '#0b24fb',
+      activeTintColor: '#2e3666',
 			inactiveTintColor: 'gray',
 			showLabel: false,
       style: {

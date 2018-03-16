@@ -16,7 +16,7 @@ class AboutScreen extends Component {
     const params = navigation.state.params || {};
     return {
 			header: (
-				<SafeAreaView style={{ backgroundColor: 'blue' }}>
+				<SafeAreaView style={{ backgroundColor: '#2e3666' }}>
 				<Header>
 					<TitleWrapper>
 						<Title>About <Text style={{ fontSize: 10 }}>{`v${version}`}</Text></Title>

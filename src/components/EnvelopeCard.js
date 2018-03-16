@@ -77,7 +77,7 @@ class EnvelopeView extends PureComponent {
 							flexDirection: 'row',
 							justifyContent: 'center',
 							padding: 16,
-							backgroundColor: 'blue',
+							backgroundColor: '#2e3666',
 							borderRadius: 8,
 							marginTop: 24
 						}}

@@ -32,7 +32,7 @@ class TransactionDetail extends Component {
 
     return {
 			header: (
-				<SafeAreaView style={{ backgroundColor: 'blue' }}>
+				<SafeAreaView style={{ backgroundColor: '#2e3666' }}>
 					<Header>
 						<TitleWrapper>
 							<Title>Transaction Detail</Title>
@@ -131,7 +131,7 @@ class TransactionDetail extends Component {
         {...props}
         style={{ backgroundColor: 'white' }}
         labelStyle={{ color: 'black' }}
-        indicatorStyle={{ backgroundColor: 'blue' }}
+        indicatorStyle={{ backgroundColor: '#2e3666' }}
         scrollEnabled={true}
       />
     )
