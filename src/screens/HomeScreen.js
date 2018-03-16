@@ -88,20 +88,6 @@ class HomeScreen extends Component {
   }
 
   componentDidMount() {
-    if (Platform.OS === 'android') {
-      Linking.getInitialURL().then(url => {
-        if (url) {
-          this.handleAppLinkURL(new String(url))
-        }
-      })
-    } else {
-      Linking.addEventListener('url', this.handleAppLinkURL)
-      Linking.getInitialURL().then(url => {
-        if (url) {
-          this.handleAppLinkURL(new String(url))
-        }
-      })
-    }
 		this.loadTransactions();
 	}
 
@@ -126,20 +112,6 @@ class HomeScreen extends Component {
     const currentXdr = appStore.get('currentXdr')
     if (currentXdr) {
       this.decodeXdr(currentXdr)
-    }
-  }
-
-  componentWillUnmount() {
-    Linking.removeEventListener('url', this.handleAppLinkURL)
-  }
-
-  handleAppLinkURL = event => {
-    const url = event instanceof String ? event : event.url
-    if (url) {
-      const tx = qs.parse(url.replace('stellar-signer://stellar-signer?', ''))
-      this.setState({ currentXdr: tx.xdr })
-    } else {
-      alert('Invalid Transaction! Please contact the support.')
     }
   }
 

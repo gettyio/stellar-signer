@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
-import { View, Text, Image, ScrollView, SafeAreaView, KeyboardAvoidingView } from 'react-native'
+import { View, Text, Image, ScrollView, SafeAreaView, KeyboardAvoidingView, Linking } from 'react-native'
 import PropTypes from 'prop-types'
+import qs from 'qs'
 import { observer, inject } from 'mobx-react'
 import crypto from 'crypto-js'
 import Modal from 'react-native-modal'
@@ -43,6 +44,13 @@ class AuthScreen extends Component {
 
 	componentDidMount() {
 		SplashScreen.hide();
+		Linking.addEventListener('url', this.handleAppLinkURL)
+		Linking.getInitialURL().then(url => {
+			if (url) {
+				this.handleAppLinkURL(new String(url))
+			}
+		})
+		
 		try {
 			db.allDocs({
 				include_docs: true
@@ -56,6 +64,21 @@ class AuthScreen extends Component {
 			appStore.set('securityFormError', 'Invalid password!')
 		}
 	}
+
+	componentWillUnmount() {
+    Linking.removeEventListener('url', this.handleAppLinkURL)
+  }
+
+  handleAppLinkURL = event => {
+		const { appStore } = this.props
+    const url = event instanceof String ? event : event.url
+    if (url) {
+      const tx = qs.parse(url.replace('stellar-signer://stellar-signer?', ''))
+      appStore.set('currentXdr', tx.xdr)
+    } else {
+      alert('Invalid Transaction! Please contact the support.')
+    }
+  }
 
   submit = pwd => {
 		const { firstSecret } = this.state;
