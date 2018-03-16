@@ -1,11 +1,12 @@
 import React, { Component } from 'react'
-import { View, Text, Image, ScrollView, SafeAreaView } from 'react-native'
+import { View, Text, Image, ScrollView, SafeAreaView, KeyboardAvoidingView } from 'react-native'
 import PropTypes from 'prop-types'
 import { observer, inject } from 'mobx-react'
 import crypto from 'crypto-js'
 import Modal from 'react-native-modal'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import Button from 'react-native-micro-animated-button'
+import SplashScreen from 'react-native-splash-screen'
 import SInfo from 'react-native-sensitive-info';
 import SecurityForm from '../components/SecurityForm'
 import {
@@ -41,7 +42,7 @@ class AuthScreen extends Component {
 	}
 
 	componentDidMount() {
-		const self = this;
+		SplashScreen.hide();
 		try {
 			db.allDocs({
 				include_docs: true
@@ -101,20 +102,23 @@ class AuthScreen extends Component {
 					keyboardShouldPersistTaps="always"
 					keyboardDismissMode="interactive"
 				>
-					<View style={{ alignSelf: 'center', backgroundColor: 'white', marginTop: 16  }}>
-						<Image source={require('./../assets/logo.png')} style={{ height: 150 }} resizeMode='contain'/>
-					</View>
-					<SecurityForm
-							appStore={appStore}
-							submit={this.submit}
-							error={securityFormError}
-							close={this.toggleModal}
-						/>
-					<View style={{ alignSelf: 'center' }}>
-						<Text style={{ color: 'gray', fontSize: 10 }}>
-							{`v${version}`}
-						</Text>
-					</View>
+					<KeyboardAvoidingView behavior="position">
+						<View style={{ alignSelf: 'center', backgroundColor: 'white', marginTop: 16  }}>
+							<Image source={require('./../assets/logo.png')} style={{ height: 150 }} resizeMode='contain'/>
+						</View>
+						<SecurityForm
+								appStore={appStore}
+								submit={this.submit}
+								error={securityFormError}
+								close={this.toggleModal}
+							/>
+							
+						<View style={{ alignSelf: 'center' }}>
+							<Text style={{ color: 'gray', fontSize: 10 }}>
+								{`v${version}`}
+							</Text>
+						</View>
+					</KeyboardAvoidingView>
 				</ScrollView>
 			</SafeAreaView>
     )

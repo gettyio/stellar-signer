@@ -9,11 +9,11 @@ import SInfo from 'react-native-sensitive-info';
 import uuid from 'uuid/v4'
 import crypto from 'crypto-js'
 import { get, sortBy } from 'lodash'
-import EnvelopCard from './../components/EnvelopCard'
+import EnvelopeCard from './../components/EnvelopeCard'
 import ErrorMessage from './../components/ErrorMessage'
-import EnvelopTab from './../components/EnvelopTab'
+import EnvelopeTab from './../components/EnvelopeTab'
 import SecurityForm from './../components/SecurityForm'
-import { ContainerFlex, SelectSecret, Header, Title, TitleWrapper, LoadButtonWrapper, LoadButton } from './../components/utils'
+import { Screen, ContainerFlex, SelectSecret, Header, Title, TitleWrapper, LoadButtonWrapper, LoadButton } from './../components/utils'
 import { decodeFromXdr, signXdr } from './../utils/xdrUtils';
 import PouchDB from 'pouchdb-react-native'
 import SQLite from 'react-native-sqlite-2'
@@ -128,9 +128,9 @@ class TransactionDetail extends Component {
     return (
       <TabBar
         {...props}
-        style={{ backgroundColor: 'white', borderTopLeftRadius: 8, borderTopRightRadius: 8  }}
+        style={{ backgroundColor: 'white' }}
         labelStyle={{ color: 'black' }}
-        indicatorStyle={{ backgroundColor: '#00c400' }}
+        indicatorStyle={{ backgroundColor: 'blue' }}
         scrollEnabled={true}
       />
     )
@@ -157,7 +157,7 @@ class TransactionDetail extends Component {
   renderTab = (route, tx) => {
     switch (route.key) {
       case 'display':
-				return <EnvelopCard 
+				return <EnvelopeCard 
 								tx={tx} 
 								copyToClipboard={this.copyToClipboard}
 								showConfirmDelete={this.showConfirmDelete} 
@@ -165,9 +165,9 @@ class TransactionDetail extends Component {
 								signTransaction={this.signTransaction}
 							/>
       case 'envelop':
-        return <EnvelopTab tx={tx.xdr} />
+        return <EnvelopeTab tx={tx.xdr} />
       case 'signed':
-        return <EnvelopTab tx={tx.sxdr} />
+        return <EnvelopeTab tx={tx.sxdr} />
       default:
         return null
     }
@@ -175,8 +175,14 @@ class TransactionDetail extends Component {
 
   deleteTransaction = async (currentTransaction) => {
 		const { appStore, navigation } = this.props
+		let ctx;
 		try {
-			const res = await db2.remove(currentTransaction);
+			if (currentTransaction) {
+				ctx = currentTransaction;
+			} else {
+				ctx = appStore.get('currentTransaction')
+			}
+			const res = await db2.remove(ctx);
 			navigation.goBack()
 			setTimeout(()=> {
 				appStore.set('currentTransaction', undefined)
@@ -296,7 +302,7 @@ class TransactionDetail extends Component {
   }
 
   render() {
-    const { appStore, tx, toggleModal } = this.props
+    const { appStore, toggleModal } = this.props
 		const { showSecurityForm, options } = this.state
 		const currentTransaction = appStore.get('currentTransaction');
 		const securityFormError = appStore.get('securityFormError')
@@ -304,7 +310,7 @@ class TransactionDetail extends Component {
     if (currentTransaction && currentTransaction.type === 'error') {
       return (
         <Container>
-          <ErrorMessage tx={tx} />
+          <ErrorMessage tx={currentTransaction} />
           <Button
             ref={ref => (this.deleteTransactionButton = ref)}
             foregroundColor={'white'}
@@ -323,38 +329,34 @@ class TransactionDetail extends Component {
     }
 
 		return (
-			<ScrollView
-				keyboardShouldPersistTaps="always"
-				keyboardDismissMode="interactive"
-				style={{ backgroundColor: 'white' }}
-			>
-				{!showSecurityForm && (
-					<TabViewAnimated
-						navigationState={this.state.tabView}
-						renderScene={({ route }) => this.renderTab(route, currentTransaction)}
-						renderHeader={this.renderTabHeader}
-						onIndexChange={this.handleTabIndexChange}
-					/>
-				)}
-				{showSecurityForm && (
-					<SecurityForm
-						error={securityFormError}
-						submit={this.authTransaction}
-						close={toggleModal}
-						closeAfterSubmit={false}
-					/>
-				)}
-				{(options && options.length > 0) && (
-					<ActionSheet
-						ref={o => (this.actionSheet = o)}
-						title={'Select a Secret'}
-						options={options}
-						cancelButtonIndex={1}
-						destructiveButtonIndex={2}
-						onPress={this.submitSignature}
-					/>
-				)}
-			</ScrollView>
+			<ContainerFlex>
+						{!showSecurityForm && (
+							<TabViewAnimated
+								navigationState={this.state.tabView}
+								renderScene={({ route }) => this.renderTab(route, currentTransaction)}
+								renderHeader={this.renderTabHeader}
+								onIndexChange={this.handleTabIndexChange}
+							/>
+						)}
+						{showSecurityForm && (
+							<SecurityForm
+								error={securityFormError}
+								submit={this.authTransaction}
+								close={toggleModal}
+								closeAfterSubmit={false}
+							/>
+						)}
+						{(options && options.length > 0) && (
+							<ActionSheet
+								ref={o => (this.actionSheet = o)}
+								title={'Select a Secret'}
+								options={options}
+								cancelButtonIndex={1}
+								destructiveButtonIndex={2}
+								onPress={this.submitSignature}
+							/>
+						)}
+			</ContainerFlex>
 		)
   }
 }

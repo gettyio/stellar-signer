@@ -1,5 +1,11 @@
-module.exports = ({ platform }, { module }) => ({
+module.exports = ({ platform }, { module, resolve }) => ({
 	entry: `./index.${platform}.js`,
+	resolve: {
+    ...resolve,
+    extensions: process.env.APP_ENV === 'detox_tests' 
+            ? ['.mock.behaviour.js', ...resolve.extensions]
+            : resolve.extensions
+  },
 	module: {
 		...module,
 		rules: [

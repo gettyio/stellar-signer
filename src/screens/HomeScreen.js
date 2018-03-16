@@ -25,12 +25,10 @@ import moment from 'moment'
 import Modal from 'react-native-modal'
 import SInfo from 'react-native-sensitive-info';
 import Button from 'react-native-micro-animated-button'
-import SplashScreen from 'react-native-splash-screen'
 import TransactionForm from '../components/TransactionForm'
 // import TransactionDetail from '../components/TransactionDetail'
 import PasteButton from '../components/PasteButton'
 import TransactionList from '../components/TransactionList'
-
 import {
   Screen,
   Container,
@@ -90,7 +88,6 @@ class HomeScreen extends Component {
   }
 
   componentDidMount() {
-    SplashScreen.hide();
     if (Platform.OS === 'android') {
       Linking.getInitialURL().then(url => {
         if (url) {

@@ -56,13 +56,14 @@ class SecurityForm extends Component {
           </CloseButton>
         )}
         <CardFlex>
-          <PasswordFormTitle>Type a password to continue.</PasswordFormTitle>
+          <PasswordFormTitle testID='passwordTitle'>Type a password to continue.</PasswordFormTitle>
           <TextInput
+            autoFocus={false}
             autoCorrect={false}
+            autoCapitalize={'none'}
             clearButtonMode={'always'}
             placeholder="Password"
             onChangeText={password => this.setState({ password })}
-            autoFocus={true}
 						value={password}
 						underlineColorAndroid={'white'}
           />
@@ -71,11 +72,11 @@ class SecurityForm extends Component {
             {error && <ErrorLabel>{error}</ErrorLabel>}
           </View>
           <SmallMessageLabel>
-					Enter the passphrase that should be used to protect your secrets. This passphrase is specific for this device and will be stored in your local keychain (ios) or keystore (android).
+					Enter the passphrase that should be used to protect your secrets. This passphrase is specific for this device and will be stored in a secure storage on your phone.
 					Make sure to remember the password, as you'll need it when you sign transactions with StellarSigner. Keep your passphrase secure.
           </SmallMessageLabel>
         </CardFlex>
-        <KeyboardAvoidingView>
+        <KeyboardAvoidingView  behavior="position">
           <View style={{ alignSelf: 'center' }}>
             <Button
               ref={ref => (this.savePasswordButton = ref)}
