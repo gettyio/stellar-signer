@@ -6,7 +6,7 @@ import crypto from 'crypto-js'
 import Modal from 'react-native-modal'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import Button from 'react-native-micro-animated-button'
-//import SplashScreen from 'react-native-splash-screen'
+import SplashScreen from 'react-native-splash-screen'
 import SInfo from 'react-native-sensitive-info';
 import SecurityForm from '../components/SecurityForm'
 import {
@@ -42,7 +42,7 @@ class AuthScreen extends Component {
 	}
 
 	componentDidMount() {
-		//SplashScreen.hide();
+		SplashScreen.hide();
 		try {
 			db.allDocs({
 				include_docs: true
