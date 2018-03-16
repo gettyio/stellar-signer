@@ -13,11 +13,12 @@ import EnvelopeCard from './../components/EnvelopeCard'
 import ErrorMessage from './../components/ErrorMessage'
 import EnvelopeTab from './../components/EnvelopeTab'
 import SecurityForm from './../components/SecurityForm'
-import { Screen, ContainerFlex, SelectSecret, Header, Title, TitleWrapper, LoadButtonWrapper, LoadButton } from './../components/utils'
+import { Screen, ContainerFlex, Container, SelectSecret, Header, Title, TitleWrapper, LoadButtonWrapper, LoadButton } from './../components/utils'
 import { decodeFromXdr, signXdr } from './../utils/xdrUtils';
 import PouchDB from 'pouchdb-react-native'
 import SQLite from 'react-native-sqlite-2'
 import SQLiteAdapterFactory from 'pouchdb-adapter-react-native-sqlite'
+
 const SQLiteAdapter = SQLiteAdapterFactory(SQLite)
 PouchDB.plugin(SQLiteAdapter)
 const db = new PouchDB('Secrets', { adapter: 'react-native-sqlite' })
@@ -287,18 +288,22 @@ class TransactionDetail extends Component {
   }
 
   showConfirmSignatureAlert = secret => {
-    Alert.alert(
-      `${secret.doc.alias}`,
-      `${secret.doc.sk}`,
-      [
-        { text: 'Cancel', onPress: () => {}, style: 'cancel' },
-        {
-          text: 'Confirm',
-          onPress: () => this.confirmSignTransaction(secret.doc._id)
-        }
-      ],
-      { cancelable: true }
-    )
+		if (secret && secret.doc) {
+			Alert.alert(
+				`${secret.doc.alias}`,
+				`${secret.doc.sk}`,
+				[
+					{ text: 'Cancel', onPress: () => {}, style: 'cancel' },
+					{
+						text: 'Confirm',
+						onPress: () => this.confirmSignTransaction(secret.doc._id)
+					}
+				],
+				{ cancelable: true }
+			)
+		} else {
+			this.actionSheet.hide(0);
+		}
   }
 
   render() {
