@@ -9,14 +9,11 @@ const Container = styled.View`
 	background-color: white;
 `
 export default ({ tx }) => {
+	console.log('tx',tx);
   if (tx) {
 		const decoded = decodeFromXdr(tx, 'TransactionEnvelope');
     return (
-			<ScrollView style={{ paddingBottom: 24 }}>
-				<Container>
 					<TreeView nodes={decoded.tx}></TreeView>
-				</Container>
-			</ScrollView>
     );
 	}
 	

@@ -9,10 +9,9 @@ import SInfo from 'react-native-sensitive-info';
 import uuid from 'uuid/v4'
 import crypto from 'crypto-js'
 import { get, sortBy } from 'lodash'
-import EnvelopeCard from './../components/EnvelopeCard'
 import ErrorMessage from './../components/ErrorMessage'
-import EnvelopeTab from './../components/EnvelopeTab'
 import SecurityForm from './../components/SecurityForm'
+import DetailTabs from './../components/DetailTabs'
 import { Screen, ContainerFlex, Container, SelectSecret, Header, Title, TitleWrapper, LoadButtonWrapper, LoadButton } from './../components/utils'
 import { decodeFromXdr, signXdr } from './../utils/xdrUtils';
 import PouchDB from 'pouchdb-react-native'
@@ -124,18 +123,6 @@ class TransactionDetail extends Component {
 			appStore.set('securityFormError', 'Invalid password!')
 		}
 	}
-	
-	renderTabHeader = props => {
-    return (
-      <TabBar
-        {...props}
-        style={{ backgroundColor: 'white' }}
-        labelStyle={{ color: 'black' }}
-        indicatorStyle={{ backgroundColor: '#2e3666' }}
-        scrollEnabled={true}
-      />
-    )
-  }
 
   rejectTransaction = () => {
 		const { appStore, navigation } = this.props
@@ -153,25 +140,6 @@ class TransactionDetail extends Component {
 		} catch (error) {
 			alert(error.message)
 		}
-  }
-
-  renderTab = (route, tx) => {
-    switch (route.key) {
-      case 'display':
-				return <EnvelopeCard 
-								tx={tx} 
-								copyToClipboard={this.copyToClipboard}
-								showConfirmDelete={this.showConfirmDelete} 
-								rejectTransaction={this.rejectTransaction}
-								signTransaction={this.signTransaction}
-							/>
-      case 'envelop':
-        return <EnvelopeTab tx={tx.xdr} />
-      case 'signed':
-        return <EnvelopeTab tx={tx.sxdr} />
-      default:
-        return null
-    }
   }
 
   deleteTransaction = async (currentTransaction) => {
@@ -291,7 +259,7 @@ class TransactionDetail extends Component {
 		if (secret && secret.doc) {
 			Alert.alert(
 				`${secret.doc.alias}`,
-				`${secret.doc.sk}`,
+				`${secret.doc.pk}`,
 				[
 					{ text: 'Cancel', onPress: () => {}, style: 'cancel' },
 					{
@@ -336,11 +304,12 @@ class TransactionDetail extends Component {
 		return (
 			<ContainerFlex>
 						{!showSecurityForm && (
-							<TabViewAnimated
-								navigationState={this.state.tabView}
-								renderScene={({ route }) => this.renderTab(route, currentTransaction)}
-								renderHeader={this.renderTabHeader}
-								onIndexChange={this.handleTabIndexChange}
+							<DetailTabs
+								currentTransaction={currentTransaction}
+								copyToClipboard={this.copyToClipboard}
+								showConfirmDelete={this.showConfirmDelete} 
+								rejectTransaction={this.rejectTransaction}
+								signTransaction={this.signTransaction}
 							/>
 						)}
 						{showSecurityForm && (

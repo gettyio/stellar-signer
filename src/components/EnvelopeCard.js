@@ -208,49 +208,47 @@ class EnvelopeView extends PureComponent {
 	render() {
 		const { tx } = this.props;
 		return (
-			<ScrollView style={{ backgroundColor: '#d5eef7'}}>
-					<EnvelopeCard>
-						<StellarIcon
-							source={require('./../assets/stellar-rocket.png')}
-							resizeMode="contain"
-							style={{
-								width: 42,
-								height: 42,
-								position: 'absolute',
-								marginTop: 8,
-								marginLeft: 8
-							}}
-						/>
-						<EnvelopeAmount>
-							<EnvelopeCardLabel>{`${tx.amount} XLM`}</EnvelopeCardLabel>
-						</EnvelopeAmount>
-						<EnvelopeDetail>
-							<EnvelopeInfo align="flex-start">
-								<EnvelopeLabel>From:</EnvelopeLabel>
-								<EnvelopeLabel fontSize="10px">{tx.sourceAccount}</EnvelopeLabel>
-							</EnvelopeInfo>
-						</EnvelopeDetail>
-						<EnvelopeDetail>
-							<EnvelopeInfo align="flex-start">
-								<EnvelopeLabel>To:</EnvelopeLabel>
-								<EnvelopeLabel fontSize="10px">{tx.destination}</EnvelopeLabel>
-							</EnvelopeInfo>
-						</EnvelopeDetail>
-						<EnvelopeDetail>
-							<EnvelopeInfo>
-								<EnvelopeLabel>Memo:</EnvelopeLabel>
-								<EnvelopeLabel>{tx.memo}</EnvelopeLabel>
-							</EnvelopeInfo>
-							<EnvelopeInfo align="flex-end">
-								<EnvelopeLabel>Time:</EnvelopeLabel>
-								<EnvelopeLabel>
-									{moment(tx.createdAt).format('YYYY-MM-DD hh:mm:ss')}
-								</EnvelopeLabel>
-							</EnvelopeInfo>
-						</EnvelopeDetail>
-						{this.renderActionBar()}
-					</EnvelopeCard>
-					</ScrollView>
+			<EnvelopeCard>
+				<StellarIcon
+					source={require('./../assets/stellar-rocket.png')}
+					resizeMode="contain"
+					style={{
+						width: 42,
+						height: 42,
+						position: 'absolute',
+						marginTop: 8,
+						marginLeft: 8
+					}}
+				/>
+				<EnvelopeAmount>
+					<EnvelopeCardLabel>{`${tx.amount} XLM`}</EnvelopeCardLabel>
+				</EnvelopeAmount>
+				<EnvelopeDetail>
+					<EnvelopeInfo align="flex-start">
+						<EnvelopeLabel>From:</EnvelopeLabel>
+						<EnvelopeLabel fontSize="10px">{tx.sourceAccount}</EnvelopeLabel>
+					</EnvelopeInfo>
+				</EnvelopeDetail>
+				<EnvelopeDetail>
+					<EnvelopeInfo align="flex-start">
+						<EnvelopeLabel>To:</EnvelopeLabel>
+						<EnvelopeLabel fontSize="10px">{tx.destination}</EnvelopeLabel>
+					</EnvelopeInfo>
+				</EnvelopeDetail>
+				<EnvelopeDetail>
+					<EnvelopeInfo>
+						<EnvelopeLabel>Memo:</EnvelopeLabel>
+						<EnvelopeLabel>{tx.memo}</EnvelopeLabel>
+					</EnvelopeInfo>
+					<EnvelopeInfo align="flex-end">
+						<EnvelopeLabel>Time:</EnvelopeLabel>
+						<EnvelopeLabel>
+							{moment(tx.createdAt).format('YYYY-MM-DD hh:mm:ss')}
+						</EnvelopeLabel>
+					</EnvelopeInfo>
+				</EnvelopeDetail>
+				{this.renderActionBar()}
+			</EnvelopeCard>
 		)
 	}
 }
