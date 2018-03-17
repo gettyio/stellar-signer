@@ -7,13 +7,15 @@ import { decodeFromXdr } from './../utils/xdrUtils';
 const Container = styled.View`
   flex: 1;
 	background-color: white;
+	padding-bottom: 128px;
 `
 export default ({ tx }) => {
-	console.log('tx',tx);
   if (tx) {
 		const decoded = decodeFromXdr(tx, 'TransactionEnvelope');
     return (
-					<TreeView nodes={decoded.tx}></TreeView>
+			<Container>
+				<TreeView nodes={decoded.tx}></TreeView>
+			</Container>
     );
 	}
 	

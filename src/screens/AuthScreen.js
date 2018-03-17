@@ -74,7 +74,7 @@ class AuthScreen extends Component {
     const url = event instanceof String ? event : event.url
     if (url) {
       const tx = qs.parse(url.replace('stellar-signer://stellar-signer?', ''))
-      appStore.set('currentXdr', tx.xdr)
+			appStore.set('currentXdr', tx.xdr)
     } else {
       alert('Invalid Transaction! Please contact the support.')
     }

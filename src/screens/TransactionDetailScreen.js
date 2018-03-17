@@ -302,7 +302,7 @@ class TransactionDetail extends Component {
     }
 
 		return (
-			<ContainerFlex>
+			<ContainerFlex style={{ backgroundColor: '#d5eef7'}}>
 						{!showSecurityForm && (
 							<DetailTabs
 								currentTransaction={currentTransaction}

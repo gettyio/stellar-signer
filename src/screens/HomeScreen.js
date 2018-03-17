@@ -175,7 +175,7 @@ class HomeScreen extends Component {
 					xdr: data.xdr,
           createdAt: new Date().toISOString(),
           status: 'CREATED'
-        })
+				});
       }
     } else {
       console.warn('Data not found!');

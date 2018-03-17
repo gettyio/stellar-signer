@@ -75,14 +75,13 @@ class DetailTabs extends Component {
 							<HeaderLabel name={'envelope'} tab={tab}>Envelope</HeaderLabel>
 						</HeaderButton>
 						<HeaderButton onPress={()=> this.setCurrentTab('signed')}>
-							<HeaderLabel name={'signed'} tab={tab}>Signed</HeaderLabel>
+							<HeaderLabel name={'signed'} tab={tab}>Signature</HeaderLabel>
 						</HeaderButton>										
 					</DetailTabsHeader>
 				</View>
 				<ScrollView
 					keyboardShouldPersistTaps="always"
 					keyboardDismissMode="interactive"
-					contentContainerStyle={{ paddingBottom: 128, flexGrow: 0 }}
 				>
 					{this.renderTab(tab)}
 				</ScrollView>

@@ -8,7 +8,7 @@ const Container = styled.View`
 	background-color: #5b6a71;
 `
 const EnvelopeCard = styled.View`
-	flex: 1;
+	height: 100%;
   padding: 16px;
   background-color: #d5eef7;
 `
