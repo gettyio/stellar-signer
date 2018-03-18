@@ -20,8 +20,8 @@ export default ({ tx }) => {
 	}
 	
   return (
-    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: 'white'}}>
+    <Container style={{ alignItems: 'center', justifyContent: 'center' }}>
       <Text>Transaction not signed!</Text>
-    </View>
+    </Container>
   )
 }
