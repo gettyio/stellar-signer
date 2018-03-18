@@ -7,6 +7,7 @@ import HomeScreen from './screens/HomeScreen'
 import SecretsScreen from './screens/SecretsScreen'
 import AuthScreen from './screens/AuthScreen'
 import AboutScreen from './screens/AboutScreen'
+import CreateVaultScreen from './screens/CreateVaultScreen'
 import TransactionDetailScreen from './screens/TransactionDetailScreen'
 import store from './store'
 
@@ -61,6 +62,44 @@ const NavigationStack = TabNavigator(
   }
 )
 
+const DetailStack = TabNavigator(
+  {
+		EnvelopeCard: {
+			screen: HomeScreen
+		},
+		EnvelopeTreeRaw: {
+      screen: SecretsScreen
+		},
+		EnvelopeTreeSigned: {
+      screen: AboutScreen
+    }
+  },
+  {
+    navigationOptions: ({ navigation }) => ({
+      headerTintColor: '#fff',
+      headerTitleStyle: {
+        fontWeight: 'bold',
+      }
+		}),
+		tabBarPosition: 'bottom',
+		tabBarComponent: TabBarBottom,
+		animationEnabled: true,
+		lazy: false,
+    tabBarOptions: {
+      activeTintColor: '#2e3666',
+			inactiveTintColor: 'gray',
+			showLabel: false,
+      style: {
+        height: 45,
+        backgroundColor: 'white'
+      }
+    },
+    animationEnabled: true,
+    swipeEnabled: false
+  }
+)
+
+
 const RootStack = StackNavigator(
   {
     Main: {
@@ -71,6 +110,9 @@ const RootStack = StackNavigator(
 		},
 		TransactionDetail: {
 			screen: TransactionDetailScreen,
+		},
+		CreateVault: {
+			screen: CreateVaultScreen,
 		}
   },
   {

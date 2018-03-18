@@ -19,6 +19,7 @@ import uuid from 'uuid/v4'
 import { get, sortBy } from 'lodash'
 import base64 from 'base-64'
 import base64js from 'base64-js'
+import sha256 from 'crypto-js/sha256';
 import { observer, inject } from 'mobx-react'
 import Icon from 'react-native-vector-icons/Feather'
 import moment from 'moment'
@@ -94,18 +95,8 @@ class HomeScreen extends Component {
 	componentDidUpdate(prevProps, prevState) {
 		this.handleCurrentTx()
 		this.loadTransactions();
-		this.loadSeed()
 	}
 	
-	loadSeed = () => {
-		const { appStore } = this.props
-		try {
-			
-		} catch (error) {
-			//appStore.set('securityFormError', 'Invalid password!')
-		}
-	}
-
   loadTransactions = () => {
 		const self = this;
 		db.allDocs({
@@ -126,6 +117,7 @@ class HomeScreen extends Component {
   }
 
   sendToViewer = () => {
+		// Todo: remove mock data
     const url = `stellar-signer://stellar-signer?${qs.stringify({
       type: 'decode', xdr: 'AAAAAFIBKYc47PZpoxxY5Acltd9IaRANeap3Ja+FZg9fVtSBAAAAZABu6EUAAAACAAAAAAAAAAAAAAABAAAAAAAAAAEAAAAAr+SzF6CyMZracAojHWYWqhzdJZW+OiI9csaw1Nl4EZMAAAAAAAAAAAX14QAAAAAAAAAAAA=='
 		})}`;

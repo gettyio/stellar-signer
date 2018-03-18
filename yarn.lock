@@ -6446,6 +6446,10 @@ react-native-app-link@^0.4.0:
   version "0.4.1"
   resolved "https://registry.yarnpkg.com/react-native-app-link/-/react-native-app-link-0.4.1.tgz#19095baf4ff53d5c4346a8bc67f5fa2fd1e0aa4c"
 
+react-native-device-info@^0.21.1:
+  version "0.21.1"
+  resolved "https://registry.yarnpkg.com/react-native-device-info/-/react-native-device-info-0.21.1.tgz#0b0918a84041541905337b37b9438d55ed9ed44f"
+
 react-native-dismiss-keyboard@1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/react-native-dismiss-keyboard/-/react-native-dismiss-keyboard-1.0.0.tgz#32886242b3f2317e121f3aeb9b0a585e2b879b49"

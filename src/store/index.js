@@ -4,7 +4,8 @@ import { observable, action } from 'mobx'
 // App Initial State
 const appStore = {
   sk: undefined,
-  pwd: undefined,
+	pwd: undefined,
+	seed: undefined,
   secretList: undefined,
   isAddModalVisible: false,
   isAddSecretModalVisible: false,

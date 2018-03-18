@@ -274,3 +274,21 @@ export const ErrorMessageLabel = styled.Text`
 export const ErrorInputValueLabel = styled.Text`
   padding-top: 4px;
 `
+
+export const HeaderTabs = styled.View`
+	flex-direction: row;
+  background-color: #d5eef7;
+`
+
+export const HeaderTabsButton = styled.TouchableOpacity`
+	flex: 1;
+	justify-content: center;
+  padding: 24px;
+  background-color: white;
+`
+
+export const HeaderTabsLabel = styled.Text`
+	align-self: center;
+  color: black;
+	font-weight: ${props => (props.name === props.tab ? '700' : '300' )};
+`

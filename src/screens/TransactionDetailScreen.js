@@ -6,9 +6,9 @@ import Icon from 'react-native-vector-icons/Feather'
 import ActionSheet from 'react-native-actionsheet'
 import { observer, inject } from 'mobx-react'
 import SInfo from 'react-native-sensitive-info';
-import sha256 from 'crypto-js/sha256';
 import uuid from 'uuid/v4'
 import crypto from 'crypto-js'
+import sha256 from 'crypto-js/sha256';
 import { get, sortBy } from 'lodash'
 import ErrorMessage from './../components/ErrorMessage'
 import SecurityForm from './../components/SecurityForm'
@@ -103,7 +103,8 @@ class TransactionDetail extends Component {
 
   authTransaction = pwd => {
 		const { appStore, navigation } = this.props
-		const currentPwd = appStore.get('pwd');
+		const currentPwd = sha256(appStore.get('pwd'))
+		
 		if (currentPwd === pwd) {
 			const { secrets } = this.state;
 			if (!secrets || secrets.length === 0) {
@@ -190,8 +191,7 @@ class TransactionDetail extends Component {
 			const pwd = appStore.get('pwd');
 			const currentTransaction = appStore.get('currentTransaction')
 			SInfo.getItem(_id,{}).then(value => {
-				const encodedPwd = sha256(pwd);
-				const bytes = crypto.AES.decrypt(value, `${_id}:${encodedPwd}`);
+				const bytes = crypto.AES.decrypt(value, `${_id}:${pwd}`);
 				const sk = bytes.toString(crypto.enc.Utf8);
 				const data = {
 					type: 'sign',

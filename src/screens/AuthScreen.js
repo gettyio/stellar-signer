@@ -4,12 +4,13 @@ import PropTypes from 'prop-types'
 import qs from 'qs'
 import { observer, inject } from 'mobx-react'
 import crypto from 'crypto-js'
+import sha256 from 'crypto-js/sha256';
 import Modal from 'react-native-modal'
+import DeviceInfo from 'react-native-device-info';
 import Icon from 'react-native-vector-icons/FontAwesome'
 import Button from 'react-native-micro-animated-button'
 import SplashScreen from 'react-native-splash-screen'
 import SInfo from 'react-native-sensitive-info';
-import sha256 from 'crypto-js/sha256';
 import SecurityForm from '../components/SecurityForm'
 import {
   Screen,
@@ -47,10 +48,46 @@ class AuthScreen extends Component {
 		SplashScreen.hide();
 		this.enableDeepLinks();
 		this.loadData();
+		//this.deleteSeed();
 	}
 
 	componentWillUnmount() {
     Linking.removeEventListener('url', this.handleAppLinkURL)
+	}
+
+	deleteSeed = () => {
+		const uniqueId = DeviceInfo.getUniqueID();
+		const seedKey = sha256(`ss-${uniqueId}`);
+		SInfo.deleteItem(seedKey.toString(), {})
+	}
+
+	loadSeed = () => {
+		const { appStore, navigation } = this.props
+		if (!appStore.get('seed')) {
+			try {
+				const pwd = appStore.get('pwd')
+				const uniqueId = DeviceInfo.getUniqueID();
+				const seedKey = sha256(`ss-${uniqueId}`);
+				SInfo.getItem(seedKey.toString(),{}).then(value => {
+					if (value) {
+						const pass = sha256(`ss-${uniqueId}-${pwd}`);
+						const bytes = crypto.AES.decrypt(value, pass.toString());
+						const seed =  bytes.toString(crypto.enc.Utf8)
+						if (seed) {
+							appStore.set('seed', seed);
+							navigation.navigate('Home');
+						} else {
+							navigation.navigate('CreateVault');
+						}
+					} else{
+						navigation.navigate('CreateVault');
+					}
+				})
+			} catch (error) {
+				alert(error.message);
+				//alert('Error to load your seed, please uninstall this app and install the last version to have a better experience. You will need to use your seed to restore your keys.');
+			}
+		}
 	}
 	
 	enableDeepLinks = () => {
@@ -93,16 +130,16 @@ class AuthScreen extends Component {
 		const { firstSecret } = this.state;
 		const { appStore, navigation } = this.props
 		try {
+			const encodedPwd = sha256(pwd);
 			if (firstSecret) {
 				SInfo.getItem(firstSecret._id,{}).then(value => {
-					const encodedPwd = sha256(pwd);
-					const bytes = crypto.AES.decrypt(value, `${firstSecret._id}:${encodedPwd}`);
+					const bytes = crypto.AES.decrypt(value, `${firstSecret._id}:${encodedPwd.toString()}`);
 					const val =  bytes.toString(crypto.enc.Utf8)
 					if (val) {
-						appStore.set('pwd', pwd)
+						appStore.set('pwd', encodedPwd.toString())
 						appStore.set('securityFormError', undefined)
 						appStore.set('isSecurityRequired', false)
-						navigation.navigate('Home');
+						this.loadSeed();
 					} else {
 						appStore.set('securityFormError', 'Invalid password!')
 					}
@@ -110,12 +147,13 @@ class AuthScreen extends Component {
 					appStore.set('securityFormError', 'Invalid password!')
 				})
 			} else {
-				appStore.set('pwd', pwd)
+				appStore.set('pwd', encodedPwd.toString())
 				appStore.set('securityFormError', undefined)
 				appStore.set('isSecurityRequired', false)
-				navigation.navigate('Home');
+				this.loadSeed();
 			}
 		} catch (error) {
+			console.log('error',error)
 			appStore.set('securityFormError', 'Invalid password!')
 		}
   }

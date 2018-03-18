@@ -116,9 +116,7 @@ class SecretsScreen extends Component {
 	
 	encryptSecret = (_id, sk) => {
 		const pwd = this.props.appStore.get('pwd');
-		const encodedPwd = sha256(pwd);
-		console.log('encodedPwd',encodedPwd)
-		var ciphertext = cryptojs.AES.encrypt(sk, `${_id}:${encodedPwd}`);
+		var ciphertext = cryptojs.AES.encrypt(sk, `${_id}:${pwd}`);
 		SInfo.setItem(_id, ciphertext.toString(), {});
 	}
 

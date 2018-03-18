@@ -4,34 +4,17 @@ import styled from 'styled-components'
 import EnvelopeCard from './EnvelopeCard'
 import EnvelopeTab from './EnvelopeTab'
 import {
-  Screen,
+	Screen,
+	HeaderTabs,
+	HeaderTabsButton,
+	HeaderTabsLabel
 } from './utils'
-const DetailTabsHeader = styled.View`
-	flex-direction: row;
-  background-color: #d5eef7;
-`
 
-const HeaderButton = styled.TouchableOpacity`
-	flex: 1;
-	justify-content: center;
-  padding: 24px;
-  background-color: white;
-`
-
-const HeaderLabel = styled.Text`
-	align-self: center;
-  color: black;
-	font-weight: ${props => (props.name === props.tab ? '700' : '300' )};
-`
 
 class DetailTabs extends Component {
 
 	state = {
 		tab: 'display'
-	}
-
-	setCurrentTab = (tab) => {
-		this.setState({ tab })
 	}
 
 	renderTab = (tab) => {
@@ -67,17 +50,17 @@ class DetailTabs extends Component {
 		return (
 			<Screen>
 				<View>
-					<DetailTabsHeader>
-						<HeaderButton onPress={()=> this.setCurrentTab('display')}>
-							<HeaderLabel name={'display'} tab={tab}>Display</HeaderLabel>
-						</HeaderButton>
-						<HeaderButton onPress={()=> this.setCurrentTab('envelope')}>
-							<HeaderLabel name={'envelope'} tab={tab}>Envelope</HeaderLabel>
-						</HeaderButton>
-						<HeaderButton onPress={()=> this.setCurrentTab('signed')}>
-							<HeaderLabel name={'signed'} tab={tab}>Signature</HeaderLabel>
-						</HeaderButton>										
-					</DetailTabsHeader>
+					<HeaderTabsButton>
+						<HeaderTabsButton onPress={()=> this.setCurrentTab('display')}>
+							<HeaderTabsLabel name={'display'} tab={tab}>Display</HeaderTabsLabel>
+						</HeaderTabsButton>
+						<HeaderTabsButton onPress={()=> this.setCurrentTab('envelope')}>
+							<HeaderTabsLabel name={'envelope'} tab={tab}>Envelope</HeaderTabsLabel>
+						</HeaderTabsButton>
+						<HeaderTabsButton onPress={()=> this.setCurrentTab('signed')}>
+							<HeaderTabsLabel name={'signed'} tab={tab}>Signature</HeaderTabsLabel>
+						</HeaderTabsButton>										
+					</HeaderTabsButton>
 				</View>
 				<ScrollView
 					keyboardShouldPersistTaps="always"

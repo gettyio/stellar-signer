@@ -3,6 +3,7 @@ import { View, Alert, Text, KeyboardAvoidingView } from 'react-native'
 import uuid from 'uuid/v4'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import Button from 'react-native-micro-animated-button'
+import sha256 from 'crypto-js/sha256';
 
 import {
   ContainerFlex,
