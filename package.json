@@ -1,12 +1,12 @@
 {
   "name": "stellar-signer",
-  "version": "1.2.3",
+  "version": "1.2.4",
   "private": true,
   "scripts": {
     "start": "node node_modules/react-native/local-cli/cli.js start",
     "test": "NODE_ENV=test jest --no-cache",
     "test-e2e": "detox test",
-    "postinstall": "rm ./node_modules/react-native/local-cli/core/__fixtures__/files/package.json",
+    "postinstall": "rm -f ./node_modules/react-native/local-cli/core/__fixtures__/files/package.json",
     "postversion": "react-native-version",
     "dev-ios": "haul start --platform ios --dev true",
     "dev-android": "haul start --platform android --dev true",
