@@ -9,6 +9,7 @@ import Icon from 'react-native-vector-icons/FontAwesome'
 import Button from 'react-native-micro-animated-button'
 import SplashScreen from 'react-native-splash-screen'
 import SInfo from 'react-native-sensitive-info';
+import sha256 from 'crypto-js/sha256';
 import SecurityForm from '../components/SecurityForm'
 import {
   Screen,
@@ -44,13 +45,25 @@ class AuthScreen extends Component {
 
 	componentDidMount() {
 		SplashScreen.hide();
+		this.enableDeepLinks();
+		this.loadData();
+	}
+
+	componentWillUnmount() {
+    Linking.removeEventListener('url', this.handleAppLinkURL)
+	}
+	
+	enableDeepLinks = () => {
 		Linking.addEventListener('url', this.handleAppLinkURL)
 		Linking.getInitialURL().then(url => {
 			if (url) {
 				this.handleAppLinkURL(new String(url))
 			}
 		})
-		
+	}
+
+	loadData = () => {
+		const { appStore } = this.props
 		try {
 			db.allDocs({
 				include_docs: true
@@ -64,10 +77,6 @@ class AuthScreen extends Component {
 			appStore.set('securityFormError', 'Invalid password!')
 		}
 	}
-
-	componentWillUnmount() {
-    Linking.removeEventListener('url', this.handleAppLinkURL)
-  }
 
   handleAppLinkURL = event => {
 		const { appStore } = this.props
@@ -86,7 +95,8 @@ class AuthScreen extends Component {
 		try {
 			if (firstSecret) {
 				SInfo.getItem(firstSecret._id,{}).then(value => {
-					const bytes = crypto.AES.decrypt(value, `${firstSecret._id}:${pwd}`);
+					const encodedPwd = sha256(pwd);
+					const bytes = crypto.AES.decrypt(value, `${firstSecret._id}:${encodedPwd}`);
 					const val =  bytes.toString(crypto.enc.Utf8)
 					if (val) {
 						appStore.set('pwd', pwd)

@@ -6,6 +6,7 @@ import Icon from 'react-native-vector-icons/Feather'
 import ActionSheet from 'react-native-actionsheet'
 import { observer, inject } from 'mobx-react'
 import SInfo from 'react-native-sensitive-info';
+import sha256 from 'crypto-js/sha256';
 import uuid from 'uuid/v4'
 import crypto from 'crypto-js'
 import { get, sortBy } from 'lodash'
@@ -189,8 +190,8 @@ class TransactionDetail extends Component {
 			const pwd = appStore.get('pwd');
 			const currentTransaction = appStore.get('currentTransaction')
 			SInfo.getItem(_id,{}).then(value => {
-				debugger;
-				const bytes = crypto.AES.decrypt(value, `${_id}:${pwd}`);
+				const encodedPwd = sha256(pwd);
+				const bytes = crypto.AES.decrypt(value, `${_id}:${encodedPwd}`);
 				const sk = bytes.toString(crypto.enc.Utf8);
 				const data = {
 					type: 'sign',
@@ -302,7 +303,7 @@ class TransactionDetail extends Component {
     }
 
 		return (
-			<ContainerFlex style={{ backgroundColor: '#d5eef7'}}>
+			<ContainerFlex style={{ backgroundColor: '#d5eef7' }}>
 						{!showSecurityForm && (
 							<DetailTabs
 								currentTransaction={currentTransaction}

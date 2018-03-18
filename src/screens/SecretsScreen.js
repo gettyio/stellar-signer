@@ -7,6 +7,7 @@ import { sortBy } from 'lodash';
 import base64 from 'base-64'
 import base64js from 'base64-js'
 import cryptojs from 'crypto-js'
+import sha256 from 'crypto-js/sha256';
 import cryptocore from 'crypto-js/core'
 import randomize from 'randomatic'
 import Icon from 'react-native-vector-icons/Feather'
@@ -115,7 +116,9 @@ class SecretsScreen extends Component {
 	
 	encryptSecret = (_id, sk) => {
 		const pwd = this.props.appStore.get('pwd');
-		var ciphertext = cryptojs.AES.encrypt(sk, `${_id}:${pwd}`);
+		const encodedPwd = sha256(pwd);
+		console.log('encodedPwd',encodedPwd)
+		var ciphertext = cryptojs.AES.encrypt(sk, `${_id}:${encodedPwd}`);
 		SInfo.setItem(_id, ciphertext.toString(), {});
 	}
 
@@ -250,7 +253,7 @@ class SecretsScreen extends Component {
 												errorIconColor={'white'}
 												successIconColor={'white'}
 												successIconName="check"
-												label="Create Account"
+												label="Create KeyPair"
 												style={{ borderWidth: 0 }}
 											/>				
 											{/* <Button

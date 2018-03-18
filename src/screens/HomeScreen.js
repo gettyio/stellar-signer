@@ -94,7 +94,17 @@ class HomeScreen extends Component {
 	componentDidUpdate(prevProps, prevState) {
 		this.handleCurrentTx()
 		this.loadTransactions();
-  }
+		this.loadSeed()
+	}
+	
+	loadSeed = () => {
+		const { appStore } = this.props
+		try {
+			
+		} catch (error) {
+			//appStore.set('securityFormError', 'Invalid password!')
+		}
+	}
 
   loadTransactions = () => {
 		const self = this;
