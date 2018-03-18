@@ -36,4 +36,7 @@ module.exports = ({ platform }, { module, resolve }) => ({
 			...module.rules
 		]
 	},
+	node: {
+		fs: "empty"
+ 	}
 });

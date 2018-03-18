@@ -3,17 +3,19 @@ import { View, Text, ScrollView, Alert, Dimensions, KeyboardAvoidingView, SafeAr
 import Modal from 'react-native-modal'
 import uuid from 'uuid/v4'
 import { observer, inject } from 'mobx-react'
-import { sortBy } from 'lodash';
+import { sortBy } from 'lodash'
+import bip39 from 'bip39'
 import base64 from 'base-64'
 import base64js from 'base64-js'
 import cryptojs from 'crypto-js'
-import sha256 from 'crypto-js/sha256';
+import sha256 from 'crypto-js/sha256'
 import cryptocore from 'crypto-js/core'
 import randomize from 'randomatic'
 import Icon from 'react-native-vector-icons/Feather'
 import Button from 'react-native-micro-animated-button'
-import SInfo from 'react-native-sensitive-info';
-import StellarSdk from 'stellar-sdk';
+import SInfo from 'react-native-sensitive-info'
+import StellarSdk from 'stellar-sdk'
+import { derivePath } from 'ed25519-hd-key'
 import SecretList from '../components/SecretList'
 import {
   Screen,
@@ -140,8 +142,17 @@ class SecretsScreen extends Component {
 	}
 
 	createNewAccount = () => {
-		const { alias, hasError } = this.state;
+		const { appStore } = this.props
+		const { alias, userPath, hasError } = this.state;
+		const pwd = appStore.get('pwd');
+		const seed = appStore.get('seed');
 
+		const seedHex = bip39.mnemonicToSeedHex(seed, pwd);
+		const data = derivePath(`m/44'/148'/${0}'`, seedHex)
+		const keypair = StellarSdk.Keypair.fromRawEd25519Seed(data.key);
+		const pk = keypair.publicKey();
+		const sk = keypair.secret();
+		debugger;
 		if (!alias) {
 			this.setState({ hasError: true });
 			this.addSecretButton.error()
@@ -149,19 +160,18 @@ class SecretsScreen extends Component {
 		} else {
 			try {
 				const _id = uuid();
-				const secret = randomize('*', 32);
-				const keypair = StellarSdk.Keypair.fromRawEd25519Seed(secret);
-				const pk = keypair.publicKey();
-				const sk = keypair.secret();
+				//const secret = randomize('*', 32);
+				//const keypair = StellarSdk.Keypair.fromRawEd25519Seed(secret);
+				// const pk = keypair.publicKey();
+				// const sk = keypair.secret();
 
 				db.put({
 					_id,
 					pk,
 					alias,
-					sk: `${sk.slice(0,8)}...${sk.substr(sk.length - 8)}`,
 					createdAt: new Date().toISOString()
 				});
-				this.encryptSecret(_id, sk)
+				//this.encryptSecret(_id, sk)
 				this.loadData();
 				this.toggleAddModal();
 				this.setState({ hasError: false, sk: undefined, alias: undefined })

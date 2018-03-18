@@ -47,7 +47,7 @@ class AuthScreen extends Component {
 	componentDidMount() {
 		SplashScreen.hide();
 		this.enableDeepLinks();
-		this.loadData();
+		//this.loadData();
 		//this.deleteSeed();
 	}
 
@@ -131,6 +131,7 @@ class AuthScreen extends Component {
 		const { appStore, navigation } = this.props
 		try {
 			const encodedPwd = sha256(pwd);
+			debugger;
 			if (firstSecret) {
 				SInfo.getItem(firstSecret._id,{}).then(value => {
 					const bytes = crypto.AES.decrypt(value, `${firstSecret._id}:${encodedPwd.toString()}`);
