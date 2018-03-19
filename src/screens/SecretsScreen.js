@@ -98,10 +98,12 @@ class SecretsScreen extends Component {
 	}
 
   toggleAddModal = () => {
-    const { appStore } = this.props
-		appStore.set('isAddSecretModalVisible', !appStore.get('isAddSecretModalVisible'))
-		const userPath = `${randomize('0',8)}`
-		this.setState({ userPath })
+		const { appStore } = this.props
+		if (!appStore.get('isAddSecretModalVisible')) {
+			const userPath = `${Math.floor(Math.random() * 9)+1}${randomize('0',7)}`
+			this.setState({ userPath })
+		}
+		appStore.set('isAddSecretModalVisible', !appStore.get('isAddSecretModalVisible'));
   }
 
   handleInputErrors = () => {
@@ -213,20 +215,22 @@ class SecretsScreen extends Component {
 	createNewAccount = () => {
 		const { appStore } = this.props
 		const { alias, userPath, hasError } = this.state;
-		const pwd = appStore.get('pwd');
-		const seed = appStore.get('seed');
 
-		const cleanUserPath = userPath.replace('-','');
-		const seedHex = bip39.mnemonicToSeedHex(seed);
-		const data = this.derivePath(`m/44'/148'/${cleanUserPath}'`, seedHex)
-		const keypair = StellarSdk.Keypair.fromRawEd25519Seed(data.key);
-		const pk = keypair.publicKey();
-		if (!alias) {
+		if (!alias || !userPath) {
 			this.setState({ hasError: true });
 			this.addSecretButton.error()
       this.addSecretButton.reset()
 		} else {
 			try {
+
+				const pwd = appStore.get('pwd');
+				const seed = appStore.get('seed');
+		
+				const seedHex = bip39.mnemonicToSeedHex(seed);
+				const data = this.derivePath(`m/44'/148'/${userPath}'`, seedHex)
+				const keypair = StellarSdk.Keypair.fromRawEd25519Seed(data.key);
+				const pk = keypair.publicKey();
+
 				const _id = uuid();
 				db.put({
 					_id,
@@ -299,6 +303,7 @@ class SecretsScreen extends Component {
 								</CloseButton>
 								<CardFlex>
 									<TextInput
+										autoFocus={true}
 										autoCorrect={false}
 										placeholder="Alias"
 										onChangeText={text => this.setState({ alias: text })}
@@ -313,9 +318,13 @@ class SecretsScreen extends Component {
 										clearButtonMode={'always'}
 										underlineColorAndroid={'white'}
 										value={userPath}
-									/>									
+										style={{ fontWeight: '700' }}
+									/>
 									<View>
-										{hasError && <ErrorLabel>Type an alias for your account.</ErrorLabel>}
+										<Text style={{ color: '#777', fontSize: 12 }}>The number above is your auto generated Vault Number. Please, take note on paper and keep it safe, you will need it to recover this secret from another device. If have you restored your seed string, please clear this value and type the vault number you want to restore.</Text>	
+									</View>									
+									<View>
+										{hasError && <ErrorLabel>Invalid alias or vault number.</ErrorLabel>}
 									</View>
 								</CardFlex>
 								<KeyboardAvoidingView>
@@ -334,21 +343,6 @@ class SecretsScreen extends Component {
 												label="Create KeyPair"
 												style={{ borderWidth: 0 }}
 											/>				
-											{/* <Button
-												ref={ref => (this.addSecretButton = ref)}
-												foregroundColor={'#4cd964'}
-												onPress={this.addSecretToStore}
-												foregroundColor={'white'}
-												backgroundColor={'#4cd964'}
-												successColor={'#4cd964'}
-												errorColor={'#ff3b30'}
-												errorIconColor={'white'}
-												successIconColor={'white'}
-												successIconName="check"
-												label="Save"
-												maxWidth={80}
-												style={{ borderWidth: 0, marginLeft: 16}}
-											/>																		 */}
 									</View>
 									<View>
 										<Text style={{ color: 'white', fontSize: 12, fontWeight: '700', marginBottom: 8 }}>Create Account Keypair </Text>

@@ -76,12 +76,17 @@ class CreateVaultScreen extends Component {
 	}
 	
 	componentDidMount() {
-		const seedValue = bip39.generateMnemonic(512, (n)=> randomize('0',n));
-		this.setState({ seedValue })
+		const mnemonic = bip39.generateMnemonic(512, (n)=> randomize('0',n));
+		this.setState({ mnemonic, seedValue: mnemonic  })
 	}
 
 	setCurrentTab = (tab) => {
-		this.setState({ tab })
+		if (tab === 'restore') {
+			this.setState({ seedValue: undefined, seedConfirmation: undefined }, ()=> this.setState({ tab }))
+		} else {
+			const seedValue = this.state.mnemonic;
+			this.setState({ seedValue, seedConfirmation: undefined }, ()=> this.setState({ tab }));
+		}
 	}
 
 	createSeed = () => {
@@ -92,7 +97,7 @@ class CreateVaultScreen extends Component {
 			const uniqueId = DeviceInfo.getUniqueID();
 			const seedKey = sha256(`ss-${uniqueId}`);
 			const pass = sha256(`ss-${uniqueId}-${pwd}`);
-			var ciphertext = cryptojs.AES.encrypt(seedValue.trim(), pass.toString());
+			const ciphertext = cryptojs.AES.encrypt(seedValue.trim(), pass.toString());
 			SInfo.setItem(seedKey.toString(), ciphertext.toString(), {});
 			this.createSeedButton.success();
 			navigation.navigate('Home')
@@ -105,115 +110,84 @@ class CreateVaultScreen extends Component {
 
 	}
 
-	renderCreateTab = () => {
-		const { seedValue, seedConfirmation } = this.state;
-		if (seedValue) {
+	renderForm = () => {
+		const { tab, seedValue, seedConfirmation } = this.state;
 
-			let enableSaveButton = true;
-			let errorMessage = undefined;
-			if (seedConfirmation) {
-				errorMessage = seedValue !== seedConfirmation ? 'Invalid seed confirmation' : undefined;
-				enableSaveButton = (errorMessage === undefined) ? false  : true;
-			}
-
-			return (
-				<View>
-					<SeedInput 
-						multiline
-						autoGrow
-						noState={seedConfirmation}
-						hasSuccess={errorMessage}
-						hasError={errorMessage}
-						autoCorrect={false}
-						value={seedValue}
-						numberOfLines={20}
-						autoFocus={false}
-						editable={false}
-						spellCheck={false}
-						autoCapitalize={'none'}
-						clearTextOnFocus={false}
-						clearButtonMode={'always'}
-						placeholder={'Type your seed'}
-					>
-					</SeedInput>
-
-					<SeedInput 
-						multiline
-						autoGrow
-						noState={seedConfirmation}
-						hasSuccess={errorMessage}
-						hasError={errorMessage}
-						value={seedConfirmation}
-						numberOfLines={20}
-						autoCorrect={false}
-						editable={true}
-						spellCheck={false}
-						autoCapitalize={'none'}
-						clearTextOnFocus={false}
-						clearButtonMode={'always'}
-						placeholder={'Confirm your seed'}
-						style={{ marginTop: 16 }}
-						onChangeText={text => this.setState({ seedConfirmation: text })}
-					>
-					</SeedInput>
-          <View>
-            <ErrorLabel>{errorMessage}</ErrorLabel>
-          </View>
-					<KeyboardAvoidingView  behavior="position">
-						<View style={{ alignSelf: 'center' }}>
-							<Button
-								ref={ref => (this.createSeedButton = ref)}
-								disabled={enableSaveButton}
-								foregroundColor={'#4cd964'}
-								onPress={this.createSeed}
-								foregroundColor={'white'}
-								backgroundColor={'#4cd964'}
-								successColor={'#4cd964'}
-								errorColor={'#ff3b30'}
-								errorIconColor={'white'}
-								successIconColor={'white'}
-								successIconName="check"
-								label="Create"
-								maxWidth={100}
-								style={{ marginLeft: 16, borderWidth: 0 }}
-							/>
-						</View>
-					</KeyboardAvoidingView>
-				</View>
-			)
+		let enableSaveButton = true;
+		let errorMessage = undefined;
+		if (seedConfirmation) {
+			errorMessage = seedValue !== seedConfirmation ? 'Invalid seed confirmation' : undefined;
+			enableSaveButton = (errorMessage === undefined) ? false  : true;
 		}
-	}
+		const enableSeedValueInput = (tab === 'restore') ? true : false;
 
-	renderRestoreTab = () => {
-		const { mnemonic } = this.state;
 		return (
-			<SeedInput 
-				multiline
-				autoCorrect
-				autoFocus
-				autoGrow
-				value={mnemonic}
-				numberOfLines={20}
-				spellCheck={false}
-				autoCapitalize={'none'}
-				clearTextOnFocus={false}
-				clearButtonMode={'always'}
-				placeholder={'Type your seed'}
-			>
-			</SeedInput>
+			<View>
+				<SeedInput 
+					multiline
+					autoGrow
+					noState={seedConfirmation}
+					hasSuccess={errorMessage}
+					hasError={errorMessage}
+					autoCorrect={false}
+					value={seedValue}
+					numberOfLines={20}
+					autoFocus={enableSeedValueInput}
+					editable={enableSeedValueInput}
+					spellCheck={false}
+					autoCapitalize={'none'}
+					clearTextOnFocus={false}
+					clearButtonMode={'always'}
+					placeholder={'Type your seed'}
+					onChangeText={text => this.setState({ seedValue: text })}
+				>
+				</SeedInput>
+
+				<SeedInput 
+					multiline
+					autoGrow
+					noState={seedConfirmation}
+					hasSuccess={errorMessage}
+					hasError={errorMessage}
+					value={seedConfirmation}
+					numberOfLines={20}
+					autoCorrect={false}
+					editable={true}
+					spellCheck={false}
+					autoCapitalize={'none'}
+					clearTextOnFocus={false}
+					clearButtonMode={'always'}
+					placeholder={'Confirm your seed'}
+					style={{ marginTop: 16 }}
+					onChangeText={text => this.setState({ seedConfirmation: text })}
+				>
+				</SeedInput>
+				<View>
+					<ErrorLabel>{errorMessage}</ErrorLabel>
+				</View>
+				<KeyboardAvoidingView  behavior="position">
+					<View style={{ alignSelf: 'center' }}>
+						<Button
+							ref={ref => (this.createSeedButton = ref)}
+							disabled={enableSaveButton}
+							foregroundColor={'#4cd964'}
+							onPress={this.createSeed}
+							foregroundColor={'white'}
+							backgroundColor={'#4cd964'}
+							successColor={'#4cd964'}
+							errorColor={'#ff3b30'}
+							errorIconColor={'white'}
+							successIconColor={'white'}
+							successIconName="check"
+							label="Create"
+							maxWidth={100}
+							style={{ marginLeft: 16, borderWidth: 0 }}
+						/>
+					</View>
+				</KeyboardAvoidingView>
+			</View>
 		)
 	}
-
-	renderTab = (tab) => {
-    switch (tab) {
-      case 'create':
-        return this.renderCreateTab();
-      case 'restore':
-        return this.renderRestoreTab();
-      default:
-        return null
-    }
-  }
 	
 	render() {
 		const { tab } = this.state;
@@ -230,7 +204,7 @@ class CreateVaultScreen extends Component {
 					</HeaderTabs>
 				</View>
 				<View style={{ padding: 16 }}>
-					{this.renderTab(tab)}
+					{this.renderForm()}
 				</View>
 			</View>
 		);

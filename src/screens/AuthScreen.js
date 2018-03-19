@@ -161,7 +161,6 @@ class AuthScreen extends Component {
 					}
 			}
 		} catch (error) {
-			console.log('error',error)
 			appStore.set('securityFormError', 'Invalid password!')
 		}
   }
