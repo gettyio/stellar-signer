@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { View, Text, ScrollView, Alert, Dimensions, KeyboardAvoidingView, SafeAreaView, Clipboard, Keyboard } from 'react-native'
 import Modal from 'react-native-modal'
 import uuid from 'uuid/v4'
+import createHmac from 'create-hmac'
 import { observer, inject } from 'mobx-react'
 import { sortBy } from 'lodash'
 import bip39 from 'bip39'
@@ -15,8 +16,8 @@ import Icon from 'react-native-vector-icons/Feather'
 import Button from 'react-native-micro-animated-button'
 import SInfo from 'react-native-sensitive-info'
 import StellarSdk from 'stellar-sdk'
-import { derivePath } from 'ed25519-hd-key'
 import SecretList from '../components/SecretList'
+import { isNaN } from 'lodash';
 import {
   Screen,
   ContainerFlex,
@@ -42,6 +43,8 @@ const SQLiteAdapter = SQLiteAdapterFactory(SQLite)
 PouchDB.plugin(SQLiteAdapter)
 const db = new PouchDB('Secrets', { adapter: 'react-native-sqlite' })
 import crypto from 'crypto';
+var Buffer = require('buffer/').Buffer
+
 StellarSdk.Network.useTestNetwork();
 
 @inject('appStore') @observer
@@ -69,7 +72,8 @@ class SecretsScreen extends Component {
 
   state = {
     sk: undefined,
-    alias: undefined,
+		alias: undefined,
+		userPath: undefined,
     hasError: false,
     secrets: []
 	}
@@ -95,7 +99,9 @@ class SecretsScreen extends Component {
 
   toggleAddModal = () => {
     const { appStore } = this.props
-    appStore.set('isAddSecretModalVisible', !appStore.get('isAddSecretModalVisible'))
+		appStore.set('isAddSecretModalVisible', !appStore.get('isAddSecretModalVisible'))
+		const userPath = `${randomize('0',8)}`
+		this.setState({ userPath })
   }
 
   handleInputErrors = () => {
@@ -141,18 +147,80 @@ class SecretsScreen extends Component {
 		}
 	}
 
+	getMasterKeyFromSeed = (seed) => {
+		const ED25519_CURVE = 'ed25519 seed';
+    const hmac = createHmac('sha512', ED25519_CURVE);
+    const I = hmac.update(Buffer.from(seed, 'hex')).digest();
+    const IL = I.slice(0, 32);
+    const IR = I.slice(32);
+    return {
+        key: IL,
+        chainCode: IR,
+    };
+	};
+
+	CKDPriv = ({ key, chainCode }, index) => {
+    const indexBuffer = Buffer.allocUnsafe(4);
+    indexBuffer.writeUInt32BE(index, 0);
+
+    const data = Buffer.concat([Buffer.alloc(1, 0), key, indexBuffer]);
+
+    const I = createHmac('sha512', chainCode)
+        .update(data)
+        .digest();
+    const IL = I.slice(0, 32);
+    const IR = I.slice(32);
+    return {
+        key: IL,
+        chainCode: IR,
+    };
+	}
+
+	replaceDerive = (val) => val.replace("'", '')
+
+	isValidPath = (path) => {
+		const pathRegex = new RegExp("^m(\\/[0-9]+')+$");
+    if (!pathRegex.test(path)) {
+        return false;
+    }
+    return !path
+        .split('/')
+        .slice(1)
+        .map(this.replaceDerive)
+        .some(isNaN); /* ts T_T*/
+	};
+
+	derivePath = (path, seed) => {
+		const HARDENED_OFFSET = 0x80000000;
+
+    if (!this.isValidPath(path)) {
+        throw new Error('Invalid derivation path');
+    }
+
+    const { key, chainCode } = this.getMasterKeyFromSeed(seed);
+    const segments = path
+        .split('/')
+        .slice(1)
+        .map(this.replaceDerive)
+        .map(el => parseInt(el, 10));
+
+    return segments.reduce(
+        (parentKeys, segment) => this.CKDPriv(parentKeys, segment + HARDENED_OFFSET),
+        { key, chainCode },
+    );
+	};
+
 	createNewAccount = () => {
 		const { appStore } = this.props
 		const { alias, userPath, hasError } = this.state;
 		const pwd = appStore.get('pwd');
 		const seed = appStore.get('seed');
 
-		const seedHex = bip39.mnemonicToSeedHex(seed, pwd);
-		const data = derivePath(`m/44'/148'/${0}'`, seedHex)
+		const cleanUserPath = userPath.replace('-','');
+		const seedHex = bip39.mnemonicToSeedHex(seed);
+		const data = this.derivePath(`m/44'/148'/${cleanUserPath}'`, seedHex)
 		const keypair = StellarSdk.Keypair.fromRawEd25519Seed(data.key);
 		const pk = keypair.publicKey();
-		const sk = keypair.secret();
-		debugger;
 		if (!alias) {
 			this.setState({ hasError: true });
 			this.addSecretButton.error()
@@ -160,21 +228,15 @@ class SecretsScreen extends Component {
 		} else {
 			try {
 				const _id = uuid();
-				//const secret = randomize('*', 32);
-				//const keypair = StellarSdk.Keypair.fromRawEd25519Seed(secret);
-				// const pk = keypair.publicKey();
-				// const sk = keypair.secret();
-
 				db.put({
 					_id,
 					pk,
 					alias,
 					createdAt: new Date().toISOString()
 				});
-				//this.encryptSecret(_id, sk)
 				this.loadData();
 				this.toggleAddModal();
-				this.setState({ hasError: false, sk: undefined, alias: undefined })
+				this.setState({ hasError: false, sk: undefined, alias: undefined, userPath: undefined })
 			} catch (error) {
 				alert(error.message)
 			}
@@ -218,7 +280,7 @@ class SecretsScreen extends Component {
 
   render() {
     const { appStore } = this.props
-    const { sk, alias, hasError, secrets } = this.state
+    const { sk, alias, userPath, hasError, secrets } = this.state
     const isAddSecretModalVisible = appStore.get('isAddSecretModalVisible')
 
     return (
@@ -239,11 +301,19 @@ class SecretsScreen extends Component {
 									<TextInput
 										autoCorrect={false}
 										placeholder="Alias"
-										onChangeText={alias => this.setState({ alias })}
+										onChangeText={text => this.setState({ alias: text })}
 										clearButtonMode={'always'}
 										underlineColorAndroid={'white'}
 										value={alias}
 									/>
+									<TextInput
+										keyboardType={'numeric'}
+										autoCorrect={false}
+										onChangeText={text => this.setState({ userPath: text })}
+										clearButtonMode={'always'}
+										underlineColorAndroid={'white'}
+										value={userPath}
+									/>									
 									<View>
 										{hasError && <ErrorLabel>Type an alias for your account.</ErrorLabel>}
 									</View>

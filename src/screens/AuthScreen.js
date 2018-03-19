@@ -47,7 +47,7 @@ class AuthScreen extends Component {
 	componentDidMount() {
 		SplashScreen.hide();
 		this.enableDeepLinks();
-		//this.loadData();
+		this.loadData();
 		//this.deleteSeed();
 	}
 
@@ -126,32 +126,39 @@ class AuthScreen extends Component {
     }
   }
 
-  submit = pwd => {
+  submit = async (pwd) => {
 		const { firstSecret } = this.state;
 		const { appStore, navigation } = this.props
 		try {
 			const encodedPwd = sha256(pwd);
-			debugger;
-			if (firstSecret) {
-				SInfo.getItem(firstSecret._id,{}).then(value => {
-					const bytes = crypto.AES.decrypt(value, `${firstSecret._id}:${encodedPwd.toString()}`);
-					const val =  bytes.toString(crypto.enc.Utf8)
-					if (val) {
+			const ss = `${encodedPwd.toString()}:${pwd}`;
+			const pwdKey = sha256(`ss-${uniqueId}-${encodedPwd.toString()}`)
+			const uniqueId = DeviceInfo.getUniqueID();
+			const pwdencoded = await SInfo.getItem(pwdKey.toString(),{})
+			const isUniq = await SInfo.getItem(`ss-${uniqueId}`,{})
+			if (pwdencoded) {
+				const bytes = crypto.AES.decrypt(pwdencoded, ss);
+				const val =  bytes.toString(crypto.enc.Utf8)
+				if (val) {
+					appStore.set('pwd', encodedPwd.toString())
+					appStore.set('securityFormError', undefined)
+					appStore.set('isSecurityRequired', false)
+					this.loadSeed();
+				} else {
+					appStore.set('securityFormError', 'Invalid password!')
+				}
+			} else {
+					if (isUniq === 'created') {
+						appStore.set('securityFormError', 'Invalid password!')
+					} else {
 						appStore.set('pwd', encodedPwd.toString())
 						appStore.set('securityFormError', undefined)
 						appStore.set('isSecurityRequired', false)
+						const ciphertext = crypto.AES.encrypt(pwd, ss);
+						SInfo.setItem(pwdKey.toString(), ciphertext.toString(), {});
+						SInfo.setItem(`ss-${uniqueId}`, 'created', {});
 						this.loadSeed();
-					} else {
-						appStore.set('securityFormError', 'Invalid password!')
 					}
-				}).catch(err => {
-					appStore.set('securityFormError', 'Invalid password!')
-				})
-			} else {
-				appStore.set('pwd', encodedPwd.toString())
-				appStore.set('securityFormError', undefined)
-				appStore.set('isSecurityRequired', false)
-				this.loadSeed();
 			}
 		} catch (error) {
 			console.log('error',error)
