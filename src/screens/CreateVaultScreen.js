@@ -113,7 +113,7 @@ class CreateVaultScreen extends Component {
 			const uniqueId = DeviceInfo.getUniqueID();
 			const seedKey = sha256(`ss-${uniqueId}`);
 			const pass = sha256(`ss-${uniqueId}-${pwd}`);
-			const ciphertext = cryptojs.AES.encrypt(seedValue, pass.toString());
+			const ciphertext = cryptojs.AES.encrypt(seedValue.trim(), pass.toString());
 			SInfo.setItem(seedKey.toString(), ciphertext.toString(), {});
 			this.restoreSeedButton.success();
 			navigation.navigate('Home')
@@ -126,7 +126,7 @@ class CreateVaultScreen extends Component {
 		const { tab, mnemonic, seedValue } = this.state;
 
 		if (tab === 'continue') {
-			if (mnemonic !== seedValue) {
+			if (mnemonic !== seedValue.trim()) {
 				this.restoreSeedButton.error();
 				this.restoreSeedButton.reset();
 				this.setState({ errorMessage: 'Invalid seed combination, please make sure to write with the same order.' })
@@ -137,8 +137,7 @@ class CreateVaultScreen extends Component {
 		}
 
 		if (tab === 'restore') {
-			
-			if (seedValue.split(/\s+/g).length === 24) {
+			if (seedValue.trim().split(/\s+/g).length === 24) {
 				this.setState({ successMessage: 'The seed combination is valid. We are restoring your master key...' })
 				this.createSeed();
 			} else {
@@ -183,7 +182,7 @@ class CreateVaultScreen extends Component {
 						autoCorrect={false}
 						autoCapitalize={'none'}
 						clearButtonMode={'always'}
-						onChangeText={text => this.setState({ seedValue: text.toLowerCase().trim() })}
+						onChangeText={text => this.setState({ seedValue: text.toLowerCase() })}
 						underlineColorAndroid={'white'}
 						value={seedValue}
 						placeholder="Please, type your seed words here."
