@@ -104,8 +104,8 @@ android {
         applicationId "com.stellarsigner"
         minSdkVersion 17
         targetSdkVersion 23
-        versionCode 21
-        versionName "1.2.12"
+        versionCode 22
+        versionName "1.2.13"
         ndk {
             abiFilters "armeabi-v7a", "x86"
         }
