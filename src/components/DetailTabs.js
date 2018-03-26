@@ -60,9 +60,6 @@ class DetailTabs extends Component {
 						<HeaderTabsButton onPress={() => this.setCurrentTab('envelope')}>
 							<HeaderTabsLabel name={'envelope'} tab={tab}>Envelope</HeaderTabsLabel>
 						</HeaderTabsButton>
-						{/* <HeaderTabsButton onPress={()=> this.setCurrentTab('signed')}>
-							<HeaderTabsLabel name={'signed'} tab={tab}>Signature</HeaderTabsLabel>
-						</HeaderTabsButton>*/}
 					</HeaderTabs>
 				</View>
 				<ScrollView
