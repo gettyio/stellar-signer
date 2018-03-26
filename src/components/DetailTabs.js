@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import {  View, Text, ScrollView } from 'react-native';
+import { View, Text, ScrollView } from 'react-native';
 import styled from 'styled-components'
 import EnvelopeCard from './EnvelopeCard'
 import EnvelopeTab from './EnvelopeTab'
@@ -22,34 +22,31 @@ class DetailTabs extends Component {
 	}
 
 	renderTab = (tab) => {
-		const { 
+		const {
 			currentTransaction,
-			copyToClipboard, 
-			showConfirmDelete, 
-			rejectTransaction, 
-			signTransaction 
+			copyToClipboard,
+			showConfirmDelete,
+			rejectTransaction,
+			signTransaction
 		} = this.props;
 		const xdr = currentTransaction.xdr;
-		const sxdr = currentTransaction.sxdr
-    switch (tab) {
-      case 'display':
+		switch (tab) {
+			case 'display':
 				return (
-					<EnvelopeCard 
-						tx={currentTransaction} 
+					<EnvelopeCard
+						tx={currentTransaction}
 						copyToClipboard={copyToClipboard}
-						showConfirmDelete={showConfirmDelete} 
+						showConfirmDelete={showConfirmDelete}
 						rejectTransaction={rejectTransaction}
 						signTransaction={signTransaction}
 					/>
 				)
-      case 'envelope':
-        return <EnvelopeTab tx={xdr} />
-      case 'signed':
-        return <EnvelopeTab tx={sxdr || xdr} />
-      default:
-        return null
-    }
-  }
+			case 'envelope':
+				return <EnvelopeTab tx={xdr} />
+			default:
+				return null
+		}
+	}
 
 	render() {
 		const { tab } = this.state;
@@ -57,15 +54,12 @@ class DetailTabs extends Component {
 			<View>
 				<View>
 					<HeaderTabs>
-						<HeaderTabsButton onPress={()=> this.setCurrentTab('display')}>
+						<HeaderTabsButton onPress={() => this.setCurrentTab('display')}>
 							<HeaderTabsLabel name={'display'} tab={tab}>Display</HeaderTabsLabel>
 						</HeaderTabsButton>
-						<HeaderTabsButton onPress={()=> this.setCurrentTab('envelope')}>
+						<HeaderTabsButton onPress={() => this.setCurrentTab('envelope')}>
 							<HeaderTabsLabel name={'envelope'} tab={tab}>Envelope</HeaderTabsLabel>
 						</HeaderTabsButton>
-						<HeaderTabsButton onPress={()=> this.setCurrentTab('signed')}>
-							<HeaderTabsLabel name={'signed'} tab={tab}>Signature</HeaderTabsLabel>
-						</HeaderTabsButton>										
 					</HeaderTabs>
 				</View>
 				<ScrollView

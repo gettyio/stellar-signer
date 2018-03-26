@@ -7,11 +7,11 @@ import { observer, inject } from 'mobx-react'
 import * as Animatable from 'react-native-animatable'
 
 import {
-  ContainerFlex,
-  CardFlex,
-  CloseButton,
-  AddTransactionInput,
-  AddTransactionHeaderLabel,
+	ContainerFlex,
+	CardFlex,
+	CloseButton,
+	AddTransactionInput,
+	AddTransactionHeaderLabel,
 	ErrorLabel,
 	MiniPasteButton
 } from './utils'
@@ -19,40 +19,40 @@ import {
 @inject('appStore')
 @observer
 class TransactionForm extends Component {
-  state = {
-    inputValue: undefined
-  }
+	state = {
+		inputValue: undefined
+	}
 
-  onPressHandler = () => {
-    const { appStore } = this.props
-    const { inputValue } = this.state
-    if (inputValue) {
-      this.submitXdr(inputValue)
-      this.addButton.success()
-      this.setState({ errorMessage: undefined })
-			appStore.set('isAddModalVisible', false)
-    } else {
-      this.setState({ errorMessage: 'Invalid xdr value' })
-      this.addButton.reset()
-    }
-  }
-
-  submitXdr = xdr => {
+	onPressHandler = () => {
 		const { appStore } = this.props
-    appStore.set('currentXdr', xdr)
+		let { inputValue } = this.state
+		if (inputValue) {
+			this.submitXdr(inputValue)
+			this.addButton.success()
+			this.setState({ errorMessage: undefined })
+			appStore.set('isAddModalVisible', false)
+		} else {
+			this.setState({ errorMessage: 'Invalid xdr value' })
+			this.addButton.reset()
+		}
+	}
+
+	submitXdr = xdr => {
+		const { appStore } = this.props
+		appStore.set('currentXdr', xdr)
 	}
 
 	pasteHandler = async () => {
-    const content = await Clipboard.getString()
+		const content = await Clipboard.getString()
 		this.setState({ inputValue: content })
-  }
+	}
 
-  render() {
-    const { appStore, isVisible, type, children } = this.props
-    const { inputValue, errorMessage } = this.state
-    const currentXdr = appStore.get('currentXdr')
+	render() {
+		const { appStore, isVisible, type, children } = this.props
+		const { inputValue, errorMessage } = this.state
+		const currentXdr = appStore.get('currentXdr')
 
-    return (
+		return (
 			<ContainerFlex>
 				<CardFlex>
 					<View style={{ flexDirection: 'row' }}>
@@ -63,7 +63,9 @@ class TransactionForm extends Component {
 							clearButtonMode={'always'}
 							value={inputValue}
 							onChangeText={inputValue => {
-								this.setState({ inputValue })
+								this.setState({
+									inputValue
+								})
 							}}
 							underlineColorAndroid={'white'}
 							style={{ flex: 1, marginRight: 16, }}
@@ -71,7 +73,7 @@ class TransactionForm extends Component {
 						<MiniPasteButton onPress={this.pasteHandler}>
 							<Icon name="file-text" color="gray" size={24} />
 						</MiniPasteButton>
-					</View>					
+					</View>
 					<ErrorLabel>{errorMessage}</ErrorLabel>
 				</CardFlex>
 				<Button
@@ -94,8 +96,8 @@ class TransactionForm extends Component {
 					}}
 				/>
 			</ContainerFlex>
-    )
-  }
+		)
+	}
 }
 
 export default TransactionForm

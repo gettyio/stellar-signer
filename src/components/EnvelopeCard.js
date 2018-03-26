@@ -68,7 +68,7 @@ class EnvelopeView extends PureComponent {
 		if (!tx) {
 			return
 		}
-	
+
 		if (tx.status === 'SIGNED') {
 			return (
 				<View>
@@ -84,57 +84,68 @@ class EnvelopeView extends PureComponent {
 					>
 						<Text style={{ color: 'white', fontWeight: '700' }}>SIGNED</Text>
 					</View>
-					<Button
-							ref={ref => (this.copyButton = ref)}
-							foregroundColor={'white'}
-							backgroundColor={'#454545'}
-							successColor={'#4cd964'}
-							errorColor={'#ff3b30'}
-							errorIconColor={'white'}
-							successIconColor={'white'}
-							shakeOnError={true}
+					<View style={{ flexDirection: 'row', justifyContent: 'center', marginTop: 24 }}>
+						<Button
+							ref={ref => (this.signButton = ref)}
+							foregroundColor={'#4cd964'}
+							onPress={this.sign}
 							successIconName="check"
-							label="Copy Signed XDR"
-							onPress={this.copy}
-							maxWidth={150}
-							style={{
-								marginLeft: 16,
-								borderWidth: 1,
-								alignSelf: 'center',
-								marginTop: 16
-							}}
+							label="Sign"
+							maxWidth={100}
+							style={{ marginLeft: 16 }}
 						/>
+					</View>
+					<Button
+						ref={ref => (this.copyButton = ref)}
+						foregroundColor={'white'}
+						backgroundColor={'#454545'}
+						successColor={'#4cd964'}
+						errorColor={'#ff3b30'}
+						errorIconColor={'white'}
+						successIconColor={'white'}
+						shakeOnError={true}
+						successIconName="check"
+						label="Copy Signed XDR"
+						onPress={this.copy}
+						maxWidth={150}
+						style={{
+							marginLeft: 16,
+							borderWidth: 1,
+							alignSelf: 'center',
+							marginTop: 16
+						}}
+					/>
 				</View>
 			)
 		}
-	
+
 		if (tx.status === 'REJECTED') {
 			return (
-	
-					<View>
-						<View
-							style={{
-								flexDirection: 'row',
-								justifyContent: 'center',
-								padding: 16,
-								backgroundColor: '#ff3b30',
-								borderRadius: 8,
-								marginTop: 24
-							}}
-						>
-							<Text style={{ color: 'white', fontWeight: '700' }}>REJECTED</Text>
-						</View>
-						<View style={{ alignSelf: 'center', marginTop: 8 }}>
-							<TouchableOpacity onPress={()=> showConfirmDelete(tx)} style={{ padding: 32}}>
-								<Text style={{ fontWeight: '700' }}>
-									Delete
-								</Text>
-							</TouchableOpacity>
-						</View>
+
+				<View>
+					<View
+						style={{
+							flexDirection: 'row',
+							justifyContent: 'center',
+							padding: 16,
+							backgroundColor: '#ff3b30',
+							borderRadius: 8,
+							marginTop: 24
+						}}
+					>
+						<Text style={{ color: 'white', fontWeight: '700' }}>REJECTED</Text>
 					</View>
+					<View style={{ alignSelf: 'center', marginTop: 8 }}>
+						<TouchableOpacity onPress={() => showConfirmDelete(tx)} style={{ padding: 32 }}>
+							<Text style={{ fontWeight: '700' }}>
+								Delete
+								</Text>
+						</TouchableOpacity>
+					</View>
+				</View>
 			)
 		}
-	
+
 		if (tx.status === 'SUBMITTED') {
 			return (
 				<View
@@ -151,7 +162,7 @@ class EnvelopeView extends PureComponent {
 				</View>
 			)
 		}
-	
+
 		if (tx.status === 'CONFIRMED') {
 			return (
 				<View
@@ -168,7 +179,7 @@ class EnvelopeView extends PureComponent {
 				</View>
 			)
 		}
-	
+
 		return (
 			<View>
 				<View style={{ alignSelf: 'center', marginTop: 24 }}>
@@ -192,14 +203,14 @@ class EnvelopeView extends PureComponent {
 						/>
 					</View>
 					<View style={{ alignSelf: 'center', marginTop: 8 }}>
-						<TouchableOpacity onPress={()=> showConfirmDelete(tx)} style={{ padding: 32}}>
+						<TouchableOpacity onPress={() => showConfirmDelete(tx)} style={{ padding: 32 }}>
 							<Text style={{ fontWeight: '700' }}>
 								Delete
 							</Text>
 						</TouchableOpacity>
 					</View>
+				</View>
 			</View>
-		</View>
 
 		)
 	}

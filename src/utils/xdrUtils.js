@@ -5,39 +5,39 @@ import StellarSdk, { xdr, StrKey, Keypair, Operation } from 'stellar-sdk';
 StellarSdk.Network.useTestNetwork();
 
 export function signXdr(ctx) {
-	try {
-		// 1. Decode XDR received from RN
-		var transaction = new StellarSdk.Transaction(ctx.xdr);
-	
-		// 2. Sign the transaction XDR with secret key
-		transaction.sign(StellarSdk.Keypair.fromSecret(ctx.sk));
-		
-		// 3. Convert back the tx to XDR
-		var signedXDR = transaction.toEnvelope().toXDR('base64');  
-		// 4. Send the signed XDR to be submited by RN
-		return { type: ctx.type, xdr: ctx.xdr, sxdr: signedXDR };
-	} catch (error) {
-		return { type: 'error', message: error.message, xdr: ctx.xdr }
-	}
+  try {
+    // 1. Decode XDR received from RN
+    var transaction = new StellarSdk.Transaction(ctx.xdr);
+
+    // 2. Sign the transaction XDR with secret key
+    transaction.sign(StellarSdk.Keypair.fromSecret(ctx.sk));
+
+    // 3. Convert back the tx to XDR
+    var signedXDR = transaction.toEnvelope().toXDR('base64');
+    // 4. Send the signed XDR to be submited by RN
+    return { type: ctx.type, xdr: signedXDR, lastXdr: ctx.xdr };
+  } catch (error) {
+    return { type: 'error', message: error.message, xdr: ctx.xdr }
+  }
 }
 
 export function decodeFromXdr(input, type) {
-	// TODO: Check to see if type exists
-	// TODO: input validation
-	try {
-		//console.log('input',input)
-		const tree = extrapolateFromXdr(input, 'TransactionEnvelope');
-		return { tx: tree, xdr: input };
-	} catch(error) {
-		//postMessage(JSON.stringify({ type: 'error', message: 'Input XDR could not be parsed', xdr: input }));
-		return { type: 'error', message: error.message, xdr: input };
-	}
+  // TODO: Check to see if type exists
+  // TODO: input validation
+  try {
+    //console.log('input',input)
+    const tree = extrapolateFromXdr(input, 'TransactionEnvelope');
+    return { tx: tree, xdr: input };
+  } catch (error) {
+    //postMessage(JSON.stringify({ type: 'error', message: 'Input XDR could not be parsed', xdr: input }));
+    return { type: 'error', message: error.message, xdr: input };
+  }
 }
 
 
 function decodeXdr(xdr) {
-	var decodedXdr = StellarSdk.xdr.TransactionEnvelope.fromXDR(signedXDR, 'base64');
-	//postMessage(decodedXdr);  
+  var decodedXdr = StellarSdk.xdr.TransactionEnvelope.fromXDR(signedXDR, 'base64');
+  //postMessage(decodedXdr);  
 }
 
 
@@ -48,7 +48,7 @@ export default function extrapolateFromXdr(input, type) {
   let xdrObject;
   try {
     xdrObject = xdr[type].fromXDR(input, 'base64');
-  } catch(error) {
+  } catch (error) {
     throw new Error('Input XDR could not be parsed');
   }
 
@@ -76,23 +76,23 @@ function parseArray(anchor, object) {
   anchor.nodes = [];
   for (var i = 0; i < object.length; i++) {
     anchor.nodes.push({});
-    buildTreeFromObject(object[i], anchor.nodes[anchor.nodes.length-1], '[' + i + ']');
+    buildTreeFromObject(object[i], anchor.nodes[anchor.nodes.length - 1], '[' + i + ']');
   }
 }
 
 function parseArm(anchor, object) {
-  anchor.value = '['+object.switch().name+']';
+  anchor.value = '[' + object.switch().name + ']';
   if (_.isString(object.arm())) {
     anchor.nodes = [{}];
-    buildTreeFromObject(object[object.arm()](), anchor.nodes[anchor.nodes.length-1], object.arm());
+    buildTreeFromObject(object[object.arm()](), anchor.nodes[anchor.nodes.length - 1], object.arm());
   }
 }
 
 function parseNormal(anchor, object) {
   anchor.nodes = [];
-  _(object).functions().without('toXDR', 'ext').value().forEach(function(name) {
+  _(object).functions().without('toXDR', 'ext').value().forEach(function (name) {
     anchor.nodes.push({});
-    buildTreeFromObject(object[name](), anchor.nodes[anchor.nodes.length-1], name);
+    buildTreeFromObject(object[name](), anchor.nodes[anchor.nodes.length - 1], name);
   });
 }
 
@@ -163,18 +163,18 @@ function getValue(object, name) {
     //
     let hintBytes = new Buffer(object, 'base64');
     let partialPublicKey = Buffer.concat([new Buffer(28).fill(0), hintBytes]);
-    let keypair = new Keypair({type: 'ed25519', publicKey: partialPublicKey});
+    let keypair = new Keypair({ type: 'ed25519', publicKey: partialPublicKey });
     let partialPublicKeyString =
-      'G'+
-      (new Buffer(46).fill('_').toString())+
-      keypair.publicKey().substr(47, 5)+
+      'G' +
+      (new Buffer(46).fill('_').toString()) +
+      keypair.publicKey().substr(47, 5) +
       (new Buffer(4).fill('_').toString());
-    return {type: 'code', value: partialPublicKeyString};
+    return { type: 'code', value: partialPublicKeyString };
   }
 
   if (name === 'ed25519') {
     var address = StrKey.encodeEd25519PublicKey(object);
-    return {type: 'code', value: address};
+    return { type: 'code', value: address };
   }
 
   if (name === 'assetCode' || name === 'assetCode4' || name === 'assetCode12') {
@@ -182,7 +182,7 @@ function getValue(object, name) {
   }
 
   if (object && object._isBuffer) {
-    return {type: 'code', value: new Buffer(object).toString('base64')};
+    return { type: 'code', value: new Buffer(object).toString('base64') };
   }
 
   if (typeof object === 'undefined') {
