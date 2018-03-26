@@ -7,6 +7,9 @@ import ActionSheet from 'react-native-actionsheet'
 import { observer, inject } from 'mobx-react'
 import SInfo from 'react-native-sensitive-info';
 import uuid from 'uuid/v4'
+import bip39 from 'bip39'
+import base64 from 'base-64'
+import base64js from 'base64-js'
 import crypto from 'crypto-js'
 import sha256 from 'crypto-js/sha256';
 import { get, sortBy } from 'lodash'
@@ -23,6 +26,7 @@ const SQLiteAdapter = SQLiteAdapterFactory(SQLite)
 PouchDB.plugin(SQLiteAdapter)
 const db = new PouchDB('Secrets', { adapter: 'react-native-sqlite' })
 const db2 = new PouchDB('Transactions', { adapter: 'react-native-sqlite' })
+import { generateKeypair } from './../utils/bipUtil';
 
 @inject('appStore') @observer
 class TransactionDetail extends Component {
@@ -98,31 +102,27 @@ class TransactionDetail extends Component {
   }
 
   signTransaction = () => {
-    this.setState({ showSecurityForm: true })
+    this.authTransaction();
   }
 
-  authTransaction = pwd => {
+  authTransaction = () => {
 		const { appStore, navigation } = this.props
-		const currentPwd = sha256(appStore.get('pwd'))
+		const seed = appStore.get('seed')
 		
-		if (currentPwd === pwd) {
-			const { secrets } = this.state;
-			if (!secrets || secrets.length === 0) {
-				Alert.alert(
-					`You don't have any secret!`,
-					`Please, add a new secret on the secrets tab.`,
-					[
-						{
-							text: 'Ok',
-							onPress: () => navigation.goBack()
-						}
-					]
-				)
-			} else {
-				this.actionSheet.show();
-			}
+		const { secrets } = this.state;
+		if (!secrets || secrets.length === 0) {
+			Alert.alert(
+				`You don't have any secret!`,
+				`Please, add a new secret on the secrets tab.`,
+				[
+					{
+						text: 'Ok',
+						onPress: () => navigation.goBack()
+					}
+				]
+			)
 		} else {
-			appStore.set('securityFormError', 'Invalid password!')
+			this.actionSheet.show();
 		}
 	}
 
@@ -184,25 +184,23 @@ class TransactionDetail extends Component {
     this.showConfirmSignatureAlert(secret)
 	}
 	
-
-  confirmSignTransaction = _id => {
+  confirmSignTransaction = secret => {
     const { appStore, navigation } = this.props
 		try {
-			const pwd = appStore.get('pwd');
-			const currentTransaction = appStore.get('currentTransaction')
-			SInfo.getItem(_id,{}).then(value => {
-				const bytes = crypto.AES.decrypt(value, `${_id}:${pwd}`);
-				const sk = bytes.toString(crypto.enc.Utf8);
-				const data = {
-					type: 'sign',
-					tx: currentTransaction,
-					xdr: currentTransaction.xdr,
-					sk
-				};
-				const signedTx = signXdr(data);
-				this.saveCurrentTransaction(signedTx)
-				navigation.goBack()
-			});
+			const seed = appStore.get('seed');
+			const keypair = generateKeypair(seed, secret.vn);
+			const pk = keypair.publicKey();
+			const sk = keypair.secret();
+			const ctx = appStore.get('currentTransaction')
+			const data = {
+					type: 'sign',					
+					sk,
+					...ctx,
+			}
+
+			const signedTx = signXdr(data)
+			this.saveCurrentTransaction(signedTx)
+			navigation.goBack()
 		} catch (error) {
 			alert(error.message)
 		}
@@ -265,7 +263,7 @@ class TransactionDetail extends Component {
 					{ text: 'Cancel', onPress: () => {}, style: 'cancel' },
 					{
 						text: 'Confirm',
-						onPress: () => this.confirmSignTransaction(secret.doc._id)
+						onPress: () => this.confirmSignTransaction(secret.doc)
 					}
 				],
 				{ cancelable: true }
@@ -313,14 +311,14 @@ class TransactionDetail extends Component {
 								signTransaction={this.signTransaction}
 							/>
 						)}
-						{showSecurityForm && (
+						{/* {showSecurityForm && (
 							<SecurityForm
 								error={securityFormError}
 								submit={this.authTransaction}
 								close={toggleModal}
 								closeAfterSubmit={false}
 							/>
-						)}
+						)} */}
 						{(options && options.length > 0) && (
 							<ActionSheet
 								ref={o => (this.actionSheet = o)}

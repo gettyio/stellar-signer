@@ -17,6 +17,10 @@ class DetailTabs extends Component {
 		tab: 'display'
 	}
 
+	setCurrentTab = (tab) => {
+		this.setState({ tab })
+	}
+
 	renderTab = (tab) => {
 		const { 
 			currentTransaction,
@@ -25,6 +29,8 @@ class DetailTabs extends Component {
 			rejectTransaction, 
 			signTransaction 
 		} = this.props;
+		const xdr = currentTransaction.xdr;
+		const sxdr = currentTransaction.sxdr
     switch (tab) {
       case 'display':
 				return (
@@ -37,9 +43,9 @@ class DetailTabs extends Component {
 					/>
 				)
       case 'envelope':
-        return <EnvelopeTab tx={currentTransaction.xdr} />
+        return <EnvelopeTab tx={xdr} />
       case 'signed':
-        return <EnvelopeTab tx={currentTransaction.sxdr} />
+        return <EnvelopeTab tx={sxdr || xdr} />
       default:
         return null
     }
@@ -48,9 +54,9 @@ class DetailTabs extends Component {
 	render() {
 		const { tab } = this.state;
 		return (
-			<Screen>
+			<View>
 				<View>
-					<HeaderTabsButton>
+					<HeaderTabs>
 						<HeaderTabsButton onPress={()=> this.setCurrentTab('display')}>
 							<HeaderTabsLabel name={'display'} tab={tab}>Display</HeaderTabsLabel>
 						</HeaderTabsButton>
@@ -60,7 +66,7 @@ class DetailTabs extends Component {
 						<HeaderTabsButton onPress={()=> this.setCurrentTab('signed')}>
 							<HeaderTabsLabel name={'signed'} tab={tab}>Signature</HeaderTabsLabel>
 						</HeaderTabsButton>										
-					</HeaderTabsButton>
+					</HeaderTabs>
 				</View>
 				<ScrollView
 					keyboardShouldPersistTaps="always"
@@ -68,7 +74,7 @@ class DetailTabs extends Component {
 				>
 					{this.renderTab(tab)}
 				</ScrollView>
-			</Screen>
+			</View>
 		);
 	}
 }

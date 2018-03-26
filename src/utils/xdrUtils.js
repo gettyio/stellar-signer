@@ -4,20 +4,20 @@ import StellarSdk, { xdr, StrKey, Keypair, Operation } from 'stellar-sdk';
 
 StellarSdk.Network.useTestNetwork();
 
-export function signXdr(data) {
+export function signXdr(ctx) {
 	try {
 		// 1. Decode XDR received from RN
-		var transaction = new StellarSdk.Transaction(data.xdr);
+		var transaction = new StellarSdk.Transaction(ctx.xdr);
 	
 		// 2. Sign the transaction XDR with secret key
-		transaction.sign(StellarSdk.Keypair.fromSecret(data.sk));
+		transaction.sign(StellarSdk.Keypair.fromSecret(ctx.sk));
 		
 		// 3. Convert back the tx to XDR
 		var signedXDR = transaction.toEnvelope().toXDR('base64');  
 		// 4. Send the signed XDR to be submited by RN
-		return { type: data.type, xdr: data.xdr, sxdr: signedXDR };
+		return { type: ctx.type, xdr: ctx.xdr, sxdr: signedXDR };
 	} catch (error) {
-		return { type: 'error', message: error.message, xdr: input }
+		return { type: 'error', message: error.message, xdr: ctx.xdr }
 	}
 }
 

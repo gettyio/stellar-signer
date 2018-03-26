@@ -105,8 +105,13 @@ export const PasteButtonLabel = styled.Text`
 
 export const ErrorLabel = styled.Text`
   margin-top: 8px;
-  font-size: 10px;
+  font-size: 12px;
   color: red;
+`
+export const SuccessLabel = styled.Text`
+  margin-top: 8px;
+  font-size: 12px;
+  color: green;
 `
 
 export const AddTransactionHeaderLabel = styled.Text`
@@ -284,11 +289,12 @@ export const HeaderTabsButton = styled.TouchableOpacity`
 	flex: 1;
 	justify-content: center;
   padding: 24px;
-  background-color: white;
+  background-color: #2e3666;
 `
 
 export const HeaderTabsLabel = styled.Text`
 	align-self: center;
-  color: black;
+  color: white;
+	font-size: 16px;
 	font-weight: ${props => (props.name === props.tab ? '700' : '300' )};
 `

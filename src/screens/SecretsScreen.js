@@ -12,10 +12,12 @@ import cryptojs from 'crypto-js'
 import sha256 from 'crypto-js/sha256'
 import cryptocore from 'crypto-js/core'
 import randomize from 'randomatic'
+import PouchDB from 'pouchdb-react-native'
+import SQLite from 'react-native-sqlite-2'
+import SQLiteAdapterFactory from 'pouchdb-adapter-react-native-sqlite'
 import Icon from 'react-native-vector-icons/Feather'
 import Button from 'react-native-micro-animated-button'
 import SInfo from 'react-native-sensitive-info'
-import StellarSdk from 'stellar-sdk'
 import SecretList from '../components/SecretList'
 import { isNaN } from 'lodash';
 import {
@@ -35,17 +37,11 @@ import {
 	TitleWrapper,
 	MiniPasteButton
 } from '../components/utils'
+import { generateKeypair } from './../utils/bipUtil';
 
-import PouchDB from 'pouchdb-react-native'
-import SQLite from 'react-native-sqlite-2'
-import SQLiteAdapterFactory from 'pouchdb-adapter-react-native-sqlite'
 const SQLiteAdapter = SQLiteAdapterFactory(SQLite)
 PouchDB.plugin(SQLiteAdapter)
 const db = new PouchDB('Secrets', { adapter: 'react-native-sqlite' })
-import crypto from 'crypto';
-var Buffer = require('buffer/').Buffer
-
-StellarSdk.Network.useTestNetwork();
 
 @inject('appStore') @observer
 class SecretsScreen extends Component {
@@ -110,107 +106,44 @@ class SecretsScreen extends Component {
     const { sk, alias } = this.state
   }
 
-  addSecretToStore = () => {
-    const { sk, alias } = this.state
-    if (!sk || !alias) {
-      this.setState({ hasError: true })
-      this.addSecretButton.error()
-      this.addSecretButton.reset()
-    } else {
-      this.addSecretButton.success()      
-      this.saveSecret({ sk: sk.trim(), alias: alias.trim() })
-			this.setState({ hasError: false, sk: undefined, alias: undefined })
-			this.toggleAddModal()
-    }
-	}
+  // addSecretToStore = () => {
+  //   const { sk, alias } = this.state
+  //   if (!sk || !alias) {
+  //     this.setState({ hasError: true })
+  //     this.addSecretButton.error()
+  //     this.addSecretButton.reset()
+  //   } else {
+  //     this.addSecretButton.success()      
+  //     this.saveSecret({ sk: sk.trim(), alias: alias.trim() })
+	// 		this.setState({ hasError: false, sk: undefined, alias: undefined })
+	// 		this.toggleAddModal()
+  //   }
+	// }
 	
-	encryptSecret = (_id, sk) => {
-		const pwd = this.props.appStore.get('pwd');
-		var ciphertext = cryptojs.AES.encrypt(sk, `${_id}:${pwd}`);
-		SInfo.setItem(_id, ciphertext.toString(), {});
-	}
+	// encryptSecret = (_id, sk) => {
+	// 	const pwd = this.props.appStore.get('pwd');
+	// 	var ciphertext = cryptojs.AES.encrypt(sk, `${_id}:${pwd}`);
+	// 	SInfo.setItem(_id, ciphertext.toString(), {});
+	// }
 
-  saveSecret = ({ sk, alias }) => {
-		const _id = uuid();
-		const keypair = StellarSdk.Keypair.fromSecret(sk);
-		const pk = keypair.publicKey();
-		try {
-			db.put({
-				_id,
-				alias,
-				pk: `${pk.slice(0,8)}...${pk.substr(pk.length - 8)}`,
-				sk: `${sk.slice(0,8)}...${sk.substr(sk.length - 8)}`,
-				createdAt: new Date().toISOString()
-			});
-			this.encryptSecret(_id, sk)
-			this.loadData();
-		} catch (error) {
-			alert(error.message)
-		}
-	}
-
-	getMasterKeyFromSeed = (seed) => {
-		const ED25519_CURVE = 'ed25519 seed';
-    const hmac = createHmac('sha512', ED25519_CURVE);
-    const I = hmac.update(Buffer.from(seed, 'hex')).digest();
-    const IL = I.slice(0, 32);
-    const IR = I.slice(32);
-    return {
-        key: IL,
-        chainCode: IR,
-    };
-	};
-
-	CKDPriv = ({ key, chainCode }, index) => {
-    const indexBuffer = Buffer.allocUnsafe(4);
-    indexBuffer.writeUInt32BE(index, 0);
-
-    const data = Buffer.concat([Buffer.alloc(1, 0), key, indexBuffer]);
-
-    const I = createHmac('sha512', chainCode)
-        .update(data)
-        .digest();
-    const IL = I.slice(0, 32);
-    const IR = I.slice(32);
-    return {
-        key: IL,
-        chainCode: IR,
-    };
-	}
-
-	replaceDerive = (val) => val.replace("'", '')
-
-	isValidPath = (path) => {
-		const pathRegex = new RegExp("^m(\\/[0-9]+')+$");
-    if (!pathRegex.test(path)) {
-        return false;
-    }
-    return !path
-        .split('/')
-        .slice(1)
-        .map(this.replaceDerive)
-        .some(isNaN); /* ts T_T*/
-	};
-
-	derivePath = (path, seed) => {
-		const HARDENED_OFFSET = 0x80000000;
-
-    if (!this.isValidPath(path)) {
-        throw new Error('Invalid derivation path');
-    }
-
-    const { key, chainCode } = this.getMasterKeyFromSeed(seed);
-    const segments = path
-        .split('/')
-        .slice(1)
-        .map(this.replaceDerive)
-        .map(el => parseInt(el, 10));
-
-    return segments.reduce(
-        (parentKeys, segment) => this.CKDPriv(parentKeys, segment + HARDENED_OFFSET),
-        { key, chainCode },
-    );
-	};
+  // saveSecret = ({ sk, alias }) => {
+	// 	const _id = uuid();
+	// 	const keypair = StellarSdk.Keypair.fromSecret(sk);
+	// 	const pk = keypair.publicKey();
+	// 	try {
+	// 		db.put({
+	// 			_id,
+	// 			alias,
+	// 			pk: `${pk.slice(0,8)}...${pk.substr(pk.length - 8)}`,
+	// 			sk: `${sk.slice(0,8)}...${sk.substr(sk.length - 8)}`,
+	// 			createdAt: new Date().toISOString()
+	// 		});
+	// 		this.encryptSecret(_id, sk)
+	// 		this.loadData();
+	// 	} catch (error) {
+	// 		alert(error.message)
+	// 	}
+	// }
 
 	createNewAccount = () => {
 		const { appStore } = this.props
@@ -225,17 +158,14 @@ class SecretsScreen extends Component {
 
 				const pwd = appStore.get('pwd');
 				const seed = appStore.get('seed');
-		
-				const seedHex = bip39.mnemonicToSeedHex(seed);
-				const data = this.derivePath(`m/44'/148'/${userPath}'`, seedHex)
-				const keypair = StellarSdk.Keypair.fromRawEd25519Seed(data.key);
+				const keypair = generateKeypair(seed, userPath);
 				const pk = keypair.publicKey();
-
 				const _id = uuid();
 				db.put({
 					_id,
 					pk,
 					alias,
+					vn: userPath,
 					createdAt: new Date().toISOString()
 				});
 				this.loadData();
@@ -319,10 +249,7 @@ class SecretsScreen extends Component {
 										underlineColorAndroid={'white'}
 										value={userPath}
 										style={{ fontWeight: '700' }}
-									/>
-									<View>
-										<Text style={{ color: '#777', fontSize: 12 }}>The number above is your auto generated Vault Number. Please, take note on paper and keep it safe, you will need it to recover this secret from another device. If have you restored your seed string, please clear this value and type the vault number you want to restore.</Text>	
-									</View>									
+									/>									
 									<View>
 										{hasError && <ErrorLabel>Invalid alias or vault number.</ErrorLabel>}
 									</View>
@@ -345,6 +272,7 @@ class SecretsScreen extends Component {
 											/>				
 									</View>
 									<View>
+										<Text style={{ color: 'white', fontSize: 12, marginBottom: 8 }}>The number above is your auto generated vault number. Please, take note on paper and keep it safe, you will need it to recover this secret from another device. If have you restored your seed string, please clear this value and type the vault number you want to restore.</Text>	
 										<Text style={{ color: 'white', fontSize: 12, fontWeight: '700', marginBottom: 8 }}>Create Account Keypair </Text>
 										<Text style={{ color: 'white', fontSize: 12, marginBottom: 8 }}>
 											To get started on using the StellarSigner, you must first create an account, then, you must fund the account before start.

@@ -116,7 +116,7 @@ const RootStack = StackNavigator(
 		}
   },
   {
-		initialRouteName: 'AuthModal',
+		initialRouteName: 'CreateVault',
     mode: 'modal'
   }
 );

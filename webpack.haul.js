@@ -13,7 +13,8 @@ module.exports = ({ platform }, { module, resolve }) => ({
         test: /\.js?$/,
         include: [
           /node_modules\/pouchdb-adapter-asyncstorage/,
-          /node_modules\/react-native-vector-icons/
+          /node_modules\/react-native-vector-icons/,
+          /node_modules\/tcomb-form-native/,
         ],
         use: [
           {
