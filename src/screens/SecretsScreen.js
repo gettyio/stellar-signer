@@ -233,9 +233,9 @@ class SecretsScreen extends Component {
 								</CloseButton>
 								<CardFlex>
 									<TextInput
-										autoFocus={true}
+										autoFocus={false}
 										autoCorrect={false}
-										placeholder="Alias"
+										placeholder="Type an alias for this account."
 										onChangeText={text => this.setState({ alias: text })}
 										clearButtonMode={'always'}
 										underlineColorAndroid={'white'}
@@ -244,6 +244,7 @@ class SecretsScreen extends Component {
 									<TextInput
 										keyboardType={'numeric'}
 										autoCorrect={false}
+										autoFocus={false}
 										onChangeText={text => this.setState({ userPath: text })}
 										clearButtonMode={'always'}
 										underlineColorAndroid={'white'}

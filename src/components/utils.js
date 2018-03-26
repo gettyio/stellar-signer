@@ -11,7 +11,7 @@ export const CardFlex = styled.View`
   width: 100%;
   background-color: white;
   border-radius: 16px;
-  padding: 16px;
+  padding: 8px;
   align-self: center;
 `
 
@@ -254,10 +254,14 @@ export const AuthorizeButtonLabel = styled.Text`
 `
 
 export const TextInput = styled.TextInput`
-	height: ${props => (props.height ? props.height : '60px')};
+	height: ${props => (props.height ? props.height : '40px')};
   padding: 8px;
   background-color: white;
   color: #a0a0a0;
+	border-width: 1px;
+	border-color: #cecece;
+	margin-bottom: 8px;
+	border-radius: 8px;
 `
 
 export const CardWrapper = styled.View`

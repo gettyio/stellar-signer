@@ -182,7 +182,7 @@ class CreateVaultScreen extends Component {
 					<TextInput
 						multiline={true}
 						numberOfLines={4}
-						autoFocus={true}
+						autoFocus={false}
 						autoCorrect={false}
 						autoCapitalize={'none'}
 						clearButtonMode={'always'}
@@ -243,7 +243,7 @@ class CreateVaultScreen extends Component {
 
 		const words = mnemonic.split(' ');
 		return (
-			<ScrollView style={{ padding: 16, height: '100%' }}>
+			<View style={{ padding: 16, height: '100%' }}>
 				<View>
 					<Text style={{ padding: 4, textAlign: 'justify', fontWeight: '700' }}>Please, write down these 24 words on a paper. These 24 words are the only way to restore your StellarSigner private keys if you loose or change your device. Make sure to keep it safe!</Text>
 					{this.renderWords()}
@@ -284,7 +284,7 @@ class CreateVaultScreen extends Component {
 						style={{ marginTop: 16, borderWidth: 0 }}
 					/>					
 				</View>
-			</ScrollView>
+			</View>
 		)
 	}
 	
@@ -292,7 +292,9 @@ class CreateVaultScreen extends Component {
 		const { tab } = this.state;
 		return (
 			<SafeAreaView style={{ flex: 1, alignContent: 'flex-start',	backgroundColor: 'white' }}>
-				{this.handleRenderer()}
+				<ScrollView>
+					{this.handleRenderer()}
+				</ScrollView>
 			</SafeAreaView>
 		);
 	}
