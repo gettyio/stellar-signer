@@ -177,6 +177,7 @@ class AuthScreen extends Component {
     return (
 			<SafeAreaView style={{ flex: 1, alignContent: 'flex-start',	backgroundColor: 'white' }}>
 				<ScrollView
+					keyboardShouldPersistTaps="always"
 					keyboardDismissMode="interactive"
 				>
 					<KeyboardAvoidingView behavior="position">

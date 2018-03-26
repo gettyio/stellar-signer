@@ -141,6 +141,8 @@ class CreateVaultScreen extends Component {
 				this.setState({ successMessage: 'The seed combination is valid. We are restoring your master key...' })
 				this.createSeed();
 			} else {
+				this.restoreSeedButton.error();
+				this.restoreSeedButton.reset();
 				this.setState({ errorMessage: 'Invalid seed combination, you must type a seed with 24 words.' })
 			}
 		}

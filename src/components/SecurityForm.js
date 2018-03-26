@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { View, Alert, Text, KeyboardAvoidingView } from 'react-native'
+import { View, Alert, Text, KeyboardAvoidingView, Keyboard } from 'react-native'
 import uuid from 'uuid/v4'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import Button from 'react-native-micro-animated-button'
@@ -38,7 +38,8 @@ class SecurityForm extends Component {
     }
 
     this.setState({ errorMessage: undefined })
-    submit(password)
+		submit(password)
+		Keyboard.dismiss();
   }
 
   render() {
