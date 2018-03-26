@@ -89,7 +89,7 @@ class TransactionDetail extends Component {
 	copyToClipboard = () => {
 		const { appStore, navigation } = this.props
 		const tx = appStore.get('currentTransaction')
-		Clipboard.setString(tx.sxdr);
+		Clipboard.setString(tx.xdr);
 		alert('The signed xdr was copied to the clipboard.');
 	}
 

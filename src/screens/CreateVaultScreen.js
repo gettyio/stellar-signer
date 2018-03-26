@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import {  View, Text, TextInput, FlatList, SafeAreaView, KeyboardAvoidingView, ScrollView, Keyboard } from 'react-native';
+import { View, Text, TextInput, FlatList, SafeAreaView, KeyboardAvoidingView, ScrollView, Keyboard } from 'react-native';
 import { observer, inject } from 'mobx-react'
 import bip39 from 'bip39';
 import Icon from 'react-native-vector-icons/Feather'
@@ -12,9 +12,9 @@ import sha256 from 'crypto-js/sha256';
 import SInfo from 'react-native-sensitive-info';
 
 import {
-  Screen,
-  ContainerFlex,
-  Header,
+	Screen,
+	ContainerFlex,
+	Header,
 	Title,
 	TitleWrapper,
 	LoadButtonWrapper,
@@ -78,10 +78,10 @@ class CreateVaultScreen extends Component {
 							<Title>My Vault</Title>
 						</TitleWrapper>
 						<LoadButtonWrapper>
-							<LoadButton onPress={()=> navigation.goBack()}>
+							<LoadButton onPress={() => navigation.goBack()}>
 								<Icon name="x-circle" color="white" size={32} />
 							</LoadButton>
-						</LoadButtonWrapper>						
+						</LoadButtonWrapper>
 					</Header>
 				</SafeAreaView>
 			)
@@ -95,9 +95,9 @@ class CreateVaultScreen extends Component {
 		errorMessage: undefined,
 		successMessage: undefined,
 	}
-	
+
 	componentDidMount() {
-		const mnemonic = bip39.generateMnemonic(512, (n)=> randomize('0',n));
+		const mnemonic = bip39.generateMnemonic(512, (n) => randomize('0', n));
 		this.setState({ mnemonic })
 	}
 
@@ -141,7 +141,7 @@ class CreateVaultScreen extends Component {
 				this.setState({ successMessage: 'The seed combination is valid. We are restoring your master key...' })
 				this.createSeed();
 			} else {
-				this.setState({ errorMessage: 'Invalid seed combination, you must type a seed with 24 words.' })	
+				this.setState({ errorMessage: 'Invalid seed combination, you must type a seed with 24 words.' })
 			}
 		}
 	}
@@ -161,9 +161,9 @@ class CreateVaultScreen extends Component {
 		const words = mnemonic.split(' ');
 		return (
 			<SeedBox>
-				{words.map((item, index)=> (<SeedWord key={`${index}`}>{item}</SeedWord>))}
+				{words.map((item, index) => (<SeedWord key={`${index}`}>{item}</SeedWord>))}
 			</SeedBox>
-		)	
+		)
 	}
 
 	handleRenderer = () => {
@@ -171,8 +171,8 @@ class CreateVaultScreen extends Component {
 		if (!mnemonic) {
 			return;
 		}
-		
-		if(tab === 'continue' || tab === 'restore') {
+
+		if (tab === 'continue' || tab === 'restore') {
 			return (
 				<View style={{ margin: 8 }}>
 					<TextInput
@@ -186,19 +186,19 @@ class CreateVaultScreen extends Component {
 						underlineColorAndroid={'white'}
 						value={seedValue}
 						placeholder="Please, type your seed words here."
-						style={{ 
+						style={{
 							fontSize: 16,
-							borderWidth: 2, 
-							borderColor: '#2e3666', 
-							width: '100%', 
-							height: 90, 
+							borderWidth: 2,
+							borderColor: '#2e3666',
+							width: '100%',
+							height: 90,
 							padding: 8
-						}} 
+						}}
 					>
 					</TextInput>
 					{errorMessage && <ErrorLabel>{errorMessage}</ErrorLabel>}
 					{successMessage && <SuccessLabel>{successMessage}</SuccessLabel>}
-					<View style={{ alignSelf: 'center' }}>		
+					<View style={{ alignSelf: 'center' }}>
 						<Button
 							ref={ref => (this.restoreSeedButton = ref)}
 							foregroundColor={'#276cf2'}
@@ -217,7 +217,7 @@ class CreateVaultScreen extends Component {
 						<Button
 							ref={ref => (this.backButton = ref)}
 							foregroundColor={'#343434'}
-							onPress={()=> {
+							onPress={() => {
 								this.backButton.success()
 								this.setCurrentTab('create')
 							}}
@@ -231,7 +231,7 @@ class CreateVaultScreen extends Component {
 							label="Back"
 							maxWidth={300}
 							style={{ marginTop: 8, borderWidth: 0 }}
-						/>															
+						/>
 					</View>
 				</View>
 			)
@@ -248,7 +248,7 @@ class CreateVaultScreen extends Component {
 					<Button
 						ref={ref => (this.createSeedButton = ref)}
 						foregroundColor={'red'}
-						onPress={()=> this.setCurrentTab('continue')}
+						onPress={() => this.setCurrentTab('continue')}
 						foregroundColor={'white'}
 						backgroundColor={'red'}
 						successColor={'red'}
@@ -264,7 +264,7 @@ class CreateVaultScreen extends Component {
 					<Button
 						ref={ref => (this.goRestoreSeedButton = ref)}
 						foregroundColor={'#276cf2'}
-						onPress={()=> {
+						onPress={() => {
 							this.goRestoreSeedButton.success();
 							this.setCurrentTab('restore');
 						}}
@@ -278,16 +278,16 @@ class CreateVaultScreen extends Component {
 						label="I want to restore my keys"
 						maxWidth={300}
 						style={{ marginTop: 16, borderWidth: 0 }}
-					/>					
+					/>
 				</View>
 			</View>
 		)
 	}
-	
+
 	render() {
 		const { tab } = this.state;
 		return (
-			<SafeAreaView style={{ flex: 1, alignContent: 'flex-start',	backgroundColor: 'white' }}>
+			<SafeAreaView style={{ flex: 1, alignContent: 'flex-start', backgroundColor: 'white' }}>
 				<ScrollView>
 					{this.handleRenderer()}
 				</ScrollView>
