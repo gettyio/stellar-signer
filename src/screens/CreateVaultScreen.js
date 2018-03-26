@@ -10,7 +10,6 @@ import DeviceInfo from 'react-native-device-info'
 import cryptojs from 'crypto-js'
 import sha256 from 'crypto-js/sha256';
 import SInfo from 'react-native-sensitive-info';
-import SplashScreen from 'react-native-splash-screen'
 
 import {
   Screen,
@@ -91,17 +90,15 @@ class CreateVaultScreen extends Component {
 
 	state = {
 		tab: 'create',
-		mnemonic: 'much civil book artist kangaroo merit grass anchor globe motion avoid erupt half december blur comfort deer dream scare vacant deal enrich mass furnace',
-		seedValue: 'much civil book artist kangaroo merit grass anchor globe motion avoid erupt half december blur comfort deer dream scare vacant deal enrich mass furnace',
+		mnemonic: undefined,
+		seedValue: undefined,
 		errorMessage: undefined,
 		successMessage: undefined,
 	}
 	
 	componentDidMount() {
-		SplashScreen.hide();
-
 		const mnemonic = bip39.generateMnemonic(512, (n)=> randomize('0',n));
-		//this.setState({ mnemonic })
+		this.setState({ mnemonic })
 	}
 
 	setCurrentTab = (tab) => {
