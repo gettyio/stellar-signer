@@ -13,7 +13,7 @@ import {
   CardFlex,
   SmallMessageLabel,
 	PasswordFormTitle
-} from './utils'
+} from './styled'
 
 class SecurityForm extends Component {
   state = {

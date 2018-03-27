@@ -1,14 +1,14 @@
 import React, { Component } from 'react';
 import { View, Text, ScrollView } from 'react-native';
 import styled from 'styled-components'
-import EnvelopeCard from './EnvelopeCard'
-import EnvelopeTab from './EnvelopeTab'
+import EnvelopeCard from './Envelope/EnvelopeCard'
+import EnvelopeTab from './Envelope/EnvelopeTab'
 import {
 	Screen,
 	HeaderTabs,
 	HeaderTabsButton,
 	HeaderTabsLabel
-} from './utils'
+} from './styled';
 
 
 class DetailTabs extends Component {

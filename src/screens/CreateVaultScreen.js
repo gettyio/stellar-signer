@@ -12,57 +12,19 @@ import sha256 from 'crypto-js/sha256';
 import SInfo from 'react-native-sensitive-info';
 
 import {
-	Screen,
-	ContainerFlex,
 	Header,
 	Title,
 	TitleWrapper,
 	LoadButtonWrapper,
 	LoadButton,
-	HeaderTabs,
-	HeaderTabsButton,
-	HeaderTabsLabel,
 	ErrorLabel,
 	SuccessLabel,
-	SmallMessageLabel
-} from '../components/utils'
+	SeedWord,
+	SeedBox,
+	InsertSeedInput,
+	VaultWordsText
+} from './styled'
 
-
-export const SeedInput = styled.TextInput`
-	height: 80px;
-	width: 100%;
-  background-color: white;
-  border-radius: 8px;
-	border-width: 1px;
-	border-color: ${props => {
-		if (!props.noState) {
-			return '#cecece'
-		} else {
-			if (props.hasError) {
-				return 'red'
-			} else {
-				return '#4cd964'
-			}
-		}
-	}};
-  padding: 8px 16px 8px 16px;
-  align-self: center;
-`
-
-const SeedWord = styled.Text`
-	color: #2e3666;
-	font-size: 16px;
-	padding: 2px;
-`
-
-const SeedBox = styled.View`
-	margin-top: 8px; 
-	padding: 4px; 
-	flex-direction: row;
-	flex-wrap: wrap; 
-	border-width: 2px; 
-	border-color: #2e3666;
-`
 
 @inject('appStore') @observer
 class CreateVaultScreen extends Component {
@@ -126,7 +88,7 @@ class CreateVaultScreen extends Component {
 		const { tab, mnemonic, seedValue } = this.state;
 
 		if (tab === 'continue') {
-			if (mnemonic !== seedValue.trim()) {
+			if (!seedValue || mnemonic !== seedValue.trim()) {
 				this.restoreSeedButton.error();
 				this.restoreSeedButton.reset();
 				this.setState({ errorMessage: 'Invalid seed combination, please make sure to write with the same order.' })
@@ -177,7 +139,7 @@ class CreateVaultScreen extends Component {
 		if (tab === 'continue' || tab === 'restore') {
 			return (
 				<View style={{ margin: 8 }}>
-					<TextInput
+					<InsertSeedInput
 						multiline={true}
 						numberOfLines={4}
 						autoFocus={false}
@@ -188,19 +150,11 @@ class CreateVaultScreen extends Component {
 						underlineColorAndroid={'white'}
 						value={seedValue}
 						placeholder="Please, type your seed words here."
-						style={{
-							fontSize: 16,
-							borderWidth: 2,
-							borderColor: '#2e3666',
-							width: '100%',
-							height: 90,
-							padding: 8
-						}}
 					>
-					</TextInput>
+					</InsertSeedInput>
 					{errorMessage && <ErrorLabel>{errorMessage}</ErrorLabel>}
 					{successMessage && <SuccessLabel>{successMessage}</SuccessLabel>}
-					<View style={{ alignSelf: 'center' }}>
+					<View style={{ alignItems: 'center' }}>
 						<Button
 							ref={ref => (this.restoreSeedButton = ref)}
 							foregroundColor={'#276cf2'}
@@ -243,10 +197,10 @@ class CreateVaultScreen extends Component {
 		return (
 			<View style={{ padding: 16, height: '100%' }}>
 				<View>
-					<Text style={{ padding: 4, textAlign: 'justify', fontWeight: '700' }}>Please, write down these 24 words on a paper. These 24 words are the only way to restore your StellarSigner private keys if you loose or change your device. Make sure to keep it safe!</Text>
+					<VaultWordsText>Please, write down these 24 words on a paper. These 24 words are the only way to restore your StellarSigner private keys if you loose or change your device. Make sure to keep it safe!</VaultWordsText>
 					{this.renderWords()}
 				</View>
-				<View style={{ alignSelf: 'center' }}>
+				<View style={{ alignItems: 'center' }}>
 					<Button
 						ref={ref => (this.createSeedButton = ref)}
 						foregroundColor={'red'}

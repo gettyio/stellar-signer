@@ -14,7 +14,7 @@ import {
 	AddTransactionHeaderLabel,
 	ErrorLabel,
 	MiniPasteButton
-} from './utils'
+} from './styled'
 
 @inject('appStore')
 @observer

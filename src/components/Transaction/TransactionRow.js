@@ -21,7 +21,7 @@ import {
   StatusLabel,
   AccountInfoCard,
   AccountLabel
-} from './utils'
+} from './styled'
 
 const TransactionRow = ({ item, appStore, navigation }) => {
   if (item.type === 'error') {
@@ -29,9 +29,9 @@ const TransactionRow = ({ item, appStore, navigation }) => {
       <TouchableOpacity
         key={item.id}
         onPress={() => {
-					appStore.set('currentTransaction', item)
-					navigation.navigate('TransactionDetail')
-				}}
+          appStore.set('currentTransaction', item)
+          navigation.navigate('TransactionDetail')
+        }}
       >
         <TransactionRowWrapper>
           <CardWrapper pad="8px">
@@ -42,7 +42,7 @@ const TransactionRow = ({ item, appStore, navigation }) => {
               <LabelsRow>
                 <StatusLabel status={item.status}>{item.status}</StatusLabel>
                 <CreatedAtLabel>
-								{`${moment(new Date(item.createdAt)).format('YYYY-MM-DD hh:mm')}`}
+                  {`${moment(new Date(item.createdAt)).format('YYYY-MM-DD hh:mm')}`}
                 </CreatedAtLabel>
               </LabelsRow>
             </CardContent>
@@ -66,11 +66,11 @@ const TransactionRow = ({ item, appStore, navigation }) => {
   }
 
   return (
-		<TouchableOpacity key={item.id} 
-			onPress={() => {
-				appStore.set('currentTransaction', item)
-				navigation.navigate('TransactionDetail')
-			}}>
+    <TouchableOpacity key={item.id}
+      onPress={() => {
+        appStore.set('currentTransaction', item)
+        navigation.navigate('TransactionDetail')
+      }}>
       <TransactionRowWrapper>
         <CardWrapper pad="8px">
           <Icon name={iconName} color={iconColor} size={32} />
