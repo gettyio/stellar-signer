@@ -6,36 +6,20 @@ import _ from 'lodash';
 import { View, Text } from 'react-native'
 import styled from 'styled-components'
 
-const Container = styled.View`
-  flex: 1;
-	background-color: white;
-`
-const TreeViewSpan = styled.View`
-	word-break: break-all;
-`
 
-const TreeViewChild = styled.View`
-	border-left-width: 10px;
-	border-color: #e6f8fc;
-`
-const EasySelect = styled.View`
-  cursor: pointer;
-  border-bottom: 1px dotted currentColor;
-`
-const TreeViewRow = styled.View`
-	padding: 5px 10px;
-`
+import {
+  TreeContainer,
+  TreeViewSpan,
+  TreeViewChild,
+  EasySelect,
+  TreeViewRow,
+  TreeViewLabel
+} from './styled';
 
-const XdrViewerResults = styled.Text`
-`
-
-const TreeViewLabel = styled.Text`
-	font-weight: 700;
-`
 // @param {array} props.nodes - Array of TreeView compatible nodes
 export default class TreeView extends React.Component {
   render() {
-		let {nodes, className} = this.props;
+    let { nodes, className } = this.props;
     let rootClass = 'TreeView ' + (className) ? className : '';
 
     let result = <View className={rootClass}>
@@ -63,7 +47,7 @@ export default class TreeView extends React.Component {
 
 function RowValue(props) {
   let value, childNodes, separatorNeeded, separator;
-  let {node} = props;
+  let { node } = props;
 
   if (typeof node.value === 'string') {
     value = String(node.value);
@@ -90,11 +74,11 @@ function RowValue(props) {
 // provide for a more rich experience other than just plain text.
 // "untyped" values are simply strings. They will be displayed as strings in the
 // tree node.
-function convertTypedValue({type, value}) {
-  switch(type) {
-  case 'code':
-    return <TreeViewLabel>{value}</TreeViewLabel>;
-  case 'amount':
-    return <TreeViewLabel>{value.parsed} (raw: <TreeViewLabel>{value.raw}</TreeViewLabel>)</TreeViewLabel>;
+function convertTypedValue({ type, value }) {
+  switch (type) {
+    case 'code':
+      return <TreeViewLabel>{value}</TreeViewLabel>;
+    case 'amount':
+      return <TreeViewLabel>{value.parsed} (raw: <TreeViewLabel>{value.raw}</TreeViewLabel>)</TreeViewLabel>;
   }
 }

@@ -11,20 +11,14 @@ import Icon from 'react-native-vector-icons/FontAwesome'
 import Button from 'react-native-micro-animated-button'
 import SplashScreen from 'react-native-splash-screen'
 import SInfo from 'react-native-sensitive-info';
-import SecurityForm from '../components/SecurityForm'
+import SecurityForm from '../components/UI/SecurityForm'
+import { version } from './../../package.json'
+
 import {
-  Screen,
-  ContainerFlex,
-  Header,
-  Title,
-  LoadButton,
-  ErrorLabel,
-  CloseButton,
-  Card,
-  CardRow,
-  CardLabel,
-  CardTitle
-} from '../components/utils'
+	AuthLogoView,
+	AuthVersionWrapper,
+	AuthVersionText
+} from './styled';
 
 import PouchDB from 'pouchdb-react-native'
 import SQLite from 'react-native-sqlite-2'
@@ -32,13 +26,12 @@ import SQLiteAdapterFactory from 'pouchdb-adapter-react-native-sqlite'
 const SQLiteAdapter = SQLiteAdapterFactory(SQLite)
 PouchDB.plugin(SQLiteAdapter)
 const db = new PouchDB('Secrets', { adapter: 'react-native-sqlite' })
-import { version } from './../../package.json'
 
 @inject('appStore') @observer
 class AuthScreen extends Component {
-  static navigationOptions = {
-    header: null
-  };
+	static navigationOptions = {
+		header: null
+	};
 
 	state = {
 		firstSecret: undefined
@@ -52,7 +45,7 @@ class AuthScreen extends Component {
 	}
 
 	componentWillUnmount() {
-    Linking.removeEventListener('url', this.handleAppLinkURL)
+		Linking.removeEventListener('url', this.handleAppLinkURL)
 	}
 
 	deleteSeed = () => {
@@ -68,18 +61,18 @@ class AuthScreen extends Component {
 				const pwd = appStore.get('pwd')
 				const uniqueId = DeviceInfo.getUniqueID();
 				const seedKey = sha256(`ss-${uniqueId}`);
-				SInfo.getItem(seedKey.toString(),{}).then(value => {
+				SInfo.getItem(seedKey.toString(), {}).then(value => {
 					if (value) {
 						const pass = sha256(`ss-${uniqueId}-${pwd}`);
 						const bytes = crypto.AES.decrypt(value, pass.toString());
-						const seed =  bytes.toString(crypto.enc.Utf8)
+						const seed = bytes.toString(crypto.enc.Utf8)
 						if (seed) {
 							appStore.set('seed', seed);
 							navigation.navigate('Home');
 						} else {
 							navigation.navigate('CreateVault');
 						}
-					} else{
+					} else {
 						navigation.navigate('CreateVault');
 					}
 				})
@@ -89,7 +82,7 @@ class AuthScreen extends Component {
 			}
 		}
 	}
-	
+
 	enableDeepLinks = () => {
 		Linking.addEventListener('url', this.handleAppLinkURL)
 		Linking.getInitialURL().then(url => {
@@ -104,7 +97,7 @@ class AuthScreen extends Component {
 		try {
 			db.allDocs({
 				include_docs: true
-			}).then((res)=> {
+			}).then((res) => {
 				const row = res.rows[0];
 				if (row) {
 					this.setState({ firstSecret: row.doc })
@@ -115,18 +108,18 @@ class AuthScreen extends Component {
 		}
 	}
 
-  handleAppLinkURL = event => {
+	handleAppLinkURL = event => {
 		const { appStore } = this.props
-    const url = event instanceof String ? event : event.url
-    if (url) {
-      const tx = qs.parse(url.replace('stellar-signer://stellar-signer?', ''))
+		const url = event instanceof String ? event : event.url
+		if (url) {
+			const tx = qs.parse(url.replace('stellar-signer://stellar-signer?', ''))
 			appStore.set('currentXdr', tx.xdr)
-    } else {
-      alert('Invalid Transaction! Please contact the support.')
-    }
-  }
+		} else {
+			alert('Invalid Transaction! Please contact the support.')
+		}
+	}
 
-  submit = async (pwd) => {
+	submit = async (pwd) => {
 		const { firstSecret } = this.state;
 		const { appStore, navigation } = this.props
 		try {
@@ -134,11 +127,11 @@ class AuthScreen extends Component {
 			const ss = `${encodedPwd.toString()}:${pwd}`;
 			const pwdKey = sha256(`ss-${uniqueId}-${encodedPwd.toString()}`)
 			const uniqueId = DeviceInfo.getUniqueID();
-			const pwdencoded = await SInfo.getItem(pwdKey.toString(),{})
-			const isUniq = await SInfo.getItem(`ss-${uniqueId}`,{})
+			const pwdencoded = await SInfo.getItem(pwdKey.toString(), {})
+			const isUniq = await SInfo.getItem(`ss-${uniqueId}`, {})
 			if (pwdencoded) {
 				const bytes = crypto.AES.decrypt(pwdencoded, ss);
-				const val =  bytes.toString(crypto.enc.Utf8)
+				const val = bytes.toString(crypto.enc.Utf8)
 				if (val) {
 					appStore.set('pwd', encodedPwd.toString())
 					appStore.set('securityFormError', undefined)
@@ -148,59 +141,58 @@ class AuthScreen extends Component {
 					appStore.set('securityFormError', 'Invalid password!')
 				}
 			} else {
-					if (isUniq === 'created') {
-						appStore.set('securityFormError', 'Invalid password!')
-					} else {
-						appStore.set('pwd', encodedPwd.toString())
-						appStore.set('securityFormError', undefined)
-						appStore.set('isSecurityRequired', false)
-						const ciphertext = crypto.AES.encrypt(pwd, ss);
-						SInfo.setItem(pwdKey.toString(), ciphertext.toString(), {});
-						SInfo.setItem(`ss-${uniqueId}`, 'created', {});
-						this.loadSeed();
-					}
+				if (isUniq === 'created') {
+					appStore.set('securityFormError', 'Invalid password!')
+				} else {
+					appStore.set('pwd', encodedPwd.toString())
+					appStore.set('securityFormError', undefined)
+					appStore.set('isSecurityRequired', false)
+					const ciphertext = crypto.AES.encrypt(pwd, ss);
+					SInfo.setItem(pwdKey.toString(), ciphertext.toString(), {});
+					SInfo.setItem(`ss-${uniqueId}`, 'created', {});
+					this.loadSeed();
+				}
 			}
 		} catch (error) {
 			appStore.set('securityFormError', 'Invalid password!')
 		}
-  }
+	}
 
-  toggleModal = () => {
-    const { appStore } = this.props
-    appStore.set('isSecurityRequired', !appStore.get('isSecurityRequired'))
-  }
+	toggleModal = () => {
+		const { appStore } = this.props
+		appStore.set('isSecurityRequired', !appStore.get('isSecurityRequired'))
+	}
 
-  render() {
-    const { appStore } = this.props
-    const isSecurityRequired = appStore.get('isSecurityRequired')
-    const securityFormError = appStore.get('securityFormError')
-    return (
-			<SafeAreaView style={{ flex: 1, alignContent: 'flex-start',	backgroundColor: 'white' }}>
+	render() {
+		const { appStore } = this.props
+		const isSecurityRequired = appStore.get('isSecurityRequired')
+		const securityFormError = appStore.get('securityFormError')
+		return (
+			<SafeAreaView style={{ flex: 1, alignContent: 'flex-start', backgroundColor: 'white' }}>
 				<ScrollView
 					keyboardShouldPersistTaps="always"
 					keyboardDismissMode="interactive"
 				>
 					<KeyboardAvoidingView behavior="position">
-						<View style={{ alignSelf: 'center', backgroundColor: 'white', marginTop: 16  }}>
-							<Image source={require('./../assets/logo.png')} style={{ height: 150 }} resizeMode='contain'/>
-						</View>
+						<AuthLogoView>
+							<Image source={require('./../assets/logo.png')} style={{ height: 150 }} resizeMode='contain' />
+						</AuthLogoView>
 						<SecurityForm
-								appStore={appStore}
-								submit={this.submit}
-								error={securityFormError}
-								close={this.toggleModal}
-							/>
-							
-						<View style={{ alignSelf: 'center' }}>
-							<Text style={{ color: 'gray', fontSize: 10 }}>
+							appStore={appStore}
+							submit={this.submit}
+							error={securityFormError}
+							close={this.toggleModal}
+						/>
+						<AuthVersionWrapper>
+							<AuthVersionText>
 								{`v${version}`}
-							</Text>
-						</View>
+							</AuthVersionText>
+						</AuthVersionWrapper>
 					</KeyboardAvoidingView>
 				</ScrollView>
 			</SafeAreaView>
-    )
-  }
+		)
+	}
 }
 
 export default AuthScreen

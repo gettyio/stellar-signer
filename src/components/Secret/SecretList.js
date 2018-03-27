@@ -11,22 +11,24 @@ import { observer, inject } from 'mobx-react'
 import base64 from 'base-64'
 import base64js from 'base64-js'
 import crypto from 'crypto-js/pbkdf2'
-
-import { Container, EmptyScreen } from './utils'
 import SecretRow from './SecretRow'
+import {
+  Container,
+  EmptyScreen
+} from './styled'
 
 @inject('appStore')
 @observer
 class SecretList extends Component {
   state = {
     hasError: undefined,
-		isLoadingList: false,
-		secrets: []
-	}
-	
-	componentWillReceiveProps(nextProps) {
-		this.setState({ secrets: nextProps.secrets })
-	}
+    isLoadingList: false,
+    secrets: []
+  }
+
+  componentWillReceiveProps(nextProps) {
+    this.setState({ secrets: nextProps.secrets })
+  }
 
   renderRow = ({ item }) => {
     const { appStore } = this.props
@@ -43,7 +45,7 @@ class SecretList extends Component {
       return (
         <EmptyScreen style={{ height: '100%' }}>
           <Image
-            source={require('../assets/empty.png')}
+            source={require('../../assets/empty.png')}
             resizeMode="contain"
             style={{ width: 170 }}
           />
