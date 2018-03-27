@@ -53,10 +53,9 @@ class AboutScreen extends Component {
 									<Text style={{ fontSize: 14, paddingTop: 8, paddingLeft: 16, lineHeight: 8 }}>> @pnakibar</Text>
 									<Text style={{ fontSize: 14, paddingTop: 8, paddingLeft: 16, lineHeight: 8 }}>> @nilocoelhojunior</Text>
 									<Text style={{ fontSize: 14, paddingTop: 8, paddingLeft: 16, lineHeight: 8 }}>> @leocolodette</Text>
-									<Text style={{ fontSize: 14, paddingTop: 8, paddingLeft: 16, lineHeight: 8 }}>> @dzham</Text>
 									<Text style={{ fontSize: 14, paddingTop: 8, paddingLeft: 16, lineHeight: 8 }}>> @jai</Text>
 									<Text style={{ fontSize: 14, paddingTop: 8, paddingLeft: 16, lineHeight: 8 }}>> @gettyio</Text>
-									<Text style={{ fontSize: 14, fontWeight: '700', padding: 16 }}>Sponsored by Getty/IO Inc.</Text>
+									<Text style={{ fontSize: 14, fontWeight: '700', padding: 16 }}>Powered by Getty/IO Inc.</Text>
 									<Text style={{ fontSize: 14, paddingTop: 4, paddingLeft: 16, lineHeight: 8 }}>www.getty.io</Text>
 								</View>
 							</ContainerFlex>
