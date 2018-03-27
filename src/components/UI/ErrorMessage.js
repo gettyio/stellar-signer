@@ -3,7 +3,7 @@ import styled from 'styled-components'
 import { Text } from 'react-native'
 import Icon from 'react-native-vector-icons/Feather'
 
-import { Container, CardFlat, CardRow, CardLabel, CardTitle } from './utils'
+import { Container, CardFlat, CardRow, CardLabel, CardTitle } from './styled'
 
 export default ({ tx }) => (
   <Container>

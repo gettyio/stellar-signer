@@ -1,15 +1,15 @@
 import 'babel-polyfill';
 import React, { Component } from 'react'
 import {
-  Platform,
-  StyleSheet,
-  View,
-  Text,
-  Clipboard,
-  Keyboard,
-  StatusBar,
-  WebView,
-  ActivityIndicator,
+	Platform,
+	StyleSheet,
+	View,
+	Text,
+	Clipboard,
+	Keyboard,
+	StatusBar,
+	WebView,
+	ActivityIndicator,
 	Linking,
 	AsyncStorage,
 	SafeAreaView
@@ -26,38 +26,38 @@ import moment from 'moment'
 import Modal from 'react-native-modal'
 import SInfo from 'react-native-sensitive-info';
 import Button from 'react-native-micro-animated-button'
-import TransactionForm from '../components/TransactionForm'
+import TransactionForm from '../components/Transaction/TransactionForm'
 // import TransactionDetail from '../components/TransactionDetail'
-import PasteButton from '../components/PasteButton'
-import TransactionList from '../components/TransactionList'
+import PasteButton from '../components/UI/PasteButton'
+import TransactionList from '../components/Transaction/TransactionList'
 import {
-  Screen,
-  Container,
-  Header,
-  Title,
-  LoadButton,
-  TextInput,
+	Screen,
+	Container,
+	Header,
+	Title,
+	LoadButton,
+	TextInput,
 	CloseButton,
 	TitleWrapper,
 	LoadButtonWrapper
-} from '../components/utils'
+} from './styled'
 import { decodeFromXdr, signXdr } from './../utils/xdrUtils';
 import parseEnvelopeTree from './../utils/parseEnvelopeTree'
 import crypto from 'crypto-js'
 import PouchDB from 'pouchdb-react-native'
 import SQLite from 'react-native-sqlite-2'
 import SQLiteAdapterFactory from 'pouchdb-adapter-react-native-sqlite'
-const SQLiteAdapter = 
-PouchDB.plugin(SQLiteAdapterFactory(SQLite))
+
+const SQLiteAdapter = PouchDB.plugin(SQLiteAdapterFactory(SQLite))
 PouchDB.plugin(require('pouchdb-upsert'))
 const db = new PouchDB('Transactions', { adapter: 'react-native-sqlite' })
 
 @inject('appStore') @observer
 class HomeScreen extends Component {
-  static navigationOptions = ({ navigation }) => {
-    const params = navigation.state.params || {};
+	static navigationOptions = ({ navigation }) => {
+		const params = navigation.state.params || {};
 
-    return {
+		return {
 			header: (
 				<SafeAreaView style={{ backgroundColor: '#2e3666' }}>
 					<Header>
@@ -75,20 +75,20 @@ class HomeScreen extends Component {
 		};
 	};
 
-	
-  state = {
+
+	state = {
 		transactions: [],
 		isLoadingList: true,
-    currentXdr: undefined,
+		currentXdr: undefined,
 		currentTransaction: undefined,
 		currentDecodedTx: undefined
 	}
-	
-	componentWillMount() {
-    this.props.navigation.setParams({ toggleAddModal: this.toggleAddModal });
-  }
 
-  componentDidMount() {
+	componentWillMount() {
+		this.props.navigation.setParams({ toggleAddModal: this.toggleAddModal });
+	}
+
+	componentDidMount() {
 		this.loadTransactions();
 	}
 
@@ -96,98 +96,98 @@ class HomeScreen extends Component {
 		this.handleCurrentTx()
 		this.loadTransactions();
 	}
-	
-  loadTransactions = () => {
+
+	loadTransactions = () => {
 		const self = this;
 		db.allDocs({
 			include_docs: true
-		}).then((res)=> {
+		}).then((res) => {
 			const rawTransactions = res.rows.map((item, index) => item.doc);
 			const transactions = sortBy(rawTransactions, 'createdAt').reverse()
 			self.setState({ transactions, isLoadingList: false });
 		})
-  }
+	}
 
-  handleCurrentTx = () => {
-    const { appStore } = this.props
-    const currentXdr = appStore.get('currentXdr')
-    if (currentXdr) {
-      this.decodeXdr(currentXdr)
-    }
-  }
+	handleCurrentTx = () => {
+		const { appStore } = this.props
+		const currentXdr = appStore.get('currentXdr')
+		if (currentXdr) {
+			this.decodeXdr(currentXdr)
+		}
+	}
 
-  sendToViewer = () => {
+	sendToViewer = () => {
 		// Todo: remove mock data
-    const url = `stellar-signer://stellar-signer?${qs.stringify({
-      type: 'decode', xdr: 'AAAAAFIBKYc47PZpoxxY5Acltd9IaRANeap3Ja+FZg9fVtSBAAAAZABu6EUAAAACAAAAAAAAAAAAAAABAAAAAAAAAAEAAAAAr+SzF6CyMZracAojHWYWqhzdJZW+OiI9csaw1Nl4EZMAAAAAAAAAAAX14QAAAAAAAAAAAA=='
+		const url = `stellar-signer://stellar-signer?${qs.stringify({
+			type: 'decode', xdr: 'AAAAAFIBKYc47PZpoxxY5Acltd9IaRANeap3Ja+FZg9fVtSBAAAAZABu6EUAAAACAAAAAAAAAAAAAAABAAAAAAAAAAEAAAAAr+SzF6CyMZracAojHWYWqhzdJZW+OiI9csaw1Nl4EZMAAAAAAAAAAAX14QAAAAAAAAAAAA=='
 		})}`;
 
-    Linking.canOpenURL(url)
-      .then(supported => {
-        if (!supported) {
-          console.log("Can't handle url: " + url)
-        } else {
-          return Linking.openURL(url)
-        }
-      })
-      .catch(err => console.error('An error occurred', err))
-  }
+		Linking.canOpenURL(url)
+			.then(supported => {
+				if (!supported) {
+					console.log("Can't handle url: " + url)
+				} else {
+					return Linking.openURL(url)
+				}
+			})
+			.catch(err => console.error('An error occurred', err))
+	}
 
-  toggleDetailModal = () => {
-    const { appStore } = this.props
-    appStore.set('isDetailModalVisible', !appStore.get('isDetailModalVisible'))
-  }
+	toggleDetailModal = () => {
+		const { appStore } = this.props
+		appStore.set('isDetailModalVisible', !appStore.get('isDetailModalVisible'))
+	}
 
-  toggleAddModal = () => {
-    const { appStore } = this.props
-    appStore.set('isAddModalVisible', !appStore.get('isAddModalVisible'))
-  }
+	toggleAddModal = () => {
+		const { appStore } = this.props
+		appStore.set('isAddModalVisible', !appStore.get('isAddModalVisible'))
+	}
 
-  decodeXdr = xdr => {
+	decodeXdr = xdr => {
 		// const event = JSON.stringify({ type: 'decode', xdr: xdr })
 		const decodedTx = decodeFromXdr(xdr, 'TransactionEnvelope');
 		this.saveCurrentTransaction(decodedTx);
-  }
+	}
 
-  saveCurrentTransaction = data => {
+	saveCurrentTransaction = data => {
 		const { appStore } = this.props
 		const currentTransaction = appStore.get('currentTransaction')
-    if (data) {
-      if (data.type === 'error') {
-        //console.warn('Error: ', data);
-        this.saveTransaction({
-          xdr: data.xdr,
-          createdAt: new Date().toISOString(),
-          type: 'error',
-          message: data.message,
-          status: 'ERROR'
-        })
-      } else if (data.type === 'sign') {
-        this.saveTransaction({
-          ...currentTransaction,
-          ...data,
+		if (data) {
+			if (data.type === 'error') {
+				//console.warn('Error: ', data);
+				this.saveTransaction({
+					xdr: data.xdr,
+					createdAt: new Date().toISOString(),
+					type: 'error',
+					message: data.message,
+					status: 'ERROR'
+				})
+			} else if (data.type === 'sign') {
+				this.saveTransaction({
+					...currentTransaction,
+					...data,
 					status: 'SIGNED',
 					createdAt: new Date().toISOString()
-        })
-      } else {
+				})
+			} else {
 				const tx = parseEnvelopeTree(data.tx)
-        this.saveTransaction({
+				this.saveTransaction({
 					...tx,
-          type: data.type,
+					type: data.type,
 					xdr: data.xdr,
-          createdAt: new Date().toISOString(),
-          status: 'CREATED'
+					createdAt: new Date().toISOString(),
+					status: 'CREATED'
 				});
-      }
-    } else {
-      console.warn('Data not found!');
-    }
-  }
+			}
+		} else {
+			console.warn('Data not found!');
+		}
+	}
 
-  saveTransaction = async tx => {
-    const { appStore } = this.props
+	saveTransaction = async tx => {
+		const { appStore } = this.props
 		try {
-      db.put({
+			db.put({
 				_id: uuid(),
 				...tx
 			});
@@ -195,14 +195,14 @@ class HomeScreen extends Component {
 		} catch (error) {
 			alert(error.message)
 		}
-    appStore.set('currentXdr', undefined)
-  }
+		appStore.set('currentXdr', undefined)
+	}
 
-  cancelTransaction = () => {
+	cancelTransaction = () => {
 		const { appStore } = this.props
 		const currentTransaction = appStore.get('currentTransaction')
 		try {
-      db.put({
+			db.put({
 				_id: currentTransaction._id,
 				...currentTransaction,
 				status: 'REJECTED'
@@ -224,17 +224,16 @@ class HomeScreen extends Component {
 		}
 	}
 
-  render() {
+	render() {
 		const { appStore, navigation } = this.props
 		const { transactions, isLoadingList } = this.state;
-    const isAddModalVisible = appStore.get('isAddModalVisible')
-    const isDetailModalVisible = appStore.get('isDetailModalVisible')
-    const currentTransaction = appStore.get('currentTransaction')
+		const isAddModalVisible = appStore.get('isAddModalVisible')
+		const isDetailModalVisible = appStore.get('isDetailModalVisible')
+		const currentTransaction = appStore.get('currentTransaction')
 
-    return (
+		return (
 			<Screen>
-				<TransactionList transactions={transactions} isLoadingList={isLoadingList}/>
-
+				<TransactionList transactions={transactions} isLoadingList={isLoadingList} />
 				<Modal isVisible={isAddModalVisible} >
 					<SafeAreaView style={{ flex: 1 }}>
 						<CloseButton onPress={this.toggleAddModal}>
@@ -243,11 +242,10 @@ class HomeScreen extends Component {
 						<TransactionForm />
 					</SafeAreaView>
 				</Modal>
-
 				<StatusBar barStyle="light-content" />
 			</Screen>
-    )
-  }
+		)
+	}
 }
 
 export default HomeScreen

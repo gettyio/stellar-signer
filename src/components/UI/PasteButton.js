@@ -2,7 +2,7 @@ import React, { PureComponent } from 'react'
 import { Clipboard, View, Keyboard } from 'react-native'
 import * as Animatable from 'react-native-animatable'
 
-import { PasteButton, PasteButtonLabel } from './utils'
+import { PasteButton, PasteButtonLabel } from './styled'
 
 export default class PasteBtn extends PureComponent {
   pasteHandler = async () => {

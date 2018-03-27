@@ -11,14 +11,17 @@ import {
   Image,
   TouchableOpacity,
   ActivityIndicator,
-	Dimensions,
-	AsyncStorage
+  Dimensions,
+  AsyncStorage
 } from 'react-native'
 import moment from 'moment'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import { observer, inject } from 'mobx-react'
 import TransactionRow from './TransactionRow'
-import { Container, EmptyScreen } from './utils'
+import {
+  Container,
+  EmptyScreen
+} from './styled'
 // import { schema } from './../store/db';
 // import { createDb } from './../store/db'
 
@@ -27,21 +30,21 @@ class TransactionList extends Component {
   state = {
     transactions: [],
     currentTx: undefined,
-		hasError: undefined,
-		isLoadingList: true,
+    hasError: undefined,
+    isLoadingList: true,
   }
 
-	componentWillReceiveProps(nextProps) {
-		this.setState({ transactions: nextProps.transactions, isLoadingList: nextProps.isLoadingList })
-	}
+  componentWillReceiveProps(nextProps) {
+    this.setState({ transactions: nextProps.transactions, isLoadingList: nextProps.isLoadingList })
+  }
 
   renderRow = ({ item }) => {
-		const { appStore, navigation } = this.props
+    const { appStore, navigation } = this.props
     return <TransactionRow item={item} appStore={appStore} />
   }
 
   render() {
-		const { height } = Dimensions.get('window')
+    const { height } = Dimensions.get('window')
     const { hasError, transactions, isLoadingList } = this.state
 
     if (isLoadingList) {
@@ -64,7 +67,7 @@ class TransactionList extends Component {
       return (
         <EmptyScreen style={{ height: '100%' }}>
           <Image
-            source={require('../assets/empty.png')}
+            source={require('../../assets/empty.png')}
             resizeMode="contain"
             style={{ width: 170 }}
           />

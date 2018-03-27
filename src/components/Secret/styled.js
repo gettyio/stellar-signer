@@ -1,7 +1,13 @@
-import React, { Component } from 'react'
-import { View, Image, Text, TouchableOpacity } from 'react-native'
-import moment from 'moment'
 import styled from 'styled-components'
+
+export const Container = styled.View`
+  height: ${props => (props.height ? props.height : 'auto')};
+`
+export const EmptyScreen = styled.View`
+  align-items: center;
+  padding-top: 16px;
+	background-color: white;
+`
 
 export const Row = styled.View`
   padding: 16px;
@@ -40,20 +46,3 @@ export const DateLabel = styled.Text`
   color: #555;
   align-self: center;
 `
-
-const SecretRow = ({ item, appStore, onPress }) => {
-	const pk = item.pk;
-  return (
-    <TouchableOpacity onPress={() => onPress(item)}>
-      <Row>
-        <AliasLabel>{`${item.alias}`}</AliasLabel>
-				<PKLabel>{`${pk.slice(0,8)}...${pk.substr(pk.length - 8)}`}</PKLabel>
-        <DateLabel>
-				{`${moment(new Date(item.createdAt)).format('YYYY-MM-DD hh:mm')}`}
-        </DateLabel>
-      </Row>
-    </TouchableOpacity>
-  )
-}
-
-export default SecretRow
