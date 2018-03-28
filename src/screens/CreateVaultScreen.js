@@ -86,27 +86,33 @@ class CreateVaultScreen extends Component {
 
 	restoreSeed = () => {
 		const { tab, mnemonic, seedValue } = this.state;
-
-		if (tab === 'continue') {
-			if (!seedValue || mnemonic !== seedValue.trim()) {
-				this.restoreSeedButton.error();
-				this.restoreSeedButton.reset();
-				this.setState({ errorMessage: 'Invalid seed combination, please make sure to write with the same order.' })
-			} else {
-				this.setState({ successMessage: 'The seed combination is valid. We are restoring your master key...' })
-				this.createSeed()
+		const isValidSeed = bip39.validateMnemonic(seedValue);
+		if (isValidSeed) {
+			if (tab === 'continue') {
+				if (!seedValue || mnemonic !== seedValue.trim()) {
+					this.restoreSeedButton.error();
+					this.restoreSeedButton.reset();
+					this.setState({ errorMessage: 'Invalid seed combination, please make sure to write with the same order.' })
+				} else {
+					this.setState({ successMessage: 'The seed combination is valid. We are restoring your master key...' })
+					this.createSeed()
+				}
 			}
-		}
-
-		if (tab === 'restore') {
-			if (seedValue.trim().split(/\s+/g).length === 24) {
-				this.setState({ successMessage: 'The seed combination is valid. We are restoring your master key...' })
-				this.createSeed();
-			} else {
-				this.restoreSeedButton.error();
-				this.restoreSeedButton.reset();
-				this.setState({ errorMessage: 'Invalid seed combination, you must type a seed with 24 words.' })
+	
+			if (tab === 'restore') {
+				if (seedValue.trim().split(/\s+/g).length === 24) {
+					this.setState({ successMessage: 'The seed combination is valid. We are restoring your master key...' })
+					this.createSeed();
+				} else {
+					this.restoreSeedButton.error();
+					this.restoreSeedButton.reset();
+					this.setState({ errorMessage: 'Invalid seed combination, you must type a seed with 24 words.' })
+				}
 			}
+		} else {
+			this.restoreSeedButton.error();
+			this.restoreSeedButton.reset();
+			this.setState({ errorMessage: 'Invalid seed. Please, check if any of your 24 words has any typo.' })
 		}
 	}
 

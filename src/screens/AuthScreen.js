@@ -41,7 +41,7 @@ class AuthScreen extends Component {
 		SplashScreen.hide();
 		this.enableDeepLinks();
 		this.loadData();
-		//this.deleteSeed();
+		this.deleteSeed();
 	}
 
 	componentWillUnmount() {

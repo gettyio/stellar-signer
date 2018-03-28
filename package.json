@@ -88,12 +88,12 @@
   "jest": {
     "verbose": true,
     "preset": "react-native",
-    "setupFiles": [
-      "./jest.setup.js"
-    ],
     "transform": {
       "^.+\\.js$": "babel-jest"
-    },
+		},
+		"transformIgnorePatterns": [
+      "node_modules/(?!react-native|react-navigation|pouchdb-core)/"
+    ],
     "moduleNameMapper": {
       "styled-components": "<rootDir>/node_modules/styled-components/dist/styled-components.native.cjs.js"
     },
