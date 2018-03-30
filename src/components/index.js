@@ -1,15 +1,15 @@
 import DisplayTab from './DisplayTab'
 import EnvelopeCard from './EnvelopeCard'
 import EnvelopeTab from './EnvelopeTab'
-import ErrorMessage from './UI/ErrorMessage'
-import PasteButton from './UI/PasteButton'
-import SecretList from './Secret/SecretList'
-import SecretRow from './Secret/SecretRow'
-import SecurityForm from './UI/SecurityForm'
+import ErrorMessage from './shared/ErrorMessage'
+import PasteButton from './shared/PasteButton'
+import SecretList from './secret/SecretList'
+import SecretRow from './secret/SecretRow'
+import SecurityForm from './shared/SecurityForm'
 import TransactionDetail from './TransactionDetail'
-import TransactionForm from './Transaction/TransactionForm'
-import TransactionList from './Transaction/TransactionList'
-import TransactionRow from './Transaction/TransactionRow'
+import TransactionForm from './transaction/TransactionForm'
+import TransactionList from './transaction/TransactionList'
+import TransactionRow from './transaction/TransactionRow'
 
 export {
   DisplayTab,
