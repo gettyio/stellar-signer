@@ -26,10 +26,10 @@ import moment from 'moment'
 import Modal from 'react-native-modal'
 import SInfo from 'react-native-sensitive-info';
 import Button from 'react-native-micro-animated-button'
-import TransactionForm from '../components/Transaction/TransactionForm'
+import TransactionForm from '../components/transaction/TransactionForm'
 // import TransactionDetail from '../components/TransactionDetail'
-import PasteButton from '../components/UI/PasteButton'
-import TransactionList from '../components/Transaction/TransactionList'
+import PasteButton from '../components/shared/PasteButton'
+import TransactionList from '../components/transaction/TransactionList'
 import {
 	Screen,
 	Container,

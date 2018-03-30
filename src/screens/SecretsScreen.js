@@ -18,7 +18,7 @@ import SQLiteAdapterFactory from 'pouchdb-adapter-react-native-sqlite'
 import Icon from 'react-native-vector-icons/Feather'
 import Button from 'react-native-micro-animated-button'
 import SInfo from 'react-native-sensitive-info'
-import SecretList from '../components/Secret/SecretList'
+import SecretList from '../components/secret/SecretList'
 import { isNaN } from 'lodash';
 import {
 	Screen,
