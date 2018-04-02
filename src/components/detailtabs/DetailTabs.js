@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import { View, Text, ScrollView } from 'react-native';
 import styled from 'styled-components'
-import EnvelopeCard from './Envelope/EnvelopeCard'
-import EnvelopeTab from './Envelope/EnvelopeTab'
+import EnvelopeCard from './envelope/EnvelopeCard'
+import EnvelopeTab from './envelope/EnvelopeTab'
 import {
 	Screen,
 	HeaderTabs,

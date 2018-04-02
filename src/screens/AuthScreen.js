@@ -11,7 +11,7 @@ import Icon from 'react-native-vector-icons/FontAwesome'
 import Button from 'react-native-micro-animated-button'
 import SplashScreen from 'react-native-splash-screen'
 import SInfo from 'react-native-sensitive-info';
-import SecurityForm from '../components/UI/SecurityForm'
+import SecurityForm from '../components/shared/SecurityForm'
 import { version } from './../../package.json'
 
 import {
