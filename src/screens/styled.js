@@ -13,9 +13,9 @@ export const CardFlex = styled.View`
   padding: 8px;
   align-self: center;
 `
-export const Screen = styled.View`
+export const Screen = styled.SafeAreaView`
   display: flex;
-	background-color: white;
+	background-color: #2e3666;
 `
 export const Header = styled.View`
   height: 90px;

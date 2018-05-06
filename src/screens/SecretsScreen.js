@@ -43,26 +43,7 @@ const db = new PouchDB('Secrets', { adapter: 'react-native-sqlite' })
 
 @inject('appStore') @observer
 class SecretsScreen extends Component {
-
-	static navigationOptions = ({ navigation }) => {
-		const params = navigation.state.params || {};
-		return {
-			header: (
-				<SafeAreaView style={{ backgroundColor: '#2e3666' }}>
-					<Header>
-						<TitleWrapper>
-							<Title>My Secrets</Title>
-						</TitleWrapper>
-						<LoadButtonWrapper>
-							<LoadButton onPress={params.toggleAddModal}>
-								<Icon name="plus-circle" color="white" size={32} />
-							</LoadButton>
-						</LoadButtonWrapper>
-					</Header>
-				</SafeAreaView>
-			)
-		};
-	};
+	static navigationOptions = () => ({ header: null })
 
 	state = {
 		sk: undefined,
@@ -70,10 +51,6 @@ class SecretsScreen extends Component {
 		userPath: undefined,
 		hasError: false,
 		secrets: []
-	}
-
-	componentWillMount() {
-		this.props.navigation.setParams({ toggleAddModal: this.toggleAddModal });
 	}
 
 	componentDidMount() {
@@ -217,6 +194,16 @@ class SecretsScreen extends Component {
 
 		return (
 			<SafeAreaView style={{ backgroundColor: '#2e3666' }}>
+				<Header>
+					<TitleWrapper>
+						<Title>My Secrets</Title>
+					</TitleWrapper>
+					<LoadButtonWrapper>
+						<LoadButton onPress={this.toggleAddModal}>
+							<Icon name="plus-circle" color="white" size={32} />
+						</LoadButton>
+					</LoadButtonWrapper>
+				</Header>
 				<Screen>
 					<SecretList secrets={secrets} show={this.showSecretAlert} />
 					<Modal isVisible={isAddSecretModalVisible}>

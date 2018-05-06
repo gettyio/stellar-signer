@@ -57,7 +57,7 @@ class SecretList extends Component {
     }
 
     return (
-      <View style={{ height: height - 142 }}>
+      <View style={{ height: height - 142, backgroundColor: 'white' }}>
         <FlatList
           data={secrets}
           removeClippedSubviews={true}

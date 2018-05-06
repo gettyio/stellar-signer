@@ -120,7 +120,7 @@ const RootStack = StackNavigator(
 		}
   },
   {
-		initialRouteName: 'QRCodeScanner',
+		initialRouteName: 'AuthModal',
     mode: 'modal'
   }
 );
