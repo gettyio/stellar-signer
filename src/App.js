@@ -9,6 +9,7 @@ import AuthScreen from './screens/AuthScreen'
 import AboutScreen from './screens/AboutScreen'
 import CreateVaultScreen from './screens/CreateVaultScreen'
 import TransactionDetailScreen from './screens/TransactionDetailScreen'
+import QRCodeReaderScreen from './screens/QRCodeReaderScreen'
 import store from './store'
 
 const NavigationStack = TabNavigator(
@@ -113,10 +114,13 @@ const RootStack = StackNavigator(
 		},
 		CreateVault: {
 			screen: CreateVaultScreen,
+		},
+		QRCodeScanner: {
+			screen: QRCodeReaderScreen,
 		}
   },
   {
-		initialRouteName: 'AuthModal',
+		initialRouteName: 'QRCodeScanner',
     mode: 'modal'
   }
 );
