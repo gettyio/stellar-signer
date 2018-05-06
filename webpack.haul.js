@@ -14,7 +14,8 @@ module.exports = ({ platform }, { module, resolve }) => ({
         include: [
           /node_modules\/pouchdb-adapter-asyncstorage/,
           /node_modules\/react-native-vector-icons/,
-          /node_modules\/tcomb-form-native/,
+          /node_modules\/react-native-qrcode-scanner/,
+          /node_modules\/react-native-camera/,
         ],
         use: [
           {

@@ -2,6 +2,7 @@ import styled from 'styled-components'
 
 export const ContainerFlex = styled.View`
   flex: 1;
+  background-color: white;
 `
 
 export const CardFlex = styled.View`

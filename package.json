@@ -41,10 +41,12 @@
     "react-native-actionsheet": "^2.3.0",
     "react-native-animatable": "^1.2.4",
     "react-native-app-link": "^0.4.0",
+    "react-native-camera": "^1.1.2",
     "react-native-device-info": "^0.21.1",
     "react-native-gesture-handler": "^1.0.0-alpha.40",
     "react-native-micro-animated-button": "^0.0.15",
     "react-native-modal": "^5.0.0",
+    "react-native-qrcode-scanner": "^1.0.1",
     "react-native-sensitive-info": "^5.1.0",
     "react-native-splash-screen": "3.0.0",
     "react-native-sqlite-2": "^1.5.2",
@@ -90,8 +92,8 @@
     "preset": "react-native",
     "transform": {
       "^.+\\.js$": "babel-jest"
-		},
-		"transformIgnorePatterns": [
+    },
+    "transformIgnorePatterns": [
       "node_modules/(?!react-native|react-navigation|pouchdb-core)/"
     ],
     "moduleNameMapper": {

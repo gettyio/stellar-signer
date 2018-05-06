@@ -79,12 +79,12 @@ class TransactionList extends Component {
     }
 
     return (
-      <View style={{ height: height - 142 }}>
+      <View style={{ height: height - 142, backgroundColor: 'white' }}>
         <FlatList
           data={transactions}
           removeClippedSubviews={true}
           renderItem={this.renderRow}
-          keyExtractor={(item, index) => `${item._id}`}
+          keyExtractor={(item, index) => item._id}
         />
       </View>
     )
