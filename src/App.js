@@ -121,8 +121,12 @@ const RootStack = StackNavigator(
   }
 );
 
-export default (() => (
-  <Provider appStore={store} >
-    <RootStack />
-  </Provider>
-))
+export default class App extends Component {
+  render() {
+    return (
+      <Provider appStore={store} >
+        <RootStack />
+      </Provider>
+    )
+  }
+}

@@ -19,12 +19,12 @@ import uuid from 'uuid/v4'
 import { get, sortBy } from 'lodash'
 import base64 from 'base-64'
 import base64js from 'base64-js'
-import sha256 from 'crypto-js/sha256';
+import sha256 from 'crypto-js/sha256'
 import { observer, inject } from 'mobx-react'
 import Icon from 'react-native-vector-icons/Feather'
 import moment from 'moment'
 import Modal from 'react-native-modal'
-import SInfo from 'react-native-sensitive-info';
+import SInfo from 'react-native-sensitive-info'
 import Button from 'react-native-micro-animated-button'
 import TransactionForm from '../components/transaction/TransactionForm'
 // import TransactionDetail from '../components/TransactionDetail'
@@ -41,7 +41,7 @@ import {
 	TitleWrapper,
 	LoadButtonWrapper
 } from './styled'
-import { decodeFromXdr, signXdr } from './../utils/xdrUtils';
+import { decodeFromXdr, signXdr } from './../utils/xdrUtils'
 import parseEnvelopeTree from './../utils/parseEnvelopeTree'
 import crypto from 'crypto-js'
 import PouchDB from 'pouchdb-react-native'
@@ -75,7 +75,6 @@ class HomeScreen extends Component {
 		};
 	};
 
-
 	state = {
 		transactions: [],
 		isLoadingList: true,
@@ -90,11 +89,39 @@ class HomeScreen extends Component {
 
 	componentDidMount() {
 		this.loadTransactions();
+		this.enableDeepLinks();
 	}
 
 	componentDidUpdate(prevProps, prevState) {
 		this.handleCurrentTx()
 		this.loadTransactions();
+	}
+
+	componentWillUnmount() {
+		Linking.removeEventListener('url', this.handleAppLinkURL)
+	}
+
+	enableDeepLinks = () => {
+		Linking.addEventListener('url', this.handleAppLinkURL)
+		Linking.getInitialURL().then(url => {
+			if (url) {
+				this.handleAppLinkURL(new String(url))
+			}
+		})
+	}
+
+	handleAppLinkURL = event => {
+		const { appStore, navigation } = this.props
+		const url = event instanceof String ? event : event.url
+		if (url) {
+			const tx = qs.parse(url.replace('stellar-signer://stellar-signer?', ''))
+			appStore.set('currentXdr', tx.xdr)
+			appStore.set('currentTransaction', this.state.transactions[0])
+			navigation.navigate('TransactionDetail')
+
+		} else {
+			alert('Invalid Transaction! Please contact the support.')
+		}
 	}
 
 	loadTransactions = () => {

@@ -2,7 +2,7 @@ import React from 'react'
 import { TouchableOpacity } from 'react-native'
 import styled from 'styled-components'
 import moment from 'moment'
-import { withNavigation } from 'react-navigation';
+import { withNavigation } from 'react-navigation'
 import Icon from 'react-native-vector-icons/Feather'
 
 import {

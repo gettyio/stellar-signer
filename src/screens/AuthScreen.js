@@ -1,16 +1,15 @@
 import React, { Component } from 'react'
-import { View, Text, Image, ScrollView, SafeAreaView, KeyboardAvoidingView, Linking } from 'react-native'
+import { View, Text, Image, ScrollView, SafeAreaView, KeyboardAvoidingView } from 'react-native'
 import PropTypes from 'prop-types'
-import qs from 'qs'
 import { observer, inject } from 'mobx-react'
 import crypto from 'crypto-js'
-import sha256 from 'crypto-js/sha256';
+import sha256 from 'crypto-js/sha256'
 import Modal from 'react-native-modal'
-import DeviceInfo from 'react-native-device-info';
+import DeviceInfo from 'react-native-device-info'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import Button from 'react-native-micro-animated-button'
 import SplashScreen from 'react-native-splash-screen'
-import SInfo from 'react-native-sensitive-info';
+import SInfo from 'react-native-sensitive-info'
 import SecurityForm from '../components/shared/SecurityForm'
 import { version } from './../../package.json'
 
@@ -39,13 +38,8 @@ class AuthScreen extends Component {
 
 	componentDidMount() {
 		SplashScreen.hide();
-		this.enableDeepLinks();
 		this.loadData();
-		this.deleteSeed();
-	}
-
-	componentWillUnmount() {
-		Linking.removeEventListener('url', this.handleAppLinkURL)
+		// this.deleteSeed();
 	}
 
 	deleteSeed = () => {
@@ -83,15 +77,6 @@ class AuthScreen extends Component {
 		}
 	}
 
-	enableDeepLinks = () => {
-		Linking.addEventListener('url', this.handleAppLinkURL)
-		Linking.getInitialURL().then(url => {
-			if (url) {
-				this.handleAppLinkURL(new String(url))
-			}
-		})
-	}
-
 	loadData = () => {
 		const { appStore } = this.props
 		try {
@@ -105,17 +90,6 @@ class AuthScreen extends Component {
 			})
 		} catch (error) {
 			appStore.set('securityFormError', 'Invalid password!')
-		}
-	}
-
-	handleAppLinkURL = event => {
-		const { appStore } = this.props
-		const url = event instanceof String ? event : event.url
-		if (url) {
-			const tx = qs.parse(url.replace('stellar-signer://stellar-signer?', ''))
-			appStore.set('currentXdr', tx.xdr)
-		} else {
-			alert('Invalid Transaction! Please contact the support.')
 		}
 	}
 
