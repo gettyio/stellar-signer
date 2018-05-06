@@ -6,10 +6,15 @@ import {
   TouchableOpacity,
   Linking,
 } from 'react-native';
-
+import SplashScreen from 'react-native-splash-screen'
 import QRCodeScanner from 'react-native-qrcode-scanner';
 
 class QRCodeReaderScreen extends Component {
+
+	componentDidMount() {
+		SplashScreen.hide();
+	}
+
   onSuccess(e) {
     Linking
       .openURL(e.data)
