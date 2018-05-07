@@ -12,7 +12,8 @@ import {
 	ActivityIndicator,
 	Linking,
 	AsyncStorage,
-	SafeAreaView
+	SafeAreaView,
+	Alert
 } from 'react-native'
 import qs from 'qs'
 import uuid from 'uuid/v4'
@@ -51,7 +52,8 @@ import SQLiteAdapterFactory from 'pouchdb-adapter-react-native-sqlite'
 
 PouchDB.plugin(SQLiteAdapterFactory(SQLite))
 PouchDB.plugin(require('pouchdb-upsert'))
-const db = new PouchDB('Transactions', { adapter: 'react-native-sqlite' })
+const transactionsDb = new PouchDB('Transactions', { adapter: 'react-native-sqlite' })
+const secretsDb = new PouchDB('Secrets', { adapter: 'react-native-sqlite' })
 
 @inject('appStore') @observer
 class HomeScreen extends Component {
@@ -92,32 +94,41 @@ class HomeScreen extends Component {
 		const url = event instanceof String ? event : event.url
 		if (url) {
 			const tx = qs.parse(url.replace('stellar-signer://stellar-signer?', ''))
-			this.addXDRAndOpenDetails(tx.xdr)
+			this.addXDRAndOpenDetails(tx)
 		} else {
 			alert('Invalid Transaction! Please contact the support.')
 		}
 	}
 
-	addXDRAndOpenDetails = xdr => {
+	addXDRAndOpenDetails = async data => {
 		const { appStore, navigation } = this.props
-		const decodedTx = this.decodeXdr(xdr)
-		const transaction = this.getCurrentTransaction(decodedTx)
-		if (transaction) {
-			this.saveTransaction(transaction)
-			appStore.set('currentTransaction', transaction)
-			navigation.navigate('TransactionDetail')
+		const decodedTx = this.decodeXdr(data.xdr)
+		const currentTransaction = this.getCurrentTransaction(decodedTx)
+		if (this.state.secrets.find(secret => secret.doc.pk === data.public_key)) {
+			const transaction = await this.saveTransaction(currentTransaction)
+			appStore.set('currentTransaction', {
+				_id: transaction.id,
+				_rev: transaction.rev,
+				...currentTransaction
+			})
+			navigation.navigate('TransactionDetail', { data })
+		} else {
+			alert('This transaction does not come from one of your accounts.')
 		}
 	}
 
-	loadTransactions = () => {
-		const self = this;
-		db.allDocs({
+	loadTransactions = async () => {
+		const transactions = await transactionsDb.allDocs({
 			include_docs: true
 		}).then((res) => {
 			const rawTransactions = res.rows.map((item, index) => item.doc);
-			const transactions = sortBy(rawTransactions, 'createdAt').reverse()
-			self.setState({ transactions, isLoadingList: false });
+			return sortBy(rawTransactions, 'createdAt').reverse()
 		})
+		const secrets = await secretsDb.allDocs({
+			include_docs: true
+		}).then(res => res.rows)
+
+		this.setState({ secrets, transactions, isLoadingList: false })
 	}
 
 	handleCurrentTx = () => {
@@ -196,11 +207,11 @@ class HomeScreen extends Component {
 	saveTransaction = async tx => {
 		const { appStore } = this.props
 		try {
-			db.put({
+			const transaction = {
 				_id: uuid(),
 				...tx
-			});
-			this.loadTransactions();
+			}
+			return transactionsDb.put(transaction);
 		} catch (error) {
 			alert(error.message)
 		}
@@ -211,7 +222,7 @@ class HomeScreen extends Component {
 		const { appStore } = this.props
 		const currentTransaction = appStore.get('currentTransaction')
 		try {
-			db.put({
+			transactionsDb.put({
 				_id: currentTransaction._id,
 				...currentTransaction,
 				status: 'REJECTED'
@@ -226,7 +237,7 @@ class HomeScreen extends Component {
 
 	deleteTransaction = async (doc) => {
 		try {
-			const res = await db.remove(doc);
+			const res = await transactionsDb.remove(doc);
 			this.loadTransactions();
 		} catch (error) {
 			alert(error.message);

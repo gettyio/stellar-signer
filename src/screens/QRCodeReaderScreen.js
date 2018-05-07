@@ -5,18 +5,16 @@ import {
   Text,
   TouchableOpacity,
   Linking,
+  Alert
 } from 'react-native';
 import SplashScreen from 'react-native-splash-screen'
 import QRCodeScanner from 'react-native-qrcode-scanner';
 
 class QRCodeReaderScreen extends Component {
-	componentDidMount() {
-		SplashScreen.hide();
-	}
-
   onSuccess(e) {
+    const { data } = e
     this.props.navigation.goBack()
-    this.props.navigation.state.params.callback(JSON.parse(e.data).xdr)
+    this.props.navigation.state.params.callback(JSON.parse(data))
   }
 
   render() {

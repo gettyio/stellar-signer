@@ -1,5 +1,5 @@
 import React, { Component, Fragment } from 'react'
-import { SafeAreaView, View, Text, Alert, Clipboard, TouchableOpacity, ScrollView } from 'react-native'
+import { SafeAreaView, View, Text, Alert, Clipboard, TouchableOpacity, ScrollView, Linking } from 'react-native'
 import { TabViewAnimated, TabBar, SceneMap } from 'react-native-tab-view'
 import Button from 'react-native-micro-animated-button'
 import Icon from 'react-native-vector-icons/Feather'
@@ -21,6 +21,8 @@ import { generateKeypair } from './../utils/bipUtil';
 import PouchDB from 'pouchdb-react-native'
 import SQLite from 'react-native-sqlite-2'
 import SQLiteAdapterFactory from 'pouchdb-adapter-react-native-sqlite'
+import qs from 'qs'
+import parseEnvelopeTree from './../utils/parseEnvelopeTree'
 import {
 	Screen,
 	ContainerFlex, 
@@ -35,8 +37,8 @@ import {
 
 const SQLiteAdapter = SQLiteAdapterFactory(SQLite)
 PouchDB.plugin(SQLiteAdapter)
-const db = new PouchDB('Secrets', { adapter: 'react-native-sqlite' })
-const db2 = new PouchDB('Transactions', { adapter: 'react-native-sqlite' })
+const secretsDb = new PouchDB('Secrets', { adapter: 'react-native-sqlite' })
+const transactionsDb = new PouchDB('Transactions', { adapter: 'react-native-sqlite' })
 
 @inject('appStore') @observer
 class TransactionDetail extends Component {
@@ -83,7 +85,7 @@ class TransactionDetail extends Component {
 	loadData = () => {
 		try {
 			let self = this;
-			db.allDocs({
+			secretsDb.allDocs({
 				include_docs: true
 			}).then((res) => {
 				const options = [];
@@ -117,7 +119,9 @@ class TransactionDetail extends Component {
 
 	authTransaction = () => {
 		const { appStore, navigation } = this.props
+		const { data } = navigation.state.params
 		const seed = appStore.get('seed')
+		const currentTransaction = appStore.get('currentTransaction')
 
 		const { secrets } = this.state;
 		if (!secrets || secrets.length === 0) {
@@ -132,23 +136,24 @@ class TransactionDetail extends Component {
 				]
 			)
 		} else {
-			this.actionSheet.show();
+			const secret = this.state.secrets.find(secret => secret.doc.pk === data.public_key)
+			const index = this.state.options.indexOf(secret.doc.alias)
+			this.submitSignature(index);
 		}
 	}
 
-	rejectTransaction = () => {
+	rejectTransaction = async () => {
 		const { appStore, navigation } = this.props
 		const currentTransaction = appStore.get('currentTransaction')
 		try {
-			db2.put({
-				_id: currentTransaction._id,
+			await transactionsDb.put({
 				...currentTransaction,
 				status: 'REJECTED'
 			});
 			navigation.goBack()
-			setTimeout(() => {
-				appStore.set('currentTransaction', undefined)
-			}, 1000)
+			// setTimeout(() => {
+			// 	appStore.set('currentTransaction', undefined)
+			// }, 1000)
 		} catch (error) {
 			alert(error.message)
 		}
@@ -163,7 +168,7 @@ class TransactionDetail extends Component {
 			} else {
 				ctx = appStore.get('currentTransaction')
 			}
-			const res = await db2.remove(ctx);
+			const res = await transactionsDb.remove(ctx);
 			navigation.goBack()
 			setTimeout(() => {
 				appStore.set('currentTransaction', undefined)
@@ -203,13 +208,21 @@ class TransactionDetail extends Component {
 			const sk = keypair.secret();
 			const ctx = appStore.get('currentTransaction')
 			const data = {
-				type: 'sign',
 				sk,
 				...ctx,
+				type: 'sign',
 			}
 
 			const signedTx = signXdr(data)
 			this.saveCurrentTransaction(signedTx)
+
+			const qr = this.props.navigation.state.params.data
+			const response = {
+				...qr,
+				signedXdr: signedTx.xdr
+			}
+			Linking.openURL(`${qr.callback_url}?${qs.stringify(response)}`)
+
 			navigation.goBack()
 		} catch (error) {
 			alert(error.message)
@@ -237,7 +250,7 @@ class TransactionDetail extends Component {
 					createdAt: new Date().toISOString()
 				})
 			} else {
-				const tx = parseEnvelopeTree(data.tx)
+				const tx = parseEnvelopeTree(decodeFromXdr(data.xdr, 'TransactionEnvelope').tx)
 				this.saveTransaction({
 					...tx,
 					type: data.type,
@@ -254,7 +267,7 @@ class TransactionDetail extends Component {
 	saveTransaction = async tx => {
 		const { appStore } = this.props
 		try {
-			db2.put({
+			transactionsDb.put({
 				_id: uuid(),
 				...tx
 			});

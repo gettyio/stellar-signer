@@ -35,7 +35,7 @@ class TransactionList extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    this.setState({ transactions: nextProps.transactions, isLoadingList: nextProps.isLoadingList })
+    this.setState({ transactions: nextProps.transactions.filter(transaction => (transaction.status === 'SIGNED' || transaction.status === 'REJECTED')), isLoadingList: nextProps.isLoadingList })
   }
 
   renderRow = ({ item }) => {
