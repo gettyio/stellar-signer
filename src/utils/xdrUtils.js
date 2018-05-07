@@ -25,7 +25,6 @@ export function decodeFromXdr(input, type) {
   // TODO: Check to see if type exists
   // TODO: input validation
   try {
-    //console.log('input',input)
     const tree = extrapolateFromXdr(input, 'TransactionEnvelope');
     return { tx: tree, xdr: input };
   } catch (error) {

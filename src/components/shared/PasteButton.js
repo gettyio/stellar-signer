@@ -9,7 +9,6 @@ export default class PasteBtn extends PureComponent {
     const { setAccountValue } = this.props
 
     const content = await Clipboard.getString()
-    //console.log('content', content)
     this.refs.pasteButtonView.fadeOutLeft(300).then(
       () => setAccountValue(content),
       () => {
