@@ -6,9 +6,9 @@
 		<!-- Code used for dev   -->
 		<!-- <uses-permission android:name="android.permission.INTERNET" /> -->
 		<uses-permission android:name="android.permission.CAMERA" />
+		<uses-permission android:name="android.permission.VIBRATE"/>
     <uses-permission android:name="android.permission.BROWSABLE"/>
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/>
-		<uses-permission android:name="android.permission.READ_PHONE_STATE" tools:node="remove" />
     <uses-sdk
         android:minSdkVersion="17"
         android:targetSdkVersion="23" />
