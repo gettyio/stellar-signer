@@ -104,7 +104,7 @@ class HomeScreen extends Component {
 		const { appStore, navigation } = this.props
 		const decodedTx = this.decodeXdr(data.xdr)
 		const currentTransaction = this.getCurrentTransaction(decodedTx)
-		if (this.state.secrets.find(secret => secret.doc.pk === data.public_key)) {
+		if (this.state.secrets.find(secret => secret.doc.pk === data.source)) {
 			const transaction = await this.saveTransaction(currentTransaction)
 			appStore.set('currentTransaction', {
 				_id: transaction.id,
