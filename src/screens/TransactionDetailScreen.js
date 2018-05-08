@@ -136,7 +136,7 @@ class TransactionDetail extends Component {
 				]
 			)
 		} else {
-			const secret = this.state.secrets.find(secret => secret.doc.pk === data.public_key)
+			const secret = this.state.secrets.find(secret => secret.doc.pk === data.source)
 			const index = this.state.options.indexOf(secret.doc.alias)
 			this.submitSignature(index);
 		}
@@ -219,7 +219,7 @@ class TransactionDetail extends Component {
 			const qr = this.props.navigation.state.params.data
 			const response = {
 				...qr,
-				signedXdr: signedTx.xdr
+				signedXDR: signedTx.xdr
 			}
 			Linking.openURL(`${qr.callback_url}?${qs.stringify(response)}`)
 

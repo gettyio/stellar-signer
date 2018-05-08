@@ -135,6 +135,7 @@ class SecretsScreen extends Component {
 				const seed = appStore.get('seed');
 				const keypair = generateKeypair(seed, userPath);
 				const pk = keypair.publicKey();
+				const sk = keypair.secret();
 				const _id = uuid();
 				db.put({
 					_id,
